@@ -24,9 +24,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public int registCategory(String categoryName) {
-        Category category = new Category();
-        category.setCategoryName(categoryName);
+    public int registCategory(Category category) {
 
         Category findCategory = categoryRepository.save(category);
 
@@ -61,10 +59,17 @@ public class CategoryService {
         categoryRepository.deleteById(categoryCode);
         Category category = categoryRepository.findById(categoryCode);
 
-        if(Objects.isNull(category)){
+        if (Objects.isNull(category)) {
             return 1;
-        }else {
+        } else {
             return 2;
         }
     }
+
+    public List<Category> findCategoryByName(String categoryName) {
+        List<Category> categoryList = categoryRepository.findBycategoryName(categoryName);
+
+        return categoryList;
+    }
+
 }

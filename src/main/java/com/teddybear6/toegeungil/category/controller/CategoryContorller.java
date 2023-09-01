@@ -24,11 +24,18 @@ public class CategoryContorller {
 
 
     @PostMapping
-    public ResponseEntity<?> regist(String categoryName){
-        System.out.println(categoryName);
+    public ResponseEntity<?> regist(CategoryDTO categoryDTO){
+
+
+        List<Category> categoryList = categoryService.findCategoryByName(categoryDTO.getCategoryName());
+
+        if(categoryList.size()>0){
+            return ResponseEntity.status(404).body("중복된 카테고리 입니다");
+        }
         Category category = new Category();
-        category.setCategoryName(categoryName);
-        int result = categoryService.registCategory(categoryName);
+        category.setCategoryName(categoryDTO.getCategoryName());
+
+        int result = categoryService.registCategory(category);
         if(result>0){
             return ResponseEntity.ok().body("카테고리 등록 성공했습니다.");
         } else {
@@ -43,7 +50,11 @@ public class CategoryContorller {
         if(categoryList.size()==0){
             List<String> error = new ArrayList<>();
             error.add("카테고리가 존재하지 않습니다.");
+<<<<<<< HEAD
            return ResponseEntity.status(500).body(error);
+=======
+            return ResponseEntity.status(500).body(error);
+>>>>>>> 133c7999fb2861e52bff5660c2dba035da96759b
         }
 
         List<CategoryDTO> categoryDTOS  = categoryList.stream().map(m-> new CategoryDTO(m)).collect(Collectors.toList());
