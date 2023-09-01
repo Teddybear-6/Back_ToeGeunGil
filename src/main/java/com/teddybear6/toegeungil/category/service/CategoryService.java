@@ -49,10 +49,22 @@ public class CategoryService {
         Category category = new Category(findcategory.getCategoryCode(), categoryDTO.getCategoryName());
         Category result = categoryRepository.save(category);
 
-        if(Objects.isNull(result)){
+        if (Objects.isNull(result)) {
             return 0;
-        }else {
+        } else {
             return 1;
+        }
+    }
+
+    @Transactional
+    public int deleteCategory(int categoryCode) {
+        categoryRepository.deleteById(categoryCode);
+        Category category = categoryRepository.findById(categoryCode);
+
+        if(Objects.isNull(category)){
+            return 1;
+        }else {
+            return 2;
         }
     }
 }

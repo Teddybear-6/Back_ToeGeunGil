@@ -81,7 +81,22 @@ public class CategoryContorller {
     }
 
 
-    @DeleteMapping
+    @DeleteMapping("/{categoryCode}")
+    public ResponseEntity<?> delete(@PathVariable int  categoryCode){
+        Category category = categoryService.findCategoryByCode(categoryCode);
+
+        if(Objects.isNull(category)){
+            return ResponseEntity.status(404).body("존재하지 않는 카테고리입니다.");
+        }
+
+        int result = categoryService.deleteCategory(categoryCode);
+
+        if(result>0){
+            return  ResponseEntity.ok().body("삭제에 성공했습니다.");
+        }else {
+            return  ResponseEntity.status(500).body("삭제에 실패했습니다.");
+        }
+    }
 
 
 }
