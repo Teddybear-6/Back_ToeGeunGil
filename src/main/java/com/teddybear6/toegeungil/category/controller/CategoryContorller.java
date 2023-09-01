@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -38,8 +39,11 @@ public class CategoryContorller {
     @GetMapping
     public ResponseEntity<List<?>> findAllCategory(){
         List<Category> categoryList = categoryService.findAll();
-        if(Objects.isNull(categoryList)){
-            ResponseEntity.status(500).body("카테고리가 존재하지 않습니다.");
+
+        if(categoryList.size()==0){
+            List<String> error = new ArrayList<>();
+            error.add("카테고리가 존재하지 않습니다.");
+           return ResponseEntity.status(500).body(error);
         }
 
         List<CategoryDTO> categoryDTOS  = categoryList.stream().map(m-> new CategoryDTO(m)).collect(Collectors.toList());
