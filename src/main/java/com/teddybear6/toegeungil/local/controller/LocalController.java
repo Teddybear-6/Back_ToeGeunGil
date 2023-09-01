@@ -92,7 +92,19 @@ public class LocalController {
 
     @DeleteMapping("/{localCode}")
     public ResponseEntity<?> deleteLocal(@PathVariable int localCode){
-        
+
+        Local local = localService.findById(localCode);
+        if(Objects.isNull(local)){
+            return ResponseEntity.status(404).body("존재하지 않는 카테고리입니다.");
+        }
+        int result = localService.deleteLocal(localCode);
+
+
+        if(result>0){
+            return ResponseEntity.ok().body("삭제 성공했습니다.");
+        }else{
+            return ResponseEntity.status(500).body("삭제에 실패했습니다");
+        }
     }
 
 }

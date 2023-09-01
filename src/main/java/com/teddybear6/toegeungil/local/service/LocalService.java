@@ -59,4 +59,15 @@ public class LocalService {
         }
 
     }
+    @Transactional
+    public int deleteLocal(int localCode) {
+        localRepository.deleteById(localCode);
+
+        Local local = localRepository.findById(localCode);
+        if(Objects.isNull(local)){
+            return 1;
+        }else {
+            return 0;
+        }
+    }
 }
