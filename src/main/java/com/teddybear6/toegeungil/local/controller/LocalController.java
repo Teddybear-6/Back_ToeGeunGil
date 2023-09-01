@@ -7,6 +7,7 @@ import com.teddybear6.toegeungil.local.service.LocalService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -58,11 +59,19 @@ public class LocalController {
             return ResponseEntity.status(500).body("등록에 실패했습니다.");
         }
 
-
-
-
     }
 
+    @GetMapping("/{localCode}")
+    public ResponseEntity<Object> findLocalByCode(@PathVariable int localCode){
+        Local local = localService.findById(localCode);
+
+        if(Objects.isNull(local)){
+            return ResponseEntity.status(404).body("존재하지 않는 지역입니다.");
+        }
+        LocalDTO localDTO = new LocalDTO(local);
+
+        return ResponseEntity.ok().body(localDTO);
+    }
 
 
 }

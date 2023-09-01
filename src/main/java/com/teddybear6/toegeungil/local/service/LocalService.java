@@ -17,12 +17,12 @@ public class LocalService {
     }
 
     @Transactional
-    public  int registLocal(Local local) {
+    public int registLocal(Local local) {
         Local findLocal = localRepository.save(local);
 
-        if(Objects.isNull(findLocal)){
+        if (Objects.isNull(findLocal)) {
             return 0;
-        }else {
+        } else {
             return 1;
         }
     }
@@ -35,6 +35,12 @@ public class LocalService {
 
     public List<Local> findByName(String localName) {
         List<Local> local = localRepository.findBylocalName(localName);
+        return local;
+    }
+
+    public Local findById(int localCode) {
+
+        Local local = localRepository.findById(localCode);
         return local;
     }
 }
