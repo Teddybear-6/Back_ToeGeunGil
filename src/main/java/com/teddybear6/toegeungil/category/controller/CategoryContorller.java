@@ -50,7 +50,11 @@ public class CategoryContorller {
         if(categoryList.size()==0){
             List<String> error = new ArrayList<>();
             error.add("카테고리가 존재하지 않습니다.");
+<<<<<<< HEAD
+           return ResponseEntity.status(500).body(error);
+=======
             return ResponseEntity.status(500).body(error);
+>>>>>>> 133c7999fb2861e52bff5660c2dba035da96759b
         }
 
         List<CategoryDTO> categoryDTOS  = categoryList.stream().map(m-> new CategoryDTO(m)).collect(Collectors.toList());
