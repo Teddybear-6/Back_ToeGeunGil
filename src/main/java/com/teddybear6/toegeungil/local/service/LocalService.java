@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.local.service;
 
+import com.teddybear6.toegeungil.local.dto.LocalDTO;
 import com.teddybear6.toegeungil.local.entity.Local;
 import com.teddybear6.toegeungil.local.repository.LocalRepository;
 import org.springframework.stereotype.Service;
@@ -42,5 +43,20 @@ public class LocalService {
 
         Local local = localRepository.findById(localCode);
         return local;
+    }
+
+    @Transactional
+    public int update(Local local, LocalDTO localDTO) {
+
+        local.setLocalName(localDTO.getLocalName());
+
+        Local findLocal = localRepository.save(local);
+
+        if(Objects.isNull(findLocal)){
+            return 0;
+        }else {
+            return 1;
+        }
+
     }
 }
