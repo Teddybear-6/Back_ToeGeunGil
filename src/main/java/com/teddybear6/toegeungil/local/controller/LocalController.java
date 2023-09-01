@@ -58,6 +58,9 @@ public class LocalController {
             return ResponseEntity.status(500).body("등록에 실패했습니다.");
         }
 
+
+
+
     }
 
 
