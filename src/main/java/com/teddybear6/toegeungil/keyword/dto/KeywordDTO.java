@@ -16,6 +16,9 @@ public class KeywordDTO {
 
     private String keywordName;
 
+    public KeywordDTO() {
+    }
+
     public KeywordDTO(int keywordCode, String keywordName) {
         this.keywordCode = keywordCode;
         this.keywordName = keywordName;
