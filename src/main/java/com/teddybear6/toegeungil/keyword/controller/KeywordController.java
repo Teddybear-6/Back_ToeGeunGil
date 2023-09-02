@@ -4,13 +4,11 @@ import com.teddybear6.toegeungil.keyword.dto.KeywordDTO;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.keyword.service.KeywordService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,6 +35,21 @@ public class KeywordController {
 
         return ResponseEntity.ok().body(keywordDTOS);
     }
+
+    @GetMapping("/{keywordCode}")
+    public ResponseEntity<Object> findBykeywordCode(@PathVariable int keywordCode){
+        Keyword keyword = keywordService.findById(keywordCode);
+
+        if(Objects.isNull(keyword)){
+            return ResponseEntity.status(404).body("존재하지 않는 키워드입니다.");
+        }
+        KeywordDTO keywordDTO = new KeywordDTO(keyword);
+
+        return ResponseEntity.ok().body(keywordDTO);
+
+    }
+
+
 
 
     @PostMapping

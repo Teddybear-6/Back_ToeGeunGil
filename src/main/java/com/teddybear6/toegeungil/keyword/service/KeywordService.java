@@ -38,4 +38,9 @@ public class KeywordService {
             return 1;
         }
     }
+
+    public Keyword findById(int keywordCode) {
+        Keyword keyword = keywordRepository.findById(keywordCode);
+        return keyword;
+    }
 }

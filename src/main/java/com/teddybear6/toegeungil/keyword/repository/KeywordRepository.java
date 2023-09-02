@@ -8,4 +8,5 @@ import java.util.List;
 public interface KeywordRepository  extends JpaRepository<Keyword,Integer> {
 
     List<Keyword> findBykeywordName(String keywordName);
+    Keyword findById(int keywordCode);
 }
