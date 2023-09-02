@@ -56,4 +56,14 @@ public class KeywordService {
             return 0;
         }
     }
+
+    public int deleteById(int keywordCode) {
+         keywordRepository.deleteById(keywordCode);
+         Keyword keyword = keywordRepository.findById(keywordCode);
+         if(Objects.isNull(keyword)){
+             return 1;
+         }else {
+             return 0;
+         }
+    }
 }
