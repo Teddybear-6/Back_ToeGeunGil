@@ -26,7 +26,7 @@ public class CategoryContorller {
     @PostMapping
     public ResponseEntity<?> regist(CategoryDTO categoryDTO) {
 
-
+        //중복검사
         List<Category> categoryList = categoryService.findCategoryByName(categoryDTO.getCategoryName());
 
         if (categoryList.size() > 0) {
@@ -74,10 +74,8 @@ public class CategoryContorller {
     }
 
 
-
-
     @PutMapping("/{categoryCode}")
-    public ResponseEntity<?> updateCategory(@PathVariable int categoryCode , @RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<?> updateCategory(@PathVariable int categoryCode, @RequestBody CategoryDTO categoryDTO) {
         System.out.println(categoryDTO);
         Category findcategory = categoryService.findCategoryByCode(categoryCode);
 
