@@ -50,8 +50,6 @@ public class KeywordController {
     }
 
 
-
-
     @PostMapping
     public ResponseEntity<?> registKeyword(KeywordDTO keywordDTO) {
 
@@ -73,5 +71,21 @@ public class KeywordController {
         }
     }
 
+
+    @PutMapping("/{keywordCode}")
+    public  ResponseEntity<?> updateKeyword(@PathVariable int keywordCode , @RequestBody KeywordDTO keywordDTO){
+
+        Keyword findkeyword = keywordService.findById(keywordCode);
+        if(Objects.isNull(findkeyword)){
+            return ResponseEntity.status(404).body("존재하지 않는 키워드 입니다.");
+        }
+
+        int result = keywordService.updatekeyword(findkeyword,keywordDTO);
+        if (result>0){
+            return ResponseEntity.ok().body("수정 성공했습니다.");
+        }else {
+            return ResponseEntity.status(500).body("수정 실패했습니다.");
+        }
+    }
 
 }
