@@ -44,13 +44,13 @@ public class CategoryService {
 
     @Transactional
     public int update(Category findcategory, CategoryDTO categoryDTO) {
-        Category category = new Category(findcategory.getCategoryCode(), categoryDTO.getCategoryName());
-        Category result = categoryRepository.save(category);
+       findcategory.setCategoryName(categoryDTO.getCategoryName());
+        Category result = categoryRepository.save(findcategory);
 
-        if (Objects.isNull(result)) {
-            return 0;
-        } else {
+        if (result.getCategoryName().equals(categoryDTO.getCategoryName())) {
             return 1;
+        } else {
+            return 0;
         }
     }
 

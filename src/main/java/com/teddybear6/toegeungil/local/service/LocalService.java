@@ -52,10 +52,10 @@ public class LocalService {
 
         Local findLocal = localRepository.save(local);
 
-        if(Objects.isNull(findLocal)){
-            return 0;
-        }else {
+        if(findLocal.getLocalName().equals(localDTO.getLocalName())){
             return 1;
+        }else {
+            return 0;
         }
 
     }

@@ -74,10 +74,10 @@ public class CategoryContorller {
     }
 
 
-    @PutMapping
-    public ResponseEntity<?> updateCategory(CategoryDTO categoryDTO) {
+    @PutMapping("/{categoryCode}")
+    public ResponseEntity<?> updateCategory(@PathVariable int categoryCode, @RequestBody CategoryDTO categoryDTO) {
         System.out.println(categoryDTO);
-        Category findcategory = categoryService.findCategoryByCode(categoryDTO.getCategoryCode());
+        Category findcategory = categoryService.findCategoryByCode(categoryCode);
 
         if (Objects.isNull(findcategory)) {
             return ResponseEntity.status(404).body("존재하지 않는 카테고리 입니다.");
