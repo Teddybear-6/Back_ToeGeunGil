@@ -49,21 +49,24 @@ public class HobbyController {
 
     //이미지테스트 파일을 db에 저장
     @PostMapping("/images")
-    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file, HobbyDTO hobbyDTO) throws IOException{
+    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) throws IOException{
         String uploadImage = hobbyService.uploadImage(file);
-        System.out.println(hobbyDTO);
         return ResponseEntity.ok().body(uploadImage);
     }
 
     //이미지 다운로드
     @GetMapping("/images/{fileName}")
-    public ResponseEntity<?> downloadImage(@PathVariable("fileName") String fileName, HobbyDTO hobbyDTO){
+    public ResponseEntity<?> downloadImage(@PathVariable("fileName") String fileName){
         System.out.println(fileName);
-        System.out.println(hobbyDTO);
+
         byte [] downloadImage = hobbyService.downloadImage(fileName);
         return ResponseEntity.ok().contentType(MediaType.valueOf("image/png"))
                 .body(downloadImage);
     }
 
+
+
+    @PostMapping
+    public ResponseEntity<?> registHobby()
 
 }
