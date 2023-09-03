@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.hobby.controller;
 
+import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -46,17 +47,19 @@ public class HobbyController {
 //
 //    }
 
-    //이미지테스트
+    //이미지테스트 파일을 db에 저장
     @PostMapping("/images")
-    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) throws IOException{
+    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file, HobbyDTO hobbyDTO) throws IOException{
         String uploadImage = hobbyService.uploadImage(file);
+        System.out.println(hobbyDTO);
         return ResponseEntity.ok().body(uploadImage);
     }
 
     //이미지 다운로드
     @GetMapping("/images/{fileName}")
-    public ResponseEntity<?> downloadImage(@PathVariable("fileName") String fileName){
+    public ResponseEntity<?> downloadImage(@PathVariable("fileName") String fileName, HobbyDTO hobbyDTO){
         System.out.println(fileName);
+        System.out.println(hobbyDTO);
         byte [] downloadImage = hobbyService.downloadImage(fileName);
         return ResponseEntity.ok().contentType(MediaType.valueOf("image/png"))
                 .body(downloadImage);
