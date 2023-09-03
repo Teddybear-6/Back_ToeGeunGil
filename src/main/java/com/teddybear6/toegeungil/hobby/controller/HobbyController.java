@@ -1,6 +1,7 @@
 package com.teddybear6.toegeungil.hobby.controller;
 
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,6 +53,14 @@ public class HobbyController {
         return ResponseEntity.ok().body(uploadImage);
     }
 
+    //이미지 다운로드
+    @GetMapping("/images/{fileName}")
+    public ResponseEntity<?> downloadImage(@PathVariable("fileName") String fileName){
+        System.out.println(fileName);
+        byte [] downloadImage = hobbyService.downloadImage(fileName);
+        return ResponseEntity.ok().contentType(MediaType.valueOf("image/png"))
+                .body(downloadImage);
+    }
 
 
 }

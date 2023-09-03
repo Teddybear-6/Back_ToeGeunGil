@@ -33,5 +33,10 @@ public class HobbyService {
     }
 
 
+    public byte[] downloadImage(String fileName) {
+        HobbyImage image = storageRepository.findByName(fileName)
+        .orElseThrow(RuntimeException::new);
 
+        return ImageUtils.decompressImage(image.getImageDate());
+    }
 }
