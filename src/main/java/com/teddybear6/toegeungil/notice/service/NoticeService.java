@@ -6,6 +6,7 @@ import com.teddybear6.toegeungil.notice.repository.NoticeRegistory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -15,6 +16,12 @@ public class NoticeService {
 
     public NoticeService(NoticeRegistory noticeRegistory) {
         this.noticeRegistory = noticeRegistory;
+    }
+
+    /* 전체 조회 */
+    public List<Notice> findAllNotice() {
+        List<Notice> noticeList = noticeRegistory.findAll();
+        return noticeList;
     }
 
     public Notice findNoticeByCode(int noticeNum) {
@@ -55,4 +62,6 @@ public class NoticeService {
 
         return notice;
     }
+
+
 }

@@ -6,6 +6,8 @@ import com.teddybear6.toegeungil.notice.service.NoticeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -18,7 +20,19 @@ public class NoticeController {
         this.noticeService = noticeService;
     }
 
-    /* <GET> /notices : 공지사항 목록 조회 */
+    /* <GET> /notices : 공지사항 목록 전체 조회 */
+    @GetMapping
+    public ResponseEntity<List<?>> findAllNotice() {
+        List<Notice> noticeList = noticeService.findAllNotice();
+
+        if (noticeList.size() <= 0) {
+            List<String> error = new ArrayList<>();
+            error.add("String");
+            return ResponseEntity.status(404).body(error);
+        }
+        return ResponseEntity.ok().body(noticeList);
+
+    }
 
     /* <GET> /notices/{noticeNum} : 공지사항 목록 상세 조회 */
     @GetMapping("/{noticeNum}")
@@ -64,7 +78,7 @@ public class NoticeController {
 
     /* <DELETE> /notices/{noticeID} : 공지사항 삭제 */
     @DeleteMapping("/{noticeNum}")
-    public ResponseEntity<?> deleteNotice(@PathVariable int noticeNum){
+    public ResponseEntity<?> deleteNotice(@PathVariable int noticeNum) {
         Notice notice = noticeService.deleteNotice(noticeNum);
         return ResponseEntity.ok().body("공지사항이 삭제되었습니다");
     }
