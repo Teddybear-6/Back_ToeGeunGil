@@ -1,75 +1,50 @@
-package com.teddybear6.toegeungil.social.entity;
+package com.teddybear6.toegeungil.social.dto;
 
-import org.hibernate.annotations.ColumnDefault;
-
-import javax.persistence.*;
+import javax.persistence.Id;
 import java.util.Date;
 
-@Entity
-@Table(name = "social") //DB 엑세스 시 테이블 이름을 생성하기 위한 name
-public class Social {
+public class SocialDTO {
 
-    @Id //PK
-    @Column(name = "social_num", nullable = false) //NOT NULL
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //DB에서 관리하는 전략 사용
     private int socialNum; //게시글 번호(PK)
 
-    @Column(name = "user_num", nullable = false) //NOT NULL
     private int userNum; //회원번호(작성자)
 
-    @Column(name = "social_name", nullable = false) //NOT NULL
     private String socialName; //게시글 제목
 
-    @Column(name = "social_date", nullable = false) //NOT NULL
     private Date socialDate; //모임 일자
 
-    @Column(name = "social_fixed_num", nullable = false) //NOT NULL
     private int socialFixedNum; //모임 정원(명)
 
-    @Column(name = "social_start_time", nullable = false) //NOT NULL
     private Date socialStartTime; //모임 시작 시간
 
-    @Column(name = "socia_end_time")
     private Date socialEndTime; //모임 종료 시간
 
-    @Column(name = "file_num", nullable = false) //NOT NULL
     private int fileNum; //사진 번호(FK)
 
-    @Column(name = "category_code", nullable = false) //NOT NULL
     private int categoryCode; //카테고리 번호(FK)
 
-    @Column(name = "keyword_num")
     private int keywordNum; //키워드 번호(FK)
 
-    @Column(name = "area_num", nullable = false) //NOT NULL
     private int areaNum; //지역 번호(FK)
 
-    @Column(name = "area_details")
     private String areaDetails; //지역 상세
 
-    @Column(name = "social_intro", nullable = false) //NOT NULL
     private String socialIntro; //모임 소개
 
-    @Column(name = "social_other")
     private String socialOther; //모임 기타 사항
 
-    @Column(name = "post_reg_date", nullable = false) //NOT NULL
-    @Temporal(TemporalType.DATE) //날짜를 저장한다.
     private Date postRegDate; //게시글 등록일
 
-    @Column(name = "post_modi_date")
     private Date postModiDate; //게시글 수정일
 
-    @Column(name = "social_state", nullable = false) //NOT NULL
-    @ColumnDefault("Y")
     private String socialState; //게시글 상태
 
-    public Social() {
+    public SocialDTO() {
     }
 
-    public Social(int socialNum, int userNum, String socialName, Date socialDate, int socialFixedNum, Date socialStartTime, Date socialEndTime,
-                  int fileNum, int categoryCode, int keywordNum, int areaNum, String areaDetails, String socialIntro, String socialOther,
-                  Date postRegDate, Date postModiDate, String socialState) {
+    public SocialDTO(int socialNum, int userNum, String socialName, Date socialDate, int socialFixedNum,
+                     Date socialStartTime, Date socialEndTime, int fileNum, int categoryCode, int keywordNum, int areaNum,
+                     String areaDetails, String socialIntro, String socialOther, Date postRegDate, Date postModiDate, String socialState) {
         this.socialNum = socialNum;
         this.userNum = userNum;
         this.socialName = socialName;
@@ -227,7 +202,7 @@ public class Social {
 
     @Override
     public String toString() {
-        return "Social{" +
+        return "SocialDTO{" +
                 "socialNum=" + socialNum +
                 ", userNum=" + userNum +
                 ", socialName='" + socialName + '\'' +
