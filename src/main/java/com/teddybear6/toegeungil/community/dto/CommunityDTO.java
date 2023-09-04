@@ -1,5 +1,7 @@
 package com.teddybear6.toegeungil.community.dto;
 
+import com.teddybear6.toegeungil.community.entity.Community;
+
 import java.util.Date;
 
 public class CommunityDTO {
@@ -28,6 +30,20 @@ public class CommunityDTO {
         this.postWriteDate = postWriteDate;
         this.postUpdateDate = postUpdateDate;
     }
+
+    public CommunityDTO(Community community) {
+        this.communityNum = community.getCommunityNum();
+        this.communityTitle = community.getCommunityTitle();
+        this.communityIntro = community.getCommunityIntro();
+        this.categoryNum = community.getCategoryNum();
+        this.keywordNum = community.getKeywordNum();
+        this.locationId = community.getLocationId();
+        this.communityStatus = community.getCommunityStatus();
+        this.postWriteDate = community.getPostWriteDate();
+        this.postUpdateDate = community.getPostUpdateDate();
+    }
+
+
 
     public int getCommunityNum() {
         return communityNum;
