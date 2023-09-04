@@ -68,20 +68,20 @@ public class HobbyService {
             Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
             hobbyKeywordList.add(new HobbyKeyword(new HobbyPk(hobby.getHobbyCode(),findKeyword.getKeywordCode()),hobby,findKeyword));
         }
-        for (int i=0;i<files.size();i++){
-           HobbyImage image = new HobbyImage();
-           image.setHobbyCode(hobby.getHobbyCode());
-           image.setName(files.get(i).getOriginalFilename());
-           image.setType(files.get(i).getContentType());
-           image.setImageDate(ImageUtils.compressImage(files.get(i).getBytes()));
-           hobbyImages.add(image);
-        }
-
 
         hobby.setHobbyKeywordList(hobbyKeywordList);
         Hobby findHobby = hobbyRepository.save(hobby);
+        for (int i=0;i<files.size();i++){
+            HobbyImage image = new HobbyImage();
+            image.setHobbyCode(findHobby.getHobbyCode());
+            image.setName(files.get(i).getOriginalFilename());
+            image.setType(files.get(i).getContentType());
+            image.setImageDate(ImageUtils.compressImage(files.get(i).getBytes()));
+            hobbyImages.add(image);
+        }
         List<HobbyImage> findImages = storageRepository.saveAll(hobbyImages);
-
+        System.out.println(findHobby);
+        System.out.println(findImages.get(0).getHobbyCode());
         if(Objects.isNull(findHobby)){
             return 0;
         }else {
@@ -90,5 +90,21 @@ public class HobbyService {
 
 
 
+    }
+
+    public List<Hobby> findAll() {
+        List<Hobby> hobbyList = hobbyRepository.findAll();
+
+        return hobbyList;
+    }
+
+    public byte[] findMainImage(int hobbyCode) {
+        List<HobbyImage> hobbyImage= storageRepository.findByhobbyCode(hobbyCode);
+        if(hobbyImage.size()==0){
+            System.out.println(hobbyImage.size()==0);
+            return new byte[0];
+        }
+
+        return ImageUtils.decompressImage(hobbyImage.get(0).getImageDate());
     }
 }
