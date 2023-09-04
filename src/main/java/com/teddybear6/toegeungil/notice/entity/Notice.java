@@ -1,20 +1,27 @@
 package com.teddybear6.toegeungil.notice.entity;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
+
 
 @Entity(name = "notice")
 @Table(name = "notice")
+@EntityListeners(AuditingEntityListener.class)
 public class Notice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "num") // 회원 번호(pk)
-    private int num;
-
     @Column(name = "notice_num") // 공지 번호
     private int noticeNum;
 
+    @Column(name = "num") // 회원 번호(fk)
+    private int num;
     @Column(name = "notice_title") // 공지 제목
     private String noticeTitle;
 
@@ -23,13 +30,16 @@ public class Notice {
 
     @Column(name = "notice_date") // 공지 작성일
     @Temporal(TemporalType.DATE)
+    @CreatedDate
     private Date noticeDate;
 
     @Column(name = "notice_modi_date") // 공지 수정일
     @Temporal(TemporalType.DATE)
+    @LastModifiedDate
     private Date noticeModiDate;
 
     @Column(name = "notice_state")  // 공지 상태
+    @ColumnDefault("Y") /* default 값 설정할 때 사용 */
     private String noticeState;
 
     public Notice() {
