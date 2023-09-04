@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface HobbyRepository extends JpaRepository<Hobby,Integer> {
 
+    Hobby findById(int hobbyCode);
 
 }

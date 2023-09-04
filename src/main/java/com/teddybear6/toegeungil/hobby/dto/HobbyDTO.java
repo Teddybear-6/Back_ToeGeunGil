@@ -1,5 +1,7 @@
 package com.teddybear6.toegeungil.hobby.dto;
 
+import com.teddybear6.toegeungil.hobby.entity.Hobby;
+
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +51,8 @@ public class HobbyDTO {
 
     private int categoryCode; // 카테고리
 
+    private int localCode; // 지역코드
+
     private List<HobbyKeywordDTO> keywordDTOList; // 키워드
 
 
@@ -56,7 +60,7 @@ public class HobbyDTO {
     public HobbyDTO() {
     }
 
-    public HobbyDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, Date date, Date startTime, Date endTime, int categoryCode, List<HobbyKeywordDTO> keywordDTOList, String close) {
+    public HobbyDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, Date date, Date startTime, Date endTime, int categoryCode, int localCode, List<HobbyKeywordDTO> keywordDTOList, String close) {
         this.hobbyCode = hobbyCode;
         this.hobbyTitle = hobbyTitle;
         this.tutorCode = tutorCode;
@@ -68,9 +72,28 @@ public class HobbyDTO {
         this.startTime = startTime;
         this.endTime = endTime;
         this.categoryCode = categoryCode;
+        this.localCode = localCode;
         this.keywordDTOList = keywordDTOList;
         this.close = close;
     }
+    public HobbyDTO(Hobby hobby) {
+        this.hobbyCode = hobby.getHobbyCode();
+        this.hobbyTitle = hobby.getHobbyTitle();
+        this.tutorCode = hobby.getTutorCode();
+        this.tutorIntro = hobby.getTutorIntro();
+        this.maxPersonnel = hobby.getMaxPersonnel();
+        this.hobbyPrice = hobby.getHobbyPrice();
+        this.intro = hobby.getIntro();
+        this.date = hobby.getDate();
+        this.startTime = hobby.getStartTime();
+        this.endTime = hobby.getEndTime();
+        this.categoryCode = hobby.getCategoryCode();
+        this.localCode = hobby.getLocalCode();
+        this.close = hobby.getClose();
+    }
+
+
+
 
     public int getHobbyCode() {
         return hobbyCode;
@@ -176,6 +199,14 @@ public class HobbyDTO {
         this.close = close;
     }
 
+    public int getLocalCode() {
+        return localCode;
+    }
+
+    public void setLocalCode(int localCode) {
+        this.localCode = localCode;
+    }
+
     @Override
     public String toString() {
         return "HobbyDTO{" +
@@ -190,6 +221,7 @@ public class HobbyDTO {
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", categoryCode=" + categoryCode +
+                ", localCode=" + localCode +
                 ", keywordDTOList=" + keywordDTOList +
                 ", close='" + close + '\'' +
                 '}';

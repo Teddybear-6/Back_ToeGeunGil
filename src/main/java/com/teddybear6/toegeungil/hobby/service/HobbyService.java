@@ -123,4 +123,13 @@ public class HobbyService {
 
         return ImageUtils.decompressImage(hobbyImage.get(0).getImageDate());
     }
+
+    public Hobby findById(int hobbyCode) {
+        Hobby hobby = hobbyRepository.findById(hobbyCode);
+
+
+        return hobby;
+
+
+    }
 }

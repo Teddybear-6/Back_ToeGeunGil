@@ -38,6 +38,8 @@ public class Hobby {
     @Column(name = "hobby_intro")
     private String intro; // 시작전 소개
 
+    @Column(name = "local_code")
+    private int localCode;
 
     @Column(name = "hobby_date")
     @Temporal(TemporalType.DATE)
@@ -88,21 +90,26 @@ public class Hobby {
     public Hobby() {
     }
 
-    public Hobby(int hobbyCode, String hobbyTitle, int tutorCode, int maxPersonnel, int hobbyPrice, String intro, Date date, Date startTime, Date endTime, int categoryCode, String tutorIntro, String close, List<HobbyKeyword> hobbyKeywordList) {
+    public Hobby(int hobbyCode, String hobbyTitle, int tutorCode, int maxPersonnel, int hobbyPrice, String intro, int localCode, Date date, Date startTime, Date endTime, int categoryCode, String tutorIntro, String close, String hobbyStatus, Date crateDate, Date updateDate, List<HobbyKeyword> hobbyKeywordList) {
         this.hobbyCode = hobbyCode;
         this.hobbyTitle = hobbyTitle;
         this.tutorCode = tutorCode;
         this.maxPersonnel = maxPersonnel;
         this.hobbyPrice = hobbyPrice;
         this.intro = intro;
+        this.localCode = localCode;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
         this.categoryCode = categoryCode;
         this.tutorIntro = tutorIntro;
         this.close = close;
+        this.hobbyStatus = hobbyStatus;
+        this.crateDate = crateDate;
+        this.updateDate = updateDate;
         this.hobbyKeywordList = hobbyKeywordList;
     }
+
     public Hobby(HobbyDTO hobbyDTO) {
         this.hobbyTitle = hobbyDTO.getHobbyTitle();
         this.tutorCode = hobbyDTO.getTutorCode();
@@ -115,6 +122,7 @@ public class Hobby {
         this.categoryCode = hobbyDTO.getCategoryCode();
         this.tutorIntro = hobbyDTO.getTutorIntro();
         this.close = hobbyDTO.getClose();
+        this.localCode= hobbyDTO.getLocalCode();
     }
 
     public int getHobbyCode() {
@@ -245,6 +253,14 @@ public class Hobby {
         this.hobbyStatus = hobbyStatus;
     }
 
+    public int getLocalCode() {
+        return localCode;
+    }
+
+    public void setLocalCode(int localCode) {
+        this.localCode = localCode;
+    }
+
     @Override
     public String toString() {
         return "Hobby{" +
@@ -254,6 +270,7 @@ public class Hobby {
                 ", maxPersonnel=" + maxPersonnel +
                 ", hobbyPrice=" + hobbyPrice +
                 ", intro='" + intro + '\'' +
+                ", localCode=" + localCode +
                 ", date=" + date +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +

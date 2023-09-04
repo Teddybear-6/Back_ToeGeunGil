@@ -2,10 +2,12 @@ package com.teddybear6.toegeungil.hobby.controller;
 
 import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
 import com.teddybear6.toegeungil.hobby.dto.HobbyGetDTO;
+import com.teddybear6.toegeungil.hobby.dto.HobbyKeywordDTO;
 import com.teddybear6.toegeungil.hobby.entity.Hobby;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
 
 
+import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.zip.Deflater;
 
 @RestController
@@ -84,6 +88,7 @@ public class HobbyController {
         byte[] mainimage = hobbyService.findMainImage(hobbyCode);
 
         if(mainimage.length==0){
+            //나중에 기본이미지로 바꾸기
             return ResponseEntity.status(404).body("이미지를 찾을 수 없습니다.");
         }
         return ResponseEntity.ok().contentType(MediaType.valueOf("image/png")).body(mainimage);
@@ -114,8 +119,29 @@ public class HobbyController {
 
     //삭제
 
+
     //디테일보기
 
+    @GetMapping("/{hobbyCode}")
+    public ResponseEntity<Object> detailFindById(@PathVariable int hobbyCode){
+
+        Hobby hobby = hobbyService.findById(hobbyCode);
+
+        if(Objects.isNull(hobby)){
+            return ResponseEntity.status(404).body("취미가 없습니다.");
+        }
+        System.out.println(hobby.getHobbyKeywordList());
+        HobbyDTO hobbyDTO = new HobbyDTO(hobby);
+        List<Keyword> keyword = new ArrayList<>();
+        for(int i=0;i<hobby.getHobbyKeywordList().size();i++){
+            keyword.add(hobby.getHobbyKeywordList().get(i).getKeyword());
+        }
+        List<HobbyKeywordDTO> hobbyKeywordDTO = keyword.stream().map(m->new HobbyKeywordDTO(m)).collect(Collectors.toList());
+        hobbyDTO.setKeywordDTOList(hobbyKeywordDTO);
+        return ResponseEntity.ok().body(hobbyDTO);
+
+
+    }
 
 
 
