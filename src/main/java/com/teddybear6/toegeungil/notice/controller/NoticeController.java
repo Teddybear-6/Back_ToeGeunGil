@@ -55,7 +55,7 @@ public class NoticeController {
     }
 
 
-    /* <PUT> /notices/{noticeID} : 공지사항 수정 */
+    /* <PUT> /notices/{noticeNum} : 공지사항 수정 */
 //    @PutMapping("/{noticeNum}")
 //    public ResponseEntity<?> updateNotice(Notice notice, NoticeDetailDTO noticeDetailDTO) {
 //        Notice findnotice = noticeService.findNoticeByCode(notice.getNoticeNum());
@@ -76,7 +76,7 @@ public class NoticeController {
 //
 //    }
 
-    /* <DELETE> /notices/{noticeID} : 공지사항 삭제 */
+    /* <DELETE> /notices/{noticeNum} : 공지사항 삭제 */
     @DeleteMapping("/{noticeNum}")
     public ResponseEntity<?> deleteNotice(@PathVariable int noticeNum) {
         Notice notice = noticeService.deleteNotice(noticeNum);

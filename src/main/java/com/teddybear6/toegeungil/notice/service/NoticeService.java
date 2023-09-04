@@ -42,9 +42,9 @@ public class NoticeService {
         }
     }
 
-
+    /* 수정 */
 //    public int updateNotice(NoticeDetailDTO noticeDetailDTO) {
-//        if (!Objects.isNull(noticeDetailDTO){
+//        if (!Objects.isNull() {
 //
 //        }
 //    }
