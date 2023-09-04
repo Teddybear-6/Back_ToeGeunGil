@@ -6,7 +6,10 @@ import com.teddybear6.toegeungil.community.service.CommunityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Pageable;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -19,7 +22,19 @@ public class CommunityController {
         this.communityService = communityService;
     }
 
-    @GetMapping("/{communityNum}")
+    @GetMapping
+    public ResponseEntity<List<?>> findAllCommunity(){
+        List<Community> communityList = communityService.findAllCommunity();
+        if(communityList.size() == 0){
+            List<String> error = new ArrayList<>();
+            error.add("커뮤니티 글이 존재하지 않습니다.");
+            return ResponseEntity.status(404).body(error);
+        }
+
+        return ResponseEntity.ok().body(communityList);
+    }
+
+    @GetMapping("/{communityNum}") // 커뮤니티 번호로 조회
     public ResponseEntity<Object> findByCommunityCode(@PathVariable int communityNum){
         Community community = communityService.findByCommunityCode(communityNum);
 
@@ -32,8 +47,8 @@ public class CommunityController {
         return ResponseEntity.ok().body(communityDTO);
     }
 
-    @PostMapping
-    public  ResponseEntity<?> registCommunity(CommunityDTO communityDTO) {
+    @PostMapping // 커뮤니티 등록하기
+    public ResponseEntity<?> registCommunity(CommunityDTO communityDTO) {
 
         int result = 0;
         try {

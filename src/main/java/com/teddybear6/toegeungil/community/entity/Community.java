@@ -3,10 +3,7 @@ package com.teddybear6.toegeungil.community.entity;
 
 import com.teddybear6.toegeungil.community.dto.CommunityDTO;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -14,6 +11,7 @@ import java.util.Date;
 public class Community {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "community_num") // 커뮤니티 번호
     private int communityNum;
     @Column(name = "community_title") // 커뮤니티 제목
@@ -29,8 +27,10 @@ public class Community {
     @Column(name = "community_status") // 커뮤니티 상태
     private String communityStatus;
     @Column(name = "post_write_date") // 커뮤니티 작성일
+    @Temporal(TemporalType.DATE)
     private Date postWriteDate;
     @Column(name = "post_update_date") // 커뮤니티 수정일
+    @Temporal(TemporalType.DATE)
     private Date postUpdateDate;
 
     public Community() {

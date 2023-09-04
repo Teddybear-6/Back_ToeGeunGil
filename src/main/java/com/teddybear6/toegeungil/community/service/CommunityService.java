@@ -6,7 +6,9 @@ import com.teddybear6.toegeungil.community.repository.CommunityRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -15,6 +17,13 @@ public class CommunityService {
 
     public CommunityService(CommunityRepository communityRepository) {
         this.communityRepository = communityRepository;
+    }
+
+    public List<Community> findAllCommunity() {
+
+        List<Community> communityList = communityRepository.findAll();
+
+        return communityList;
     }
 
     public Community findByCommunityCode(int communityNum) {
