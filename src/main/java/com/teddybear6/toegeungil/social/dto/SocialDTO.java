@@ -1,5 +1,7 @@
 package com.teddybear6.toegeungil.social.dto;
 
+import com.teddybear6.toegeungil.social.entity.Social;
+
 import javax.persistence.Id;
 import java.util.Date;
 
@@ -40,6 +42,27 @@ public class SocialDTO {
     private String socialState; //게시글 상태
 
     public SocialDTO() {
+    }
+
+    public SocialDTO(Social social) {
+        //Social Entity를 SocialDTO에 한 번에 담아주기 위해 생성
+        this.socialNum = social.getSocialNum();
+        this.userNum = social.getUserNum();
+        this.socialName = social.getSocialName();
+        this.socialDate = social.getSocialDate();
+        this.socialFixedNum = social.getSocialFixedNum();
+        this.socialStartTime = social.getSocialStartTime();
+        this.socialEndTime = social.getSocialEndTime();
+        this.fileNum = social.getFileNum();
+        this.categoryCode = social.getCategoryCode();
+        this.keywordNum = social.getKeywordNum();
+        this.areaNum = social.getAreaNum();
+        this.areaDetails = social.getAreaDetails();
+        this.socialIntro = social.getSocialIntro();
+        this.socialOther = social.getSocialOther();
+        this.postRegDate = social.getPostRegDate();
+        this.postModiDate = social.getPostModiDate();
+        this.socialState = social.getSocialState();
     }
 
     public SocialDTO(int socialNum, int userNum, String socialName, Date socialDate, int socialFixedNum,

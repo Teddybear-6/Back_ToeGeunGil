@@ -2,7 +2,7 @@ package com.teddybear6.toegeungil.social.entity;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name= "file")
 @Table(name = "file")
 public class File {
 

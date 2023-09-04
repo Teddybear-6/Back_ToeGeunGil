@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.social.entity;
 
+import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -65,6 +66,26 @@ public class Social {
     private String socialState; //게시글 상태
 
     public Social() {
+    }
+
+    public Social(SocialDTO socialDTO) {
+        this.socialNum = socialDTO.getSocialNum();
+        this.userNum = socialDTO.getUserNum();
+        this.socialName = socialDTO.getSocialName();
+        this.socialDate = socialDTO.getSocialDate();
+        this.socialFixedNum = socialDTO.getSocialFixedNum();
+        this.socialStartTime = socialDTO.getSocialStartTime();
+        this.socialEndTime = socialDTO.getSocialEndTime();
+        this.fileNum = socialDTO.getFileNum();
+        this.categoryCode = socialDTO.getCategoryCode();
+        this.keywordNum = socialDTO.getKeywordNum();
+        this.areaNum = socialDTO.getAreaNum();
+        this.areaDetails = socialDTO.getAreaDetails();
+        this.socialIntro = socialDTO.getSocialIntro();
+        this.socialOther = socialDTO.getSocialOther();
+        this.postRegDate = socialDTO.getPostRegDate();
+        this.postModiDate = socialDTO.getPostModiDate();
+        this.socialState = socialDTO.getSocialState();
     }
 
     public Social(int socialNum, int userNum, String socialName, Date socialDate, int socialFixedNum, Date socialStartTime, Date socialEndTime,
