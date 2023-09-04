@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.social.service;
 
+import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import com.teddybear6.toegeungil.social.entity.Social;
 import com.teddybear6.toegeungil.social.repository.SocialRepository;
 import org.springframework.stereotype.Service;
@@ -46,4 +47,16 @@ public class SocialService {
         }
     }
 
+    @Transactional
+    public int updateSocialPostNum(Social findSocial, SocialDTO social) {
+        //04_소셜 수정(/social{socialNum})
+//        if(!Objects)
+
+        Social result = socialRepository.save(findSocial);
+        if (Objects.isNull(result)) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
 }
