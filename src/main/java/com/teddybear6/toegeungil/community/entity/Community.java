@@ -1,6 +1,8 @@
 package com.teddybear6.toegeungil.community.entity;
 
 
+import com.teddybear6.toegeungil.community.dto.CommunityDTO;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -23,7 +25,7 @@ public class Community {
     @Column(name = "keyword_num") // 키워드 번호
     private int keywordNum;
     @Column(name = "location_num") // 지역 번호
-    private int locationId;
+    private int locationNum;
     @Column(name = "community_status") // 커뮤니티 상태
     private String communityStatus;
     @Column(name = "post_write_date") // 커뮤니티 작성일
@@ -34,16 +36,27 @@ public class Community {
     public Community() {
     }
 
-    public Community(int communityNum, String communityTitle, String communityIntro, int categoryNum, int keywordNum, int locationId, String communityStatus, Date postWriteDate, Date postUpdateDate) {
+    public Community(int communityNum, String communityTitle, String communityIntro, int categoryNum, int keywordNum, int locationNum, String communityStatus, Date postWriteDate, Date postUpdateDate) {
         this.communityNum = communityNum;
         this.communityTitle = communityTitle;
         this.communityIntro = communityIntro;
         this.categoryNum = categoryNum;
         this.keywordNum = keywordNum;
-        this.locationId = locationId;
+        this.locationNum = locationNum;
         this.communityStatus = communityStatus;
         this.postWriteDate = postWriteDate;
         this.postUpdateDate = postUpdateDate;
+    }
+
+    public Community(CommunityDTO communityDTO) {
+        this.communityTitle = communityDTO.getCommunityTitle();
+        this.communityIntro = communityDTO.getCommunityIntro();
+        this.categoryNum = communityDTO.getCategoryNum();
+        this.keywordNum = communityDTO.getKeywordNum();
+        this.locationNum = communityDTO.getLocationNum();
+        this.communityStatus = communityDTO.getCommunityStatus();
+        this.postWriteDate = communityDTO.getPostWriteDate();
+        this.postUpdateDate = communityDTO.getPostUpdateDate();
     }
 
     public int getCommunityNum() {
@@ -86,12 +99,12 @@ public class Community {
         this.keywordNum = keywordNum;
     }
 
-    public int getLocationId() {
-        return locationId;
+    public int getLocationNum() {
+        return locationNum;
     }
 
-    public void setLocationId(int locationId) {
-        this.locationId = locationId;
+    public void setLocationNum(int locationNum) {
+        this.locationNum = locationNum;
     }
 
     public String getCommunityStatus() {
@@ -126,7 +139,7 @@ public class Community {
                 ", communityIntro='" + communityIntro + '\'' +
                 ", categoryNum=" + categoryNum +
                 ", keywordNum=" + keywordNum +
-                ", locationId=" + locationId +
+                ", locationNum=" + locationNum +
                 ", communityStatus='" + communityStatus + '\'' +
                 ", postWriteDate=" + postWriteDate +
                 ", postUpdateDate=" + postUpdateDate +

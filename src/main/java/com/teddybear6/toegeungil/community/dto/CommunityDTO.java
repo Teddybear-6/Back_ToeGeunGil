@@ -11,7 +11,7 @@ public class CommunityDTO {
     private String communityIntro; // 커뮤니티 소개
     private int categoryNum; // 카테고리 번호
     private int keywordNum;// 키워드 번호
-    private int locationId; // 지역 번호
+    private int locationNum; // 지역 번호
     private String communityStatus; // 커뮤니티 상태
     private Date postWriteDate; // 커뮤니티 작성일
     private Date postUpdateDate; // 커뮤니티 수정일
@@ -19,13 +19,13 @@ public class CommunityDTO {
     public CommunityDTO() {
     }
 
-    public CommunityDTO(int communityNum, String communityTitle, String communityIntro, int categoryNum, int keywordNum, int locationId, String communityStatus, Date postWriteDate, Date postUpdateDate) {
+    public CommunityDTO(int communityNum, String communityTitle, String communityIntro, int categoryNum, int keywordNum, int locationNum, String communityStatus, Date postWriteDate, Date postUpdateDate) {
         this.communityNum = communityNum;
         this.communityTitle = communityTitle;
         this.communityIntro = communityIntro;
         this.categoryNum = categoryNum;
         this.keywordNum = keywordNum;
-        this.locationId = locationId;
+        this.locationNum = locationNum;
         this.communityStatus = communityStatus;
         this.postWriteDate = postWriteDate;
         this.postUpdateDate = postUpdateDate;
@@ -37,13 +37,11 @@ public class CommunityDTO {
         this.communityIntro = community.getCommunityIntro();
         this.categoryNum = community.getCategoryNum();
         this.keywordNum = community.getKeywordNum();
-        this.locationId = community.getLocationId();
+        this.locationNum = community.getLocationNum();
         this.communityStatus = community.getCommunityStatus();
         this.postWriteDate = community.getPostWriteDate();
         this.postUpdateDate = community.getPostUpdateDate();
     }
-
-
 
     public int getCommunityNum() {
         return communityNum;
@@ -85,12 +83,12 @@ public class CommunityDTO {
         this.keywordNum = keywordNum;
     }
 
-    public int getLocationId() {
-        return locationId;
+    public int getLocationNum() {
+        return locationNum;
     }
 
-    public void setLocationId(int locationId) {
-        this.locationId = locationId;
+    public void setLocationNum(int locationNum) {
+        this.locationNum = locationNum;
     }
 
     public String getCommunityStatus() {
@@ -125,7 +123,7 @@ public class CommunityDTO {
                 ", communityIntro='" + communityIntro + '\'' +
                 ", categoryNum=" + categoryNum +
                 ", keywordNum=" + keywordNum +
-                ", locationId=" + locationId +
+                ", locationNum=" + locationNum +
                 ", communityStatus='" + communityStatus + '\'' +
                 ", postWriteDate=" + postWriteDate +
                 ", postUpdateDate=" + postUpdateDate +
