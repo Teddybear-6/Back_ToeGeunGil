@@ -11,7 +11,7 @@ import java.util.Date;
 public class Social {
 
     @Id //PK
-    @Column(name = "social_num", nullable = false) //NOT NULL
+    @Column(name = "social_num")
     @GeneratedValue(strategy = GenerationType.IDENTITY) //DB에서 관리하는 전략 사용
     private int socialNum; //게시글 번호(PK)
 
@@ -62,7 +62,6 @@ public class Social {
     private Date postModiDate; //게시글 수정일
 
     @Column(name = "social_state", nullable = false) //NOT NULL
-    @ColumnDefault("Y")
     private String socialState; //게시글 상태
 
     public Social() {

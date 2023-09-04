@@ -20,7 +20,6 @@ public class socialController {
         this.socialService = socialService;
     }
 
-
     /*
     소셜(social) RestAPI
     - <GET> /social: 소셜 전체 조회
