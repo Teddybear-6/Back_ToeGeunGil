@@ -2,11 +2,13 @@ package com.teddybear6.toegeungil.social.entity;
 
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@DynamicInsert
 @Table(name = "social") //Entity와 매핑할 테이블 이름
 public class Social {
 
@@ -65,7 +67,7 @@ public class Social {
     @Temporal(TemporalType.DATE)
     private Date postModiDate; //게시글 수정일
 
-    @Column(name = "social_state", nullable = false, columnDefinition = "VARCHAR(10) default 'Y'") //NOT NULL, (columnDefinition = "자료형 default 원하는 값")
+    @Column(name = "social_state", columnDefinition = "VARCHAR(1) default 'Y'") //NOT NULL, (columnDefinition = "자료형 default 원하는 값")
     private String socialState; //게시글 상태
 
     public Social() {

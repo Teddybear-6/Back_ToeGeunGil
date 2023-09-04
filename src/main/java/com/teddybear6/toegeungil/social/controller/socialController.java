@@ -6,6 +6,7 @@ import com.teddybear6.toegeungil.social.service.SocialService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.PrePersist;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -50,17 +51,14 @@ public class socialController {
     }
 
     @PostMapping //03_소셜 등록(/social)
+    @PrePersist
     public ResponseEntity<?> SocialPostRegistration(SocialDTO socialDTO) {
-        System.out.println("시작");
         Social social = new Social(socialDTO);
-        System.out.println(social);
-        social.setPostRegDate(new Date());
-        System.out.println(social.getPostRegDate());
-        social.setSocialDate(new Date());
-        System.out.println(social.getSocialDate());
-        System.out.println(social);
-        social.setSocialStartTime(new Date());
-        social.setSocialEndTime(new Date());
+        social.setPostRegDate(new Date()); //게시글 등록일
+
+        social.setSocialDate(new Date()); //모임일
+        social.setSocialStartTime(new Date()); //모임시작시간
+        social.setSocialEndTime(new Date()); //모임종료시간
 
 
         int result = socialService.SocialPostRegistration(social);
