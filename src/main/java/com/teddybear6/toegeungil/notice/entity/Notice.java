@@ -13,6 +13,7 @@ import java.util.Date;
 @Entity(name = "notice")
 @Table(name = "notice")
 @EntityListeners(AuditingEntityListener.class)
+@DynamicInsert // insert 시 지정된 default 값을 적용
 public class Notice {
 
     @Id
@@ -38,8 +39,8 @@ public class Notice {
     @LastModifiedDate
     private Date noticeModiDate;
 
-    @Column(name = "notice_state")  // 공지 상태
-    @ColumnDefault("Y") /* default 값 설정할 때 사용 */
+    @Column(name = "notice_state", columnDefinition = "varchar(1)")  // 공지 상태
+    @ColumnDefault("'Y'") /* default 값 설정할 때 사용 */
     private String noticeState;
 
     public Notice() {
