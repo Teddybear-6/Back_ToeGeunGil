@@ -30,4 +30,106 @@ public class Community {
     private Date postWriteDate;
     @Column(name = "post_update_date") // 커뮤니티 수정일
     private Date postUpdateDate;
+
+    public Community() {
+    }
+
+    public Community(int communityNum, String communityTitle, String communityIntro, int categoryNum, int keywordNum, int locationId, String communityStatus, Date postWriteDate, Date postUpdateDate) {a
+        this.communityNum = communityNum;
+        this.communityTitle = communityTitle;
+        this.communityIntro = communityIntro;
+        this.categoryNum = categoryNum;
+        this.keywordNum = keywordNum;
+        this.locationId = locationId;
+        this.communityStatus = communityStatus;
+        this.postWriteDate = postWriteDate;
+        this.postUpdateDate = postUpdateDate;
+    }
+
+    public int getCommunityNum() {
+        return communityNum;
+    }
+
+    public void setCommunityNum(int communityNum) {
+        this.communityNum = communityNum;
+    }
+
+    public String getCommunityTitle() {
+        return communityTitle;
+    }
+
+    public void setCommunityTitle(String communityTitle) {
+        this.communityTitle = communityTitle;
+    }
+
+    public String getCommunityIntro() {
+        return communityIntro;
+    }
+
+    public void setCommunityIntro(String communityIntro) {
+        this.communityIntro = communityIntro;
+    }
+
+    public int getCategoryNum() {
+        return categoryNum;
+    }
+
+    public void setCategoryNum(int categoryNum) {
+        this.categoryNum = categoryNum;
+    }
+
+    public int getKeywordNum() {
+        return keywordNum;
+    }
+
+    public void setKeywordNum(int keywordNum) {
+        this.keywordNum = keywordNum;
+    }
+
+    public int getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(int locationId) {
+        this.locationId = locationId;
+    }
+
+    public String getCommunityStatus() {
+        return communityStatus;
+    }
+
+    public void setCommunityStatus(String communityStatus) {
+        this.communityStatus = communityStatus;
+    }
+
+    public Date getPostWriteDate() {
+        return postWriteDate;
+    }
+
+    public void setPostWriteDate(Date postWriteDate) {
+        this.postWriteDate = postWriteDate;
+    }
+
+    public Date getPostUpdateDate() {
+        return postUpdateDate;
+    }
+
+    public void setPostUpdateDate(Date postUpdateDate) {
+        this.postUpdateDate = postUpdateDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Community{" +
+                "communityNum=" + communityNum +
+                ", communityTitle='" + communityTitle + '\'' +
+                ", communityIntro='" + communityIntro + '\'' +
+                ", categoryNum=" + categoryNum +
+                ", keywordNum=" + keywordNum +
+                ", locationId=" + locationId +
+                ", communityStatus='" + communityStatus + '\'' +
+                ", postWriteDate=" + postWriteDate +
+                ", postUpdateDate=" + postUpdateDate +
+                '}';
+    }
 }
