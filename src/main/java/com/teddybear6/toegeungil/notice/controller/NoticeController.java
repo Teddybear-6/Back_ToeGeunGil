@@ -55,7 +55,7 @@ public class NoticeController {
 //
 //        /* 업데이트 성공,실패 여부 */
 //        if(result >0){
-//            return ResponseEntity.ok().body("공지사항이 수정 성공입니다");
+//            return ResponseEntity.ok().body("공지사항 수정 성공입니다");
 //        }else {
 //            return ResponseEntity.status(400).body("공지사항 수정 실패입니다");
 //        }
@@ -63,4 +63,9 @@ public class NoticeController {
 //    }
 
     /* <DELETE> /notices/{noticeID} : 공지사항 삭제 */
+    @DeleteMapping("/{noticeNum}")
+    public ResponseEntity<?> deleteNotice(@PathVariable int noticeNum){
+        Notice notice = noticeService.deleteNotice(noticeNum);
+        return ResponseEntity.ok().body("공지사항이 삭제되었습니다");
+    }
 }

@@ -35,13 +35,24 @@ public class NoticeService {
         }
     }
 
+
 //    public int updateNotice(NoticeDetailDTO noticeDetailDTO) {
 //        if (!Objects.isNull(noticeDetailDTO){
 //
 //        }
 //    }
 
-//    public int updateNotice(Notice findnotice, Notice upnotice) {
+    //    public int updateNotice(Notice findnotice, Notice upnotice) {
 //        if(!Objects.isNull(upnotice.NoticeDetailDto()))
 //    }
+
+    /* 삭제 */
+    public Notice deleteNotice(int noticeNum) {
+        noticeRegistory.deleteById(noticeNum);
+
+        Notice notice = noticeRegistory.findById(noticeNum);
+        System.out.println(notice);
+
+        return notice;
+    }
 }
