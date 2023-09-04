@@ -34,7 +34,7 @@ public class Community {
     public Community() {
     }
 
-    public Community(int communityNum, String communityTitle, String communityIntro, int categoryNum, int keywordNum, int locationId, String communityStatus, Date postWriteDate, Date postUpdateDate) {a
+    public Community(int communityNum, String communityTitle, String communityIntro, int categoryNum, int keywordNum, int locationId, String communityStatus, Date postWriteDate, Date postUpdateDate) {
         this.communityNum = communityNum;
         this.communityTitle = communityTitle;
         this.communityIntro = communityIntro;
