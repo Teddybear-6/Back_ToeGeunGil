@@ -22,9 +22,11 @@ public class Notice {
     private String noticeContent;
 
     @Column(name = "notice_date") // 공지 작성일
+    @Temporal(TemporalType.DATE)
     private Date noticeDate;
 
     @Column(name = "notice_modi_date") // 공지 수정일
+    @Temporal(TemporalType.DATE)
     private Date noticeModiDate;
 
     @Column(name = "notice_state")  // 공지 상태
