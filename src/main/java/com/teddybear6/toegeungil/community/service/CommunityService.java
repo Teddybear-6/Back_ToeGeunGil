@@ -12,8 +12,9 @@ public class CommunityService {
         this.communityRepository = communityRepository;
     }
 
-    public Community communityFindCode(int communityCode){
+    public Community findByCommunityCode(int communityCode) {
         Community community = communityRepository.findById(communityCode);
         return community;
     }
+
 }
