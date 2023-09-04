@@ -23,6 +23,12 @@ public class SocialService {
         return socialList;
     }
 
+    public Social readSocialPostNum(int socialNum) {
+        //02_소셜 부분 조회(/social/{socialNum})
+        Social social = socialRepository.findById(socialNum);
+        return social;
+    }
+
     /*
     @Transactional
     - 스프링 프레임워크는 @Transactional이 붙어 있는 클래스나 메소드에 틀랜잭션을 적용한다.
@@ -39,4 +45,5 @@ public class SocialService {
             return 1;
         }
     }
+
 }

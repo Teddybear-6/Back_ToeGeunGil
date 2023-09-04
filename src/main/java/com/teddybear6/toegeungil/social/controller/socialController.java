@@ -10,6 +10,7 @@ import javax.persistence.PrePersist;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -47,6 +48,18 @@ public class socialController {
             //객체의 getter로 List를 만든다.
             List<SocialDTO> socialDTOList = socialList.stream().map(social -> new SocialDTO(social)).collect(Collectors.toList());
             return ResponseEntity.ok().body(socialDTOList);
+        }
+    }
+
+    @GetMapping("{socialNum}") //02_소셜 부분 조회(/social/{socialNum})
+    public ResponseEntity<?> readSocialPostNum(@PathVariable int socialNum) {
+        Social social = socialService.readSocialPostNum(socialNum);
+
+        if (Objects.isNull(social)) {
+            return ResponseEntity.status(404).body("게시글 조회에 실패하였습니다...");
+        } else {
+            SocialDTO socialDTO = new SocialDTO(social);
+            return ResponseEntity.ok().body(socialDTO);
         }
     }
 
