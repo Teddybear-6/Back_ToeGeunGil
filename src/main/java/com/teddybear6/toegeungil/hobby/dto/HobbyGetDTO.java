@@ -1,7 +1,10 @@
 package com.teddybear6.toegeungil.hobby.dto;
 
 import com.teddybear6.toegeungil.hobby.entity.Hobby;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import javax.persistence.Column;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +36,13 @@ public class HobbyGetDTO {
     private List<HobbyKeywordDTO> keyword;
 
 
+    private Date crateDate;
+
+
+    private Date updateDate;
+
+
+    private String hobbyStats;
 
     public HobbyGetDTO() {
     }
@@ -66,6 +76,10 @@ public class HobbyGetDTO {
         this.endTime = hobby.getEndTime();
         this.categoryCode = hobby.getCategoryCode();
         this.close = hobby.getClose();
+        this.crateDate =hobby.getCrateDate();
+        this.updateDate = hobby.getUpdateDate();
+        this.hobbyStats= hobby.getHobbyStatus();
+
     }
 
 
@@ -165,6 +179,13 @@ public class HobbyGetDTO {
         this.close = close;
     }
 
+    public String getHobbyStats() {
+        return hobbyStats;
+    }
+
+    public void setHobbyStats(String hobbyStats) {
+        this.hobbyStats = hobbyStats;
+    }
 
     public List<HobbyKeywordDTO> getKeyword() {
         return keyword;
@@ -174,6 +195,22 @@ public class HobbyGetDTO {
         this.keyword = keyword;
     }
 
+
+    public Date getCrateDate() {
+        return crateDate;
+    }
+
+    public void setCrateDate(Date crateDate) {
+        this.crateDate = crateDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
 
 
     @Override
@@ -192,6 +229,9 @@ public class HobbyGetDTO {
                 ", categoryCode=" + categoryCode +
                 ", close='" + close + '\'' +
                 ", keyword=" + keyword +
+                ", crateDate=" + crateDate +
+                ", updateDate=" + updateDate +
+                ", hobbyStats='" + hobbyStats + '\'' +
                 '}';
     }
 }

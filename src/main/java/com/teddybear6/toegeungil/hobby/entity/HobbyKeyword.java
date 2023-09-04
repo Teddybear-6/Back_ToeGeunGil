@@ -5,7 +5,7 @@ import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import javax.persistence.*;
 
 @Entity(name = "hobby_category")
-@Table(name="hobby_category_mapping")
+@Table(name="hobby_keyword_mapping")
 public class HobbyKeyword {
 
     @EmbeddedId

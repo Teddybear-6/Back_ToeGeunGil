@@ -2,6 +2,11 @@ package com.teddybear6.toegeungil.hobby.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,6 +14,8 @@ import java.util.List;
 
 @Entity(name = "hobby")
 @Table(name = "hobby")
+@EntityListeners(AuditingEntityListener.class)
+@DynamicInsert
 public class Hobby {
 
     @Id
@@ -54,9 +61,27 @@ public class Hobby {
     @Column(name = "close")
     private String close;
 
+    @Column(name = "hobby_status",columnDefinition = "varchar(1)")
+    @ColumnDefault("'Y'")
+    private String hobbyStatus;
+
+
+    @Column(name = "create_date")
+    @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date crateDate;
+
+
+
+    @Column(name = "update_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    @LastModifiedDate
+    private Date updateDate;
+
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "hobby")
     private List<HobbyKeyword> hobbyKeywordList;
+
 
 
 
@@ -188,6 +213,22 @@ public class Hobby {
         this.close = close;
     }
 
+    public Date getCrateDate() {
+        return crateDate;
+    }
+
+    public void setCrateDate(Date crateDate) {
+        this.crateDate = crateDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
     public List<HobbyKeyword> getHobbyKeywordList() {
         return hobbyKeywordList;
     }
@@ -196,6 +237,13 @@ public class Hobby {
         this.hobbyKeywordList = hobbyKeywordList;
     }
 
+    public String getHobbyStatus() {
+        return hobbyStatus;
+    }
+
+    public void setHobbyStatus(String hobbyStatus) {
+        this.hobbyStatus = hobbyStatus;
+    }
 
     @Override
     public String toString() {
@@ -212,6 +260,10 @@ public class Hobby {
                 ", categoryCode=" + categoryCode +
                 ", tutorIntro='" + tutorIntro + '\'' +
                 ", close='" + close + '\'' +
+                ", hobbyStatus='" + hobbyStatus + '\'' +
+                ", crateDate=" + crateDate +
+                ", updateDate=" + updateDate +
+                ", hobbyKeywordList=" + hobbyKeywordList +
                 '}';
     }
 }

@@ -12,7 +12,7 @@ import com.teddybear6.toegeungil.hobby.repository.StorageRepository;
 import com.teddybear6.toegeungil.hobby.utils.ImageUtils;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.keyword.repository.KeywordRepository;
-import org.springframework.data.domain.PageRequest;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

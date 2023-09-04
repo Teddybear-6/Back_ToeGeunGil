@@ -66,6 +66,7 @@ public class HobbyController {
                 .body(downloadImage);
     }
 
+    //findall
     @GetMapping
     public ResponseEntity<List<?>> hobbyfindAll(final Pageable pageable){
         List<HobbyGetDTO> hobbyList = hobbyService.findAll(pageable);
@@ -81,13 +82,14 @@ public class HobbyController {
     @GetMapping("/mainimages/{hobbyCode}")
     public  ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode){
         byte[] mainimage = hobbyService.findMainImage(hobbyCode);
-        System.out.println(mainimage.length);
+
         if(mainimage.length==0){
             return ResponseEntity.status(404).body("이미지를 찾을 수 없습니다.");
         }
         return ResponseEntity.ok().contentType(MediaType.valueOf("image/png")).body(mainimage);
     }
 
+    //등록
     @PostMapping
     public ResponseEntity<?> registHobby(@RequestPart("hobbyDTO") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") List<MultipartFile> files) {
         int result = 0;
@@ -104,6 +106,17 @@ public class HobbyController {
         }
 
     }
+
+
+    //수정
+
+
+
+    //삭제
+
+    //디테일보기
+
+
 
 
 }
