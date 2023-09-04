@@ -49,14 +49,14 @@ public class HobbyDTO {
 
     private int categoryCode; // 카테고리
 
-    private List<KeywordDTO> keywordDTOList; // 키워드
+    private List<HobbyKeywordDTO> keywordDTOList; // 키워드
 
 
     private String close; //마감
     public HobbyDTO() {
     }
 
-    public HobbyDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, Date date, Date startTime, Date endTime, int categoryCode, List<KeywordDTO> keywordDTOList, String close) {
+    public HobbyDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, Date date, Date startTime, Date endTime, int categoryCode, List<HobbyKeywordDTO> keywordDTOList, String close) {
         this.hobbyCode = hobbyCode;
         this.hobbyTitle = hobbyTitle;
         this.tutorCode = tutorCode;
@@ -160,11 +160,11 @@ public class HobbyDTO {
         this.categoryCode = categoryCode;
     }
 
-    public List<KeywordDTO> getKeywordDTOList() {
+    public List<HobbyKeywordDTO> getKeywordDTOList() {
         return keywordDTOList;
     }
 
-    public void setKeywordDTOList(List<KeywordDTO> keywordDTOList) {
+    public void setKeywordDTOList(List<HobbyKeywordDTO> keywordDTOList) {
         this.keywordDTOList = keywordDTOList;
     }
 

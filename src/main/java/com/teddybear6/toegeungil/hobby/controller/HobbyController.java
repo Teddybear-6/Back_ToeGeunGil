@@ -1,15 +1,17 @@
 package com.teddybear6.toegeungil.hobby.controller;
 
 import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
+import com.teddybear6.toegeungil.hobby.dto.HobbyGetDTO;
 import com.teddybear6.toegeungil.hobby.entity.Hobby;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
+
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +67,8 @@ public class HobbyController {
     }
 
     @GetMapping
-    public ResponseEntity<List<?>> hobbyfindAll(){
-        List<Hobby> hobbyList = hobbyService.findAll();
+    public ResponseEntity<List<?>> hobbyfindAll(final Pageable pageable){
+        List<HobbyGetDTO> hobbyList = hobbyService.findAll(pageable);
         if(hobbyList.size()==0){
             List<String> error = new ArrayList<>();
             error.add("취미가 존재하지 않습니다.");

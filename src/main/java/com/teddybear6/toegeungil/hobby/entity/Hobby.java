@@ -2,7 +2,6 @@ package com.teddybear6.toegeungil.hobby.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
-import com.teddybear6.toegeungil.hobby.dto.KeywordDTO;
 
 import javax.persistence.*;
 import java.util.Date;

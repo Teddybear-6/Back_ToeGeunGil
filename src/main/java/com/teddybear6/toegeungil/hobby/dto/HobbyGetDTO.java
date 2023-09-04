@@ -1,6 +1,7 @@
 package com.teddybear6.toegeungil.hobby.dto;
 
-import java.util.Arrays;
+import com.teddybear6.toegeungil.hobby.entity.Hobby;
+
 import java.util.Date;
 import java.util.List;
 
@@ -28,8 +29,14 @@ public class HobbyGetDTO {
     private int categoryCode; // 카테고리
 
     private String close; //마감
+
+    private List<HobbyKeywordDTO> keyword;
+
+
+
     public HobbyGetDTO() {
     }
+
 
     public HobbyGetDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, Date date, Date startTime, Date endTime, int categoryCode, String close) {
         this.hobbyCode = hobbyCode;
@@ -45,6 +52,22 @@ public class HobbyGetDTO {
         this.categoryCode = categoryCode;
         this.close = close;
     }
+
+    public HobbyGetDTO(Hobby hobby) {
+        this.hobbyCode = hobby.getHobbyCode();
+        this.hobbyTitle = hobby.getHobbyTitle();
+        this.tutorCode = hobby.getTutorCode();
+        this.tutorIntro = hobby.getTutorIntro();
+        this.maxPersonnel = hobby.getMaxPersonnel();
+        this.hobbyPrice = hobby.getHobbyPrice();
+        this.intro = hobby.getIntro();
+        this.date = hobby.getDate();
+        this.startTime = hobby.getStartTime();
+        this.endTime = hobby.getEndTime();
+        this.categoryCode = hobby.getCategoryCode();
+        this.close = hobby.getClose();
+    }
+
 
     public int getHobbyCode() {
         return hobbyCode;
@@ -142,6 +165,17 @@ public class HobbyGetDTO {
         this.close = close;
     }
 
+
+    public List<HobbyKeywordDTO> getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(List<HobbyKeywordDTO> keyword) {
+        this.keyword = keyword;
+    }
+
+
+
     @Override
     public String toString() {
         return "HobbyGetDTO{" +
@@ -157,6 +191,7 @@ public class HobbyGetDTO {
                 ", endTime=" + endTime +
                 ", categoryCode=" + categoryCode +
                 ", close='" + close + '\'' +
+                ", keyword=" + keyword +
                 '}';
     }
 }

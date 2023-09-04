@@ -1,14 +1,19 @@
 package com.teddybear6.toegeungil.hobby.dto;
 
-public class KeywordDTO {
+import com.teddybear6.toegeungil.keyword.entity.Keyword;
+
+public class HobbyKeywordDTO {
 
     private int keywordCode;
 
-    public KeywordDTO() {
+    public HobbyKeywordDTO() {
     }
 
-    public KeywordDTO(int keywordCode) {
+    public HobbyKeywordDTO(int keywordCode) {
         this.keywordCode = keywordCode;
+    }
+    public HobbyKeywordDTO(Keyword keyword) {
+        this.keywordCode = keyword.getKeywordCode();
     }
 
     public int getKeywordCode() {
