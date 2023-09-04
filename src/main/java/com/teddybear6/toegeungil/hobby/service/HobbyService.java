@@ -132,4 +132,10 @@ public class HobbyService {
 
 
     }
+
+    public List<HobbyImage> detailImage(int hobbyCode) {
+        List<HobbyImage> hobbyImages = storageRepository.findByhobbyCode(hobbyCode);
+
+        return hobbyImages;
+    }
 }

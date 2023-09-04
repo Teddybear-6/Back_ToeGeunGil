@@ -4,9 +4,11 @@ import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
 import com.teddybear6.toegeungil.hobby.dto.HobbyGetDTO;
 import com.teddybear6.toegeungil.hobby.dto.HobbyKeywordDTO;
 import com.teddybear6.toegeungil.hobby.entity.Hobby;
+import com.teddybear6.toegeungil.hobby.entity.HobbyImage;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
 
 
+import com.teddybear6.toegeungil.hobby.utils.ImageUtils;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -141,6 +143,21 @@ public class HobbyController {
         return ResponseEntity.ok().body(hobbyDTO);
 
 
+    }
+
+    //디테일 사진보기
+    @GetMapping("/image/{hobbyCode}")
+    public ResponseEntity<List<?>> detailImage(@PathVariable int hobbyCode){
+        List<HobbyImage> image = hobbyService.detailImage(hobbyCode);
+        if(image.size()==0){
+            List<String> error = new ArrayList<>();
+            error.add("취미가 존재하지 않습니다.");
+            return ResponseEntity.status(404).body(error);
+        }
+        for(int i=0;i<image.size();i++){
+            image.get(i).setImageDate(ImageUtils.decompressImage(image.get(i).getImageDate()));
+        }
+        return ResponseEntity.ok().body(image);
     }
 
 
