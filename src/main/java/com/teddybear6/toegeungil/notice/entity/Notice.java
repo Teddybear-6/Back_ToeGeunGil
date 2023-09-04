@@ -1,16 +1,14 @@
 package com.teddybear6.toegeungil.notice.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Date;
 
-@Entity
+@Entity(name = "notice")
 @Table(name = "notice")
 public class Notice {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "num") // 회원 번호(pk)
     private int num;
 
