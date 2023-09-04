@@ -64,7 +64,6 @@ public class socialController {
     }
 
     @PostMapping //03_소셜 등록(/social)
-    @PrePersist
     public ResponseEntity<?> SocialPostRegistration(SocialDTO socialDTO) {
         Social social = new Social(socialDTO);
         social.setPostRegDate(new Date()); //게시글 등록일
