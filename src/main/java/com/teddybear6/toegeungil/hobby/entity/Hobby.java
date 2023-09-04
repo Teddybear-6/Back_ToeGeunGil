@@ -1,66 +1,73 @@
-package com.teddybear6.toegeungil.hobby.dto;
+package com.teddybear6.toegeungil.hobby.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
+import com.teddybear6.toegeungil.hobby.dto.KeywordDTO;
+
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-public class HobbyDTO {
+@Entity(name = "hobby")
+@Table(name = "hobby")
+public class Hobby {
 
-    /*  해야할일
-     *   최대인원
-     *   강사이름
-     *   일정(날짜 시간 장소)
-     *   카테고리
-     *   키워드
-     *   가격
-     *   마감일
-     *   참여자
-     *   신청전 확인해주세요
-     *   강사 소개
-     *   사진 4장
-     *   마감여부
-     *
-     *   마감되었을때 참가자 한하여 후기글 + 점수
-     *   선생이 다는 댓글
-     *
-     * 1.리드 부터 해보자
-     * 전체 조회는 사진 제목 가격 카테고리 키워드만 보이면 된다
-     */
-
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "hobby_code")
     private int hobbyCode;
 
+    @Column(name = "hobby_title")
     private String hobbyTitle; //제목
 
+    @Column(name = "user_code")
     private int tutorCode; //선생 번호
-    
-    private String tutorIntro; //선생소개
 
+    @Column(name = "max_personnel")
     private int maxPersonnel;  //최대인원
 
+    @Column(name= "hobby_price")
     private int hobbyPrice;  // 가격
 
+    @Column(name = "hobby_intro")
     private String intro; // 시작전 소개
 
 
+    @Column(name = "hobby_date")
+    @Temporal(TemporalType.DATE)
     private Date date; // 일정
 
+    @Column(name = "start_time")
+    @Temporal(TemporalType.TIME)
     private Date startTime; //시간
+
+    @Column(name = "end_time")
+    @Temporal(TemporalType.TIME)
     private Date endTime; //시간
 
+
+    @Column(name = "category_code")
     private int categoryCode; // 카테고리
 
-    private List<KeywordDTO> keywordDTOList; // 키워드
+    @Column(name="tutor_intro")
+    private String tutorIntro;
+
+    @Column(name = "close")
+    private String close;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hobby")
+    private List<HobbyKeyword> hobbyKeywordList;
 
 
-    private String close; //마감
-    public HobbyDTO() {
+
+    public Hobby() {
     }
 
-    public HobbyDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, Date date, Date startTime, Date endTime, int categoryCode, List<KeywordDTO> keywordDTOList, String close) {
+    public Hobby(int hobbyCode, String hobbyTitle, int tutorCode, int maxPersonnel, int hobbyPrice, String intro, Date date, Date startTime, Date endTime, int categoryCode, String tutorIntro, String close, List<HobbyKeyword> hobbyKeywordList) {
         this.hobbyCode = hobbyCode;
         this.hobbyTitle = hobbyTitle;
         this.tutorCode = tutorCode;
-        this.tutorIntro = tutorIntro;
         this.maxPersonnel = maxPersonnel;
         this.hobbyPrice = hobbyPrice;
         this.intro = intro;
@@ -68,8 +75,22 @@ public class HobbyDTO {
         this.startTime = startTime;
         this.endTime = endTime;
         this.categoryCode = categoryCode;
-        this.keywordDTOList = keywordDTOList;
+        this.tutorIntro = tutorIntro;
         this.close = close;
+        this.hobbyKeywordList = hobbyKeywordList;
+    }
+    public Hobby(HobbyDTO hobbyDTO) {
+        this.hobbyTitle = hobbyDTO.getHobbyTitle();
+        this.tutorCode = hobbyDTO.getTutorCode();
+        this.maxPersonnel = hobbyDTO.getMaxPersonnel();
+        this.hobbyPrice = hobbyDTO.getHobbyPrice();
+        this.intro = hobbyDTO.getIntro();
+        this.date = hobbyDTO.getDate();
+        this.startTime = hobbyDTO.getStartTime();
+        this.endTime = hobbyDTO.getEndTime();
+        this.categoryCode = hobbyDTO.getCategoryCode();
+        this.tutorIntro = hobbyDTO.getTutorIntro();
+        this.close = hobbyDTO.getClose();
     }
 
     public int getHobbyCode() {
@@ -94,14 +115,6 @@ public class HobbyDTO {
 
     public void setTutorCode(int tutorCode) {
         this.tutorCode = tutorCode;
-    }
-
-    public String getTutorIntro() {
-        return tutorIntro;
-    }
-
-    public void setTutorIntro(String tutorIntro) {
-        this.tutorIntro = tutorIntro;
     }
 
     public int getMaxPersonnel() {
@@ -160,12 +173,12 @@ public class HobbyDTO {
         this.categoryCode = categoryCode;
     }
 
-    public List<KeywordDTO> getKeywordDTOList() {
-        return keywordDTOList;
+    public String getTutorIntro() {
+        return tutorIntro;
     }
 
-    public void setKeywordDTOList(List<KeywordDTO> keywordDTOList) {
-        this.keywordDTOList = keywordDTOList;
+    public void setTutorIntro(String tutorIntro) {
+        this.tutorIntro = tutorIntro;
     }
 
     public String getClose() {
@@ -176,13 +189,21 @@ public class HobbyDTO {
         this.close = close;
     }
 
+    public List<HobbyKeyword> getHobbyKeywordList() {
+        return hobbyKeywordList;
+    }
+
+    public void setHobbyKeywordList(List<HobbyKeyword> hobbyKeywordList) {
+        this.hobbyKeywordList = hobbyKeywordList;
+    }
+
+
     @Override
     public String toString() {
-        return "HobbyDTO{" +
+        return "Hobby{" +
                 "hobbyCode=" + hobbyCode +
                 ", hobbyTitle='" + hobbyTitle + '\'' +
                 ", tutorCode=" + tutorCode +
-                ", tutorIntro='" + tutorIntro + '\'' +
                 ", maxPersonnel=" + maxPersonnel +
                 ", hobbyPrice=" + hobbyPrice +
                 ", intro='" + intro + '\'' +
@@ -190,7 +211,7 @@ public class HobbyDTO {
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", categoryCode=" + categoryCode +
-                ", keywordDTOList=" + keywordDTOList +
+                ", tutorIntro='" + tutorIntro + '\'' +
                 ", close='" + close + '\'' +
                 '}';
     }

@@ -2,6 +2,7 @@ package com.teddybear6.toegeungil.hobby.controller;
 
 import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,10 +43,8 @@ public class HobbyController {
     public HobbyController(HobbyService hobbyService) {
         this.hobbyService = hobbyService;
     }
-    //    @GetMapping
-//    public ResponseEntity<List<?>> findAllHobby(){
-//
-//    }
+
+
 
     //이미지테스트 파일을 db에 저장
     @PostMapping("/images")
@@ -67,6 +66,21 @@ public class HobbyController {
 
 
     @PostMapping
-    public ResponseEntity<?> registHobby()
+    public ResponseEntity<?> registHobby(@RequestPart("hobbyDTO")HobbyDTO hobbyDTO , @RequestPart("hobbyImage") List<MultipartFile> files){
+        int result=0;
+        try {
+            result = hobbyService.registHobby(hobbyDTO, files);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        if(result>0){
+            return ResponseEntity.ok().body("등록 성공했습니다.");
+        }else {
+            return ResponseEntity.status(500).body("등록에 실패했습니다");
+        }
+
+    }
+
 
 }

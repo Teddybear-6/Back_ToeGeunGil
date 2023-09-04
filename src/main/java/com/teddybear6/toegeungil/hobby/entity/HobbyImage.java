@@ -9,7 +9,7 @@ public class HobbyImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int  id;
 
     @Column(name = "image_name")
     private String name;
@@ -17,6 +17,8 @@ public class HobbyImage {
     @Column(name = "image_type")
     private String type;
 
+    @Column(name = "hobby_code")
+    private int hobbyCode;
 
     @Lob
     @Column(name="imagedata",length = 1000)
@@ -25,15 +27,13 @@ public class HobbyImage {
     public HobbyImage() {
     }
 
-
-    public HobbyImage(int id, String name, String type, byte[] imageDate) {
+    public HobbyImage(int id, String name, String type, int hobbyCode, byte[] imageDate) {
         this.id = id;
         this.name = name;
         this.type = type;
+        this.hobbyCode = hobbyCode;
         this.imageDate = imageDate;
     }
-
-
 
     public int getId() {
         return id;
@@ -59,6 +59,14 @@ public class HobbyImage {
         this.type = type;
     }
 
+    public int getHobbyCode() {
+        return hobbyCode;
+    }
+
+    public void setHobbyCode(int hobbyCode) {
+        this.hobbyCode = hobbyCode;
+    }
+
     public byte[] getImageDate() {
         return imageDate;
     }
@@ -69,10 +77,11 @@ public class HobbyImage {
 
     @Override
     public String toString() {
-        return "hobbyImage{" +
+        return "HobbyImage{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
+                ", hobbyCode=" + hobbyCode +
                 ", imageDate=" + Arrays.toString(imageDate) +
                 '}';
     }

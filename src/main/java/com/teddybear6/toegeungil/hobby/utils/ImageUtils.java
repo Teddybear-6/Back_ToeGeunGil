@@ -6,6 +6,7 @@ import java.util.zip.Inflater;
 
 public class ImageUtils {
 
+    //deflate 특정한 파일을 압축
     public static byte[] compressImage(byte[] date){
         Deflater deflater = new Deflater();
         deflater.setLevel(Deflater.BEST_COMPRESSION);
@@ -29,7 +30,7 @@ public class ImageUtils {
     }
 
 
-
+   //Inflater 압축된걸 해제
     public static byte[] decompressImage(byte[] data){
         Inflater inflater = new Inflater();
         inflater.setInput(data);
