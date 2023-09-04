@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,7 @@ public class socialController {
     소셜(social) RestAPI
     - <GET> /social: 소셜 전체 조회
     - <GET> /social/{socialID} : 소셜 상세 조회
-    - <POST> /social: 소셜 생성
+    - <POST> /social: 소셜 등록
     - <PUT> /social/{socialID} : 소셜 수정
     - <DELETE> /social/{socialID} : 소셜 삭제 */
 
@@ -45,6 +46,20 @@ public class socialController {
             //객체의 getter로 List를 만든다.
             List<SocialDTO> socialDTOList = socialList.stream().map(social -> new SocialDTO(social)).collect(Collectors.toList());
             return ResponseEntity.ok().body(socialDTOList);
+        }
+    }
+
+    @PostMapping //03_소셜 등록(/social)
+    public ResponseEntity<?> SocialPostRegistration(SocialDTO socialDTO) {
+        Social social = new Social(socialDTO);
+        social.setPostRegDate(new Date());
+
+        int result = socialService.SocialPostRegistration(social);
+        if (result == 0) {
+            //socialService.SocialPostRegistration에서 반환받은 값이 0일 경우
+            return ResponseEntity.status(404).body("게시글 등록에 실패하였습니다...");
+        } else {
+            return ResponseEntity.ok().body("게시글이 등록되었습니다");
         }
     }
 
