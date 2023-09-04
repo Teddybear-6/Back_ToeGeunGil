@@ -51,8 +51,17 @@ public class socialController {
 
     @PostMapping //03_소셜 등록(/social)
     public ResponseEntity<?> SocialPostRegistration(SocialDTO socialDTO) {
+        System.out.println("시작");
         Social social = new Social(socialDTO);
+        System.out.println(social);
         social.setPostRegDate(new Date());
+        System.out.println(social.getPostRegDate());
+        social.setSocialDate(new Date());
+        System.out.println(social.getSocialDate());
+        System.out.println(social);
+        social.setSocialStartTime(new Date());
+        social.setSocialEndTime(new Date());
+
 
         int result = socialService.SocialPostRegistration(social);
         if (result == 0) {

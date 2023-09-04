@@ -7,12 +7,12 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "social") //DB 엑세스 시 테이블 이름을 생성하기 위한 name
+@Table(name = "social") //Entity와 매핑할 테이블 이름
 public class Social {
 
     @Id //PK
     @Column(name = "social_num")
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //DB에서 관리하는 전략 사용
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //IDENTITY: 기본 키 생성을 테이터베이스에 위임(관리하도록)한다.
     private int socialNum; //게시글 번호(PK)
 
     @Column(name = "user_num", nullable = false) //NOT NULL
@@ -22,15 +22,18 @@ public class Social {
     private String socialName; //게시글 제목
 
     @Column(name = "social_date", nullable = false) //NOT NULL
+    @Temporal(TemporalType.DATE)
     private Date socialDate; //모임 일자
 
     @Column(name = "social_fixed_num", nullable = false) //NOT NULL
     private int socialFixedNum; //모임 정원(명)
 
     @Column(name = "social_start_time", nullable = false) //NOT NULL
+    @Temporal(TemporalType.TIME)
     private Date socialStartTime; //모임 시작 시간
 
     @Column(name = "socia_end_time")
+    @Temporal(TemporalType.TIME)
     private Date socialEndTime; //모임 종료 시간
 
     @Column(name = "file_num", nullable = false) //NOT NULL
@@ -59,9 +62,10 @@ public class Social {
     private Date postRegDate; //게시글 등록일
 
     @Column(name = "post_modi_date")
+    @Temporal(TemporalType.DATE)
     private Date postModiDate; //게시글 수정일
 
-    @Column(name = "social_state", nullable = false) //NOT NULL
+    @Column(name = "social_state", nullable = false, columnDefinition = "VARCHAR(10) default 'Y'") //NOT NULL, (columnDefinition = "자료형 default 원하는 값")
     private String socialState; //게시글 상태
 
     public Social() {
