@@ -50,9 +50,9 @@ public class NoticeController {
     public ResponseEntity<?> registNotice(Notice notice) {
         int result = noticeService.registNotice(notice);
 
-        if(result > 0){
+        if (result > 0) {
             return ResponseEntity.ok().body("공지사항 등록 성공입니다");
-        }else {
+        } else {
             return ResponseEntity.status(500).body("공지사항 등록 실패입니다");
         }
     }
@@ -72,9 +72,9 @@ public class NoticeController {
         int result = noticeService.updateNotice(findnotice, noticeDetailDTO);
 
         /* 업데이트 성공,실패 여부 */
-        if(result >0){
+        if (result > 0) {
             return ResponseEntity.ok().body("공지사항 수정 성공입니다");
-        }else {
+        } else {
             return ResponseEntity.status(400).body("공지사항 수정 실패입니다");
         }
 
@@ -83,7 +83,18 @@ public class NoticeController {
     /* <DELETE> /notices/{noticeNum} : 공지사항 삭제 */
     @DeleteMapping("/{noticeNum}")
     public ResponseEntity<?> deleteNotice(@PathVariable int noticeNum) {
-        Notice notice = noticeService.deleteNotice(noticeNum);
-        return ResponseEntity.ok().body("공지사항이 삭제되었습니다");
+        Notice notice = noticeService.findNoticeByCode(noticeNum);
+
+        if (Objects.isNull(notice)) {
+            return ResponseEntity.status(404).body("공지사항이 존재하지 않습니다");
+        }
+
+        int result = noticeService.deleteNotice(noticeNum);
+
+        if (result > 0) {
+            return ResponseEntity.ok().body("공지사항 삭제 성공입니다");
+        } else {
+            return ResponseEntity.status(400).body("공지사항 삭제 실패입니다");
+        }
     }
 }

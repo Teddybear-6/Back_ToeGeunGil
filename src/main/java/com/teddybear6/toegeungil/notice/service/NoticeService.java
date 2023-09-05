@@ -19,15 +19,15 @@ public class NoticeService {
         this.noticeRegistory = noticeRegistory;
     }
 
+    public Notice findNoticeByCode(int noticeNum) {
+        Notice notice = noticeRegistory.findById(noticeNum);
+        return notice;
+    }
+
     /* 전체 조회 */
     public List<Notice> findAllNotice() {
         List<Notice> noticeList = noticeRegistory.findAll();
         return noticeList;
-    }
-
-    public Notice findNoticeByCode(int noticeNum) {
-        Notice notice = noticeRegistory.findById(noticeNum);
-        return notice;
     }
 
     /* 등록 */
@@ -59,12 +59,16 @@ public class NoticeService {
     }
 
     /* 삭제 */
-    public Notice deleteNotice(int noticeNum) {
+    @Transactional
+    public int deleteNotice(int noticeNum) {
         noticeRegistory.deleteById(noticeNum);
 
-        Notice notice = noticeRegistory.findById(noticeNum);
-        System.out.println(notice);
-
-        return notice;
+        Notice result = noticeRegistory.findById(noticeNum);
+        System.out.println(result);
+        if(Objects.isNull(result)){
+            return 1;
+        }else {
+            return 0;
+        }
     }
 }
