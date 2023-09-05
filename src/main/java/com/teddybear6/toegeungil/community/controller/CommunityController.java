@@ -3,14 +3,11 @@ package com.teddybear6.toegeungil.community.controller;
 import com.teddybear6.toegeungil.community.dto.CommunityDTO;
 import com.teddybear6.toegeungil.community.entity.Community;
 import com.teddybear6.toegeungil.community.service.CommunityService;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -66,9 +63,30 @@ public class CommunityController {
         }
     }
 
+//    @PutMapping("/{communityNum}") // 커뮤니티 수정
+//    public ResponseEntity<?> updateCommunity(@PathVariable int communityNum, @RequestParam String communityTitle, @RequestParam String communityIntro,
+//                                             @RequestParam int categoryNum, @RequestParam int keywordNum, @RequestParam int locationNum, @RequestParam String communityStatus){
+//
+//        // 유효성 검사 체크 (RequestParam)으로 코드만 받아오고 나머지는 service 로직에서 찾아오기 .,...
+//
+//        Community findCommunity = communityService.findByCommunityCode(communityNum);
+//
+//        if(Objects.isNull(findCommunity)){
+//            return ResponseEntity.status(404).body("커뮤니티 카테고리가 존재하지 않습니다.");
+//        }
+//
+//        // 직접 각 필드의 값을 전달하여 communityUpdate 메서드를 호출한다.
+//        int result = communityService.communityUpdate(findCommunity, communityTitle, communityIntro, categoryNum, keywordNum, locationNum, communityStatus);
+//
+//        if(result > 0){
+//            return ResponseEntity.ok().body("커뮤니티 수정에 성공했습니다.");
+//        } else {
+//            return ResponseEntity.status(400).body("커뮤니티 수정에 실패하였습니다.");
+//        }
+//    }
+
     @PutMapping("/{communityNum}") // 커뮤니티 수정
-    public ResponseEntity<?> updateCommunity(@PathVariable int communityNum, @RequestParam String communityTitle, @RequestParam String communityIntro,
-                                             @RequestParam int categoryNum, @RequestParam int keywordNum, @RequestParam int locationNum, @RequestParam String communityStatus){
+    public ResponseEntity<?> updateCommunity(@PathVariable int communityNum, @RequestBody CommunityDTO communityDTO){
 
         // 유효성 검사 체크 (RequestParam)으로 코드만 받아오고 나머지는 service 로직에서 찾아오기 .,...
 
@@ -79,7 +97,7 @@ public class CommunityController {
         }
 
         // 직접 각 필드의 값을 전달하여 communityUpdate 메서드를 호출한다.
-        int result = communityService.communityUpdate(findCommunity, communityTitle, communityIntro, categoryNum, keywordNum, locationNum, communityStatus);
+        int result = communityService.communityUpdate(findCommunity, communityDTO);
 
         if(result > 0){
             return ResponseEntity.ok().body("커뮤니티 수정에 성공했습니다.");
@@ -87,7 +105,6 @@ public class CommunityController {
             return ResponseEntity.status(400).body("커뮤니티 수정에 실패하였습니다.");
         }
     }
-
 
     @DeleteMapping("/{communityNum}")
     public ResponseEntity<?> deleteCommunity(@PathVariable int communityNum){
@@ -106,7 +123,6 @@ public class CommunityController {
             return ResponseEntity.status(500).body("커뮤니티가 삭제되지 않았습니다.");
         }
     }
-
 
 
 }
