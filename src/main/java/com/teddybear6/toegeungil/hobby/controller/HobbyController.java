@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.zip.Deflater;
+
 
 @RestController
 @RequestMapping("/hobbys")
@@ -188,5 +188,35 @@ public class HobbyController {
         return ResponseEntity.ok().contentType(MediaType.valueOf(image.getType())).body(ImageUtils.decompressImage(image.getImageDate()));
     }
 
+
+    //참여하기
+    /* 포스트?
+    * api 어떻게 하지
+    * /참여하기 @RequestParam  취미번호 , 회원정보?
+    * ?
+    * 참여하기 요청하면  매핑 테이블에 취미번호와 회원 번호 저장?
+    * 이미 있으면  회원 번호로 검색해서 삭제
+    *
+    * 취미 조회하고 없거나 마감했으면 문닫았다고 리턴 해주고
+    * 있으면 이미 참여했는지 조회 없으면 저장해주고 참여하기 완료 됐다고 리턴
+    * 있으면 삭제해주고 취소했다고 리턴
+    * */
+
+
+    //참가자 get요청
+    /*
+    * 취미번호로 참가자 조회하기
+    * 참가자 회원번호 리턴
+    *
+    *
+    *
+    * */
+
+    //찜하기
+    /*
+    * 참여하기랑 비슷한 로직
+    * */
+
+    //찜리스트 보기?
 
 }
