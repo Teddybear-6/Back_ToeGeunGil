@@ -185,12 +185,12 @@ public class HobbyService {
 
         try {
             for (int i = 0; i < files.size(); i++) {
-                HobbyImage image = new HobbyImage();
-                image.setHobbyCode(hobby.getHobbyCode());
-                image.setName(files.get(i).getOriginalFilename());
-                image.setType(files.get(i).getContentType());
-                image.setImageDate(ImageUtils.compressImage(files.get(i).getBytes()));
-                hobbyImages.add(image);
+                HobbyImage updateImage = new HobbyImage();
+                updateImage.setHobbyCode(hobby.getHobbyCode());
+                updateImage.setName(files.get(i).getOriginalFilename());
+                updateImage.setType(files.get(i).getContentType());
+                updateImage.setImageDate(ImageUtils.compressImage(files.get(i).getBytes()));
+                hobbyImages.add(updateImage);
             }
         } catch (IOException e) {
             return 0;
