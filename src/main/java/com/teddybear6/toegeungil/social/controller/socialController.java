@@ -1,24 +1,53 @@
 package com.teddybear6.toegeungil.social.controller;
 
+import com.teddybear6.toegeungil.social.dto.FileDTO;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import com.teddybear6.toegeungil.social.entity.Social;
 import com.teddybear6.toegeungil.social.service.SocialService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PrePersist;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/*
+할 일
+- 연관관계 맺기
+- 카테고리 코드 -> 카테고리 이름
+- 지역 코드 -> 지역 이름
+- 키워드 코드 -> 키워드 이름 및 리스트로 묶어오기?
+- 사진 코드 -> 사진 업로드 및 다운로드 작업부터 시작해보기...@@ 
+
+완료
+- 소셜, 카테고리, 키워드, 지역, 파일 엔티티 설계
+- 소셜 엔티티 활용하여 CRUD 만들어보기
+- 오늘 사진 업로드 및 다운로드 완료하기 !! 목표
+
+- 마지막에 create 모드에서 none으로 수정하기!
+*/
+
 @RestController
 @RequestMapping("/socials") //도메인
 public class socialController {
+    
+    /*
+    소셜 Entity
+    - 소셜(Social)
+    - 카테고리(Category)
+    - 키워드(Keyword)
+    - 지역(Local)
+    - 사진파일(File) */
 
     private final SocialService socialService;
-
     public socialController(SocialService socialService) {
         this.socialService = socialService;
     }
@@ -105,5 +134,38 @@ public class socialController {
             return ResponseEntity.ok().body("게시글이 수정되었습니다.");
         }
     }
+
+    /*
+    게시글 삭제는 수정에서 게시글 상태 Y -> N으로 변경*/
+
+    @PostMapping("/image")
+    public ResponseEntity<?> uploadSocialImage(@RequestParam(name = "image")MultipartFile image) throws IOException {
+        String uploadImage = socialService.uploadSocialImage(image);
+        return ResponseEntity.ok().body(uploadImage);
+//        //폴더 생성과 파일명을 새로 부여하기 위한 현재 시간 가져오기
+//        LocalDateTime now = LocalDateTime.now();
+//        int year = now.getYear();
+//        int month = now.getMonthValue();
+//        int day = now.getDayOfMonth();
+//        int hour = now.getHour();
+//        int minute = now.getMinute();
+//        int second = now.getSecond();
+//        int millis = now.get(ChronoField.MILLI_OF_SECOND);
+//
+//        //파일이 저장될 절대 경로
+//        String absolutePath = new File("/DEV/21_project02").getAbsolutePath() + "/";
+//        System.out.println(absolutePath);
+//        //새로 부여한 이미지명
+//        String newFileName = "image" + hour + minute + second + millis;
+//        System.out.println(newFileName);
+//        //정규식을 이용한 확장자 추출
+//        String fileExtension = '.' + image.getOriginalFilename().replaceAll("^.*\\.(.*)$", "$1");
+//        System.out.println(fileExtension);
+//        //저장될 폴더 경로
+//        String path = "images/test/" + year + "/" + month + "/" + day;
+//        System.out.println(path);
+    }
+
+
 
 }

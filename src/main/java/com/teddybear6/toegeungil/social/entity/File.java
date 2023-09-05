@@ -2,8 +2,8 @@ package com.teddybear6.toegeungil.social.entity;
 
 import javax.persistence.*;
 
-@Entity(name= "file")
-@Table(name = "file")
+//@Entity
+//@Table(name = "file")
 public class File {
 
     @Id
@@ -12,7 +12,7 @@ public class File {
     private int fileNum; //파일 번호(PK)
 
     @Column(name = "file_name")
-    private String fileName; //저장될 파일 이름
+    private String fileName; //저장될 파일 이름 (파일명이 겹치는 것을 방지하기 위해)
 
     @Column(name = "file_ori_name")
     private String fileOriName; //기존 파일 이름
@@ -30,36 +30,46 @@ public class File {
         this.fileUrl = fileUrl;
     }
 
-    public int getFileNum() {
-        return fileNum;
+    /*Builder*/
+    public File fileNum(int fileNum) {
+        this.fileNum = fileNum;
+        return this;
     }
 
-    public void setFileNum(int fileNum) {
-        this.fileNum = fileNum;
+    public File fileName(String fileName) {
+        this.fileName = fileName;
+        return this;
+    }
+
+    public File fileOriName(String fileOriName) {
+        this.fileOriName = fileOriName;
+        return this;
+    }
+
+    public File fileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+        return this;
+    }
+
+    public File builder() {
+        return new File(fileNum, fileName, fileOriName, fileUrl);
+    }
+
+    /*Getter*/
+    public int getFileNum() {
+        return fileNum;
     }
 
     public String getFileName() {
         return fileName;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
     public String getFileOriName() {
         return fileOriName;
     }
 
-    public void setFileOriName(String fileOriName) {
-        this.fileOriName = fileOriName;
-    }
-
     public String getFileUrl() {
         return fileUrl;
-    }
-
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
     }
 
     @Override

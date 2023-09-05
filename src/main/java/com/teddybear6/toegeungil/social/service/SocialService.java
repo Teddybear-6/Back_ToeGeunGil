@@ -1,7 +1,9 @@
 package com.teddybear6.toegeungil.social.service;
 
+import com.teddybear6.toegeungil.social.dto.FileDTO;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import com.teddybear6.toegeungil.social.entity.Social;
+import com.teddybear6.toegeungil.social.repository.FileRepository;
 import com.teddybear6.toegeungil.social.repository.SocialRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +14,12 @@ import java.util.Objects;
 @Service
 public class SocialService {
 
-    private final SocialRepository socialRepository;
+    private final SocialRepository socialRepository; //소셜
+    private final FileRepository fileRepository; //파일
 
-    public SocialService(SocialRepository socialRepository) {
+    public SocialService(SocialRepository socialRepository, FileRepository fileRepository) {
         this.socialRepository = socialRepository;
+        this.fileRepository = fileRepository;
     }
 
     public List<Social> readAllSocial() {
@@ -102,5 +106,14 @@ public class SocialService {
         } else {
             return 1;
         }
+    }
+
+
+    /*
+    사진*/
+    @Transactional
+    public int saveSocialImage(FileDTO fileDTO) {
+        //FileDTO를 Entity로 변환하여 DB에 저장 후 FileNum 반환
+        return fileRepository.save(fileDTO.toEntity()).getFileNum();
     }
 }

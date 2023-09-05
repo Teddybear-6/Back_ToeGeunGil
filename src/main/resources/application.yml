@@ -21,4 +21,3 @@ spring:
         show_sql: true
         #SQL정렬해서 보기
         format_sql: true
-
