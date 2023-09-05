@@ -31,7 +31,6 @@ public class NoticeController {
             return ResponseEntity.status(404).body(error);
         }
         return ResponseEntity.ok().body(noticeList);
-
     }
 
     /* <GET> /notices/{noticeNum} : 공지사항 목록 상세 조회 */
@@ -43,7 +42,7 @@ public class NoticeController {
         if (Objects.isNull(noticeNum)) {
             return ResponseEntity.status(404).body(new String("공지번호가 존재하지 않습니다"));
         }
-        return ResponseEntity.ok().body(noticeNum);
+        return ResponseEntity.ok().body(notice);
     }
 
     /* <POST> /notices: 공지사항 등록 */
