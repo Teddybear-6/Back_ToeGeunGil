@@ -2,6 +2,7 @@ package com.teddybear6.toegeungil.hobby.dto;
 
 import com.teddybear6.toegeungil.hobby.entity.Hobby;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -55,12 +56,21 @@ public class HobbyDTO {
 
     private List<HobbyKeywordDTO> keywordDTOList; // 키워드
 
-
     private String close; //마감
+
+    private List<ImageIdDTO> imageId;
+
+    private String hobbyStats;
+
+    private Date crateDate;
+
+    private Date updateDate;
+
+
     public HobbyDTO() {
     }
 
-    public HobbyDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, Date date, Date startTime, Date endTime, int categoryCode, int localCode, List<HobbyKeywordDTO> keywordDTOList, String close) {
+    public HobbyDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, Date date, Date startTime, Date endTime, int categoryCode, int localCode, List<HobbyKeywordDTO> keywordDTOList, String close, List<ImageIdDTO> imageId, String hobbyStats, Date crateDate, Date updateDate) {
         this.hobbyCode = hobbyCode;
         this.hobbyTitle = hobbyTitle;
         this.tutorCode = tutorCode;
@@ -75,7 +85,12 @@ public class HobbyDTO {
         this.localCode = localCode;
         this.keywordDTOList = keywordDTOList;
         this.close = close;
+        this.imageId = imageId;
+        this.hobbyStats = hobbyStats;
+        this.crateDate = crateDate;
+        this.updateDate = updateDate;
     }
+
     public HobbyDTO(Hobby hobby) {
         this.hobbyCode = hobby.getHobbyCode();
         this.hobbyTitle = hobby.getHobbyTitle();
@@ -90,9 +105,10 @@ public class HobbyDTO {
         this.categoryCode = hobby.getCategoryCode();
         this.localCode = hobby.getLocalCode();
         this.close = hobby.getClose();
+        this.hobbyStats = hobby.getHobbyStatus();
+        this.crateDate =hobby.getCrateDate();
+        this.updateDate =hobby.getUpdateDate();
     }
-
-
 
 
     public int getHobbyCode() {
@@ -183,6 +199,14 @@ public class HobbyDTO {
         this.categoryCode = categoryCode;
     }
 
+    public int getLocalCode() {
+        return localCode;
+    }
+
+    public void setLocalCode(int localCode) {
+        this.localCode = localCode;
+    }
+
     public List<HobbyKeywordDTO> getKeywordDTOList() {
         return keywordDTOList;
     }
@@ -199,12 +223,12 @@ public class HobbyDTO {
         this.close = close;
     }
 
-    public int getLocalCode() {
-        return localCode;
+    public List<ImageIdDTO> getImageId() {
+        return imageId;
     }
 
-    public void setLocalCode(int localCode) {
-        this.localCode = localCode;
+    public void setImageId(List<ImageIdDTO> imageId) {
+        this.imageId = imageId;
     }
 
     @Override
@@ -224,6 +248,10 @@ public class HobbyDTO {
                 ", localCode=" + localCode +
                 ", keywordDTOList=" + keywordDTOList +
                 ", close='" + close + '\'' +
+                ", imageId=" + imageId +
+                ", hobbyStats='" + hobbyStats + '\'' +
+                ", crateDate=" + crateDate +
+                ", updateDate=" + updateDate +
                 '}';
     }
 }

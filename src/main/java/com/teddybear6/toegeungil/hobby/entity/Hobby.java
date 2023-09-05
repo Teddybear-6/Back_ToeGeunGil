@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,6 +17,8 @@ import java.util.List;
 @Table(name = "hobby")
 @EntityListeners(AuditingEntityListener.class)
 @DynamicInsert
+@Where(clause = "hobby_status='Y'")
+
 public class Hobby {
 
     @Id
@@ -85,12 +88,16 @@ public class Hobby {
     private List<HobbyKeyword> hobbyKeywordList;
 
 
+    @JoinColumn(name = "hobby_code")
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<HobbyImage> hobbyImages;
+
 
 
     public Hobby() {
     }
 
-    public Hobby(int hobbyCode, String hobbyTitle, int tutorCode, int maxPersonnel, int hobbyPrice, String intro, int localCode, Date date, Date startTime, Date endTime, int categoryCode, String tutorIntro, String close, String hobbyStatus, Date crateDate, Date updateDate, List<HobbyKeyword> hobbyKeywordList) {
+    public Hobby(int hobbyCode, String hobbyTitle, int tutorCode, int maxPersonnel, int hobbyPrice, String intro, int localCode, Date date, Date startTime, Date endTime, int categoryCode, String tutorIntro, String close, String hobbyStatus, Date crateDate, Date updateDate, List<HobbyKeyword> hobbyKeywordList, List<HobbyImage> hobbyImages) {
         this.hobbyCode = hobbyCode;
         this.hobbyTitle = hobbyTitle;
         this.tutorCode = tutorCode;
@@ -108,6 +115,7 @@ public class Hobby {
         this.crateDate = crateDate;
         this.updateDate = updateDate;
         this.hobbyKeywordList = hobbyKeywordList;
+        this.hobbyImages = hobbyImages;
     }
 
     public Hobby(HobbyDTO hobbyDTO) {
@@ -261,6 +269,14 @@ public class Hobby {
         this.localCode = localCode;
     }
 
+    public List<HobbyImage> getHobbyImages() {
+        return hobbyImages;
+    }
+
+    public void setHobbyImages(List<HobbyImage> hobbyImages) {
+        this.hobbyImages = hobbyImages;
+    }
+
     @Override
     public String toString() {
         return "Hobby{" +
@@ -281,6 +297,7 @@ public class Hobby {
                 ", crateDate=" + crateDate +
                 ", updateDate=" + updateDate +
                 ", hobbyKeywordList=" + hobbyKeywordList +
+                ", hobbyImages=" + hobbyImages +
                 '}';
     }
 }

@@ -3,6 +3,7 @@ package com.teddybear6.toegeungil.hobby.controller;
 import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
 import com.teddybear6.toegeungil.hobby.dto.HobbyGetDTO;
 import com.teddybear6.toegeungil.hobby.dto.HobbyKeywordDTO;
+import com.teddybear6.toegeungil.hobby.dto.ImageIdDTO;
 import com.teddybear6.toegeungil.hobby.entity.Hobby;
 import com.teddybear6.toegeungil.hobby.entity.HobbyImage;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
@@ -43,10 +44,10 @@ public class HobbyController {
      *
      *   마감되었을때 참가자 한하여 후기글 + 점수
      *   선생이 다는 댓글
-     *
-     * 1.리드 부터 해보자
-     * 전체 조회는 사진 제목 가격 카테고리 키워드만 보이면 된다
      */
+
+    // 취미 조회 -> 취미 대표사진 조회 - 디테일 보기 조회 -> 저장된 취미 사진 id 조회  -> id로 사진 조회
+
 
     private final HobbyService hobbyService;
 
@@ -87,13 +88,14 @@ public class HobbyController {
     //취미 메인사진 조사
     @GetMapping("/mainimages/{hobbyCode}")
     public  ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode){
-        byte[] mainimage = hobbyService.findMainImage(hobbyCode);
+        List<HobbyImage> hobbyImages = hobbyService.findMainImage(hobbyCode);
 
-        if(mainimage.length==0){
-            //나중에 기본이미지로 바꾸기
-            return ResponseEntity.status(404).body("이미지를 찾을 수 없습니다.");
+        if(hobbyImages.size()==0){
+            //나중에 기본이미지로 바꾸기 무조건 하나씩 넣기하면 필요없음
+            return ResponseEntity.status(404).body(null);
         }
-        return ResponseEntity.ok().contentType(MediaType.valueOf("image/png")).body(mainimage);
+
+        return ResponseEntity.ok().contentType(MediaType.valueOf(hobbyImages.get(0).getType())).body(ImageUtils.decompressImage(hobbyImages.get(0).getImageDate()));
     }
 
     //등록
@@ -120,7 +122,20 @@ public class HobbyController {
 
 
     //삭제
+    @DeleteMapping("/{hobbyCode}")
+    public ResponseEntity<?> hobbyDelete(@PathVariable int hobbyCode){
+        Hobby hobby = hobbyService.findById(hobbyCode);
+        if(Objects.isNull(hobby) || hobby.getHobbyStatus().equals("N")){
+            return ResponseEntity.status(404).body("존재하지 않는 취미입니다.");
+        }
+        int result = hobbyService.deleteById(hobby);
 
+        if(result>0){
+            return ResponseEntity.ok().body("삭제되었습니다.");
+        }else {
+            return ResponseEntity.status(500).body("삭제에 실패했습니다");
+        }
+    }
 
     //디테일보기
 
@@ -132,32 +147,34 @@ public class HobbyController {
         if(Objects.isNull(hobby)){
             return ResponseEntity.status(404).body("취미가 없습니다.");
         }
-        System.out.println(hobby.getHobbyKeywordList());
+
         HobbyDTO hobbyDTO = new HobbyDTO(hobby);
         List<Keyword> keyword = new ArrayList<>();
         for(int i=0;i<hobby.getHobbyKeywordList().size();i++){
             keyword.add(hobby.getHobbyKeywordList().get(i).getKeyword());
         }
+        List<HobbyImage> hobbyImages = hobby.getHobbyImages();
+        List<ImageIdDTO> imageIdDTOS = new ArrayList<>();
+
+        for(int i =0 ;i <hobbyImages.size();i++){
+            imageIdDTOS.add(new ImageIdDTO(hobbyImages.get(i).getId()));
+        }
+
         List<HobbyKeywordDTO> hobbyKeywordDTO = keyword.stream().map(m->new HobbyKeywordDTO(m)).collect(Collectors.toList());
         hobbyDTO.setKeywordDTOList(hobbyKeywordDTO);
+        hobbyDTO.setImageId(imageIdDTOS);
         return ResponseEntity.ok().body(hobbyDTO);
 
 
     }
 
+
     //디테일 사진보기
-    @GetMapping("/image/{hobbyCode}")
-    public ResponseEntity<List<?>> detailImage(@PathVariable int hobbyCode){
-        List<HobbyImage> image = hobbyService.detailImage(hobbyCode);
-        if(image.size()==0){
-            List<String> error = new ArrayList<>();
-            error.add("취미가 존재하지 않습니다.");
-            return ResponseEntity.status(404).body(error);
-        }
-        for(int i=0;i<image.size();i++){
-            image.get(i).setImageDate(ImageUtils.decompressImage(image.get(i).getImageDate()));
-        }
-        return ResponseEntity.ok().body(image);
+    @GetMapping("/image/{imageId}")
+    public ResponseEntity<?> detailImage(@PathVariable int imageId){
+
+        HobbyImage image = hobbyService.detailImage(imageId);
+        return ResponseEntity.ok().contentType(MediaType.valueOf(image.getType())).body(ImageUtils.decompressImage(image.getImageDate()));
     }
 
 

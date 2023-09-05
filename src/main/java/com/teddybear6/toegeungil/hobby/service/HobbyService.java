@@ -114,28 +114,35 @@ public class HobbyService {
         return hobbyGetDTOS;
     }
 
-    public byte[] findMainImage(int hobbyCode) {
+    public List<HobbyImage> findMainImage(int hobbyCode) {
         List<HobbyImage> hobbyImage = storageRepository.findByhobbyCode(hobbyCode);
-        if (hobbyImage.size() == 0) {
-            System.out.println(hobbyImage.size() == 0);
-            return new byte[0];
-        }
 
-        return ImageUtils.decompressImage(hobbyImage.get(0).getImageDate());
+        return hobbyImage;
     }
 
     public Hobby findById(int hobbyCode) {
         Hobby hobby = hobbyRepository.findById(hobbyCode);
-
 
         return hobby;
 
 
     }
 
-    public List<HobbyImage> detailImage(int hobbyCode) {
-        List<HobbyImage> hobbyImages = storageRepository.findByhobbyCode(hobbyCode);
+    public HobbyImage detailImage(int hobbyCode) {
+        HobbyImage hobbyImages = storageRepository.findById(hobbyCode);
 
         return hobbyImages;
+    }
+
+    public int deleteById(Hobby hobby) {
+        hobby.setHobbyStatus("N");
+        hobbyRepository.save(hobby);
+
+        if(hobby.getHobbyStatus().equals("N")){
+            return 1;
+        }else {
+            return 0;
+        }
+
     }
 }

@@ -8,7 +8,9 @@ import java.util.Optional;
 
 public interface StorageRepository extends JpaRepository<HobbyImage, Integer> {
 
+
     Optional<HobbyImage> findByName(String fileName);
+    HobbyImage findById(int id);
 
     List<HobbyImage> findByhobbyCode(int hobbyCode);
 }
