@@ -50,7 +50,11 @@ public class NoticeController {
     public ResponseEntity<?> registNotice(Notice notice) {
         int result = noticeService.registNotice(notice);
 
-        return ResponseEntity.ok().body("공지사항 등록 성공");
+        if(result > 0){
+            return ResponseEntity.ok().body("공지사항 등록 성공입니다");
+        }else {
+            return ResponseEntity.status(500).body("공지사항 등록 실패입니다");
+        }
     }
 
 
