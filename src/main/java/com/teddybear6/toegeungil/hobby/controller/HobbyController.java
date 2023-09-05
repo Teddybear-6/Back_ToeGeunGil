@@ -75,9 +75,9 @@ public class HobbyController {
 
     //findall
     @GetMapping
-    public ResponseEntity<List<?>> hobbyfindAll(final Pageable pageable){
+    public ResponseEntity<List<?>> hobbyfindAll(final Pageable pageable) {
         List<HobbyGetDTO> hobbyList = hobbyService.findAll(pageable);
-        if(hobbyList.size()==0){
+        if (hobbyList.size() == 0) {
             List<String> error = new ArrayList<>();
             error.add("취미가 존재하지 않습니다.");
             return ResponseEntity.status(500).body(error);
@@ -87,10 +87,10 @@ public class HobbyController {
 
     //취미 메인사진 조사
     @GetMapping("/mainimages/{hobbyCode}")
-    public  ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode){
+    public ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode) {
         List<HobbyImage> hobbyImages = hobbyService.findMainImage(hobbyCode);
 
-        if(hobbyImages.size()==0){
+        if (hobbyImages.size() == 0) {
             //나중에 기본이미지로 바꾸기 무조건 하나씩 넣기하면 필요없음
             return ResponseEntity.status(404).body(null);
         }
@@ -100,7 +100,7 @@ public class HobbyController {
 
     //등록
     @PostMapping
-    public ResponseEntity<?> registHobby(@RequestPart("hobbyDTO") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") List<MultipartFile> files) {
+    public ResponseEntity<?> registHobby(@RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") List<MultipartFile> files) {
         int result = 0;
         try {
             result = hobbyService.registHobby(hobbyDTO, files);
@@ -118,21 +118,32 @@ public class HobbyController {
 
 
     //수정
+    @PutMapping("/{hobbyCode}")
+    public ResponseEntity<?> updateHobby(@PathVariable int hobbyCode, @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") List<MultipartFile> files){
 
+
+        Hobby hobby = hobbyService.findById(hobbyCode);
+        if(Objects.isNull(hobby)){
+            return ResponseEntity.status(404).body("존재하지 않는 취미입니다.");
+        }
+
+        int result = hobbyService.updateHobby(hobby,hobbyDTO,files);
+        return ResponseEntity.ok().body("테스트");
+    }
 
 
     //삭제
     @DeleteMapping("/{hobbyCode}")
-    public ResponseEntity<?> hobbyDelete(@PathVariable int hobbyCode){
+    public ResponseEntity<?> hobbyDelete(@PathVariable int hobbyCode) {
         Hobby hobby = hobbyService.findById(hobbyCode);
-        if(Objects.isNull(hobby) || hobby.getHobbyStatus().equals("N")){
+        if (Objects.isNull(hobby) || hobby.getHobbyStatus().equals("N")) {
             return ResponseEntity.status(404).body("존재하지 않는 취미입니다.");
         }
         int result = hobbyService.deleteById(hobby);
 
-        if(result>0){
+        if (result > 0) {
             return ResponseEntity.ok().body("삭제되었습니다.");
-        }else {
+        } else {
             return ResponseEntity.status(500).body("삭제에 실패했습니다");
         }
     }
@@ -140,27 +151,27 @@ public class HobbyController {
     //디테일보기
 
     @GetMapping("/{hobbyCode}")
-    public ResponseEntity<Object> detailFindById(@PathVariable int hobbyCode){
+    public ResponseEntity<Object> detailFindById(@PathVariable int hobbyCode) {
 
         Hobby hobby = hobbyService.findById(hobbyCode);
 
-        if(Objects.isNull(hobby)){
+        if (Objects.isNull(hobby)) {
             return ResponseEntity.status(404).body("취미가 없습니다.");
         }
 
         HobbyDTO hobbyDTO = new HobbyDTO(hobby);
         List<Keyword> keyword = new ArrayList<>();
-        for(int i=0;i<hobby.getHobbyKeywordList().size();i++){
+        for (int i = 0; i < hobby.getHobbyKeywordList().size(); i++) {
             keyword.add(hobby.getHobbyKeywordList().get(i).getKeyword());
         }
         List<HobbyImage> hobbyImages = hobby.getHobbyImages();
         List<ImageIdDTO> imageIdDTOS = new ArrayList<>();
 
-        for(int i =0 ;i <hobbyImages.size();i++){
+        for (int i = 0; i < hobbyImages.size(); i++) {
             imageIdDTOS.add(new ImageIdDTO(hobbyImages.get(i).getId()));
         }
 
-        List<HobbyKeywordDTO> hobbyKeywordDTO = keyword.stream().map(m->new HobbyKeywordDTO(m)).collect(Collectors.toList());
+        List<HobbyKeywordDTO> hobbyKeywordDTO = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
         hobbyDTO.setKeywordDTOList(hobbyKeywordDTO);
         hobbyDTO.setImageId(imageIdDTOS);
         return ResponseEntity.ok().body(hobbyDTO);
@@ -171,12 +182,11 @@ public class HobbyController {
 
     //디테일 사진보기
     @GetMapping("/image/{imageId}")
-    public ResponseEntity<?> detailImage(@PathVariable int imageId){
+    public ResponseEntity<?> detailImage(@PathVariable int imageId) {
 
         HobbyImage image = hobbyService.detailImage(imageId);
         return ResponseEntity.ok().contentType(MediaType.valueOf(image.getType())).body(ImageUtils.decompressImage(image.getImageDate()));
     }
-
 
 
 }

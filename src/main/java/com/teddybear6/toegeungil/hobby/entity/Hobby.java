@@ -84,12 +84,12 @@ public class Hobby {
     private Date updateDate;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hobby")
+    @OneToMany(cascade = CascadeType.ALL , mappedBy = "hobby")
     private List<HobbyKeyword> hobbyKeywordList;
 
 
     @JoinColumn(name = "hobby_code")
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     private List<HobbyImage> hobbyImages;
 
 

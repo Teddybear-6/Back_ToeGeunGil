@@ -7,13 +7,14 @@ import java.io.Serializable;
 @Embeddable
 public class HobbyPk implements Serializable {
 
+    @Column(name = "hobby_code")
+    private int hobbyCode;
+
 
 
     @Column(name = "keyword_code")
     private int keywordCode;
 
-    @Column(name = "hobby_code")
-    private int hobbyCode;
 
 
     public HobbyPk() {

@@ -7,6 +7,7 @@ import com.teddybear6.toegeungil.hobby.entity.Hobby;
 import com.teddybear6.toegeungil.hobby.entity.HobbyImage;
 import com.teddybear6.toegeungil.hobby.entity.HobbyKeyword;
 import com.teddybear6.toegeungil.hobby.entity.HobbyPk;
+import com.teddybear6.toegeungil.hobby.repository.HobbyKeywordRepository;
 import com.teddybear6.toegeungil.hobby.repository.HobbyRepository;
 import com.teddybear6.toegeungil.hobby.repository.StorageRepository;
 import com.teddybear6.toegeungil.hobby.utils.ImageUtils;
@@ -31,11 +32,14 @@ public class HobbyService {
     private final KeywordRepository keywordRepository;
     private final HobbyRepository hobbyRepository;
 
+    private final HobbyKeywordRepository hobbyKeywordRepository;
 
-    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository) {
+
+    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository) {
         this.storageRepository = storageRepository;
         this.keywordRepository = keywordRepository;
         this.hobbyRepository = hobbyRepository;
+        this.hobbyKeywordRepository = hobbyKeywordRepository;
     }
 
     public String uploadImage(MultipartFile file) throws IOException {
@@ -95,7 +99,7 @@ public class HobbyService {
 
     }
 
-    public List<HobbyGetDTO> findAll(final Pageable pageable ) {
+    public List<HobbyGetDTO> findAll(final Pageable pageable) {
 
         List<Hobby> hobbyList = hobbyRepository.findAll(pageable).getContent();
         List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
@@ -138,11 +142,64 @@ public class HobbyService {
         hobby.setHobbyStatus("N");
         hobbyRepository.save(hobby);
 
-        if(hobby.getHobbyStatus().equals("N")){
+        if (hobby.getHobbyStatus().equals("N")) {
             return 1;
-        }else {
+        } else {
             return 0;
         }
 
+    }
+
+    @Transactional
+    public int updateHobby(Hobby hobby, HobbyDTO hobbyDTO, List<MultipartFile> files) {
+
+        List<HobbyKeywordDTO> keyword = hobbyDTO.getKeywordDTOList();
+        List<HobbyKeyword> hobbyKeywordList = new ArrayList<>();
+        List<HobbyImage> hobbyImages = new ArrayList<>();
+
+        hobby.setHobbyTitle(hobbyDTO.getHobbyTitle());     //제목
+        hobby.setHobbyPrice(hobbyDTO.getHobbyPrice());     //가격
+        hobby.setClose(hobbyDTO.getClose());               //마감여부
+        hobby.setCategoryCode(hobbyDTO.getCategoryCode()); //카테고리
+        hobby.setLocalCode(hobbyDTO.getLocalCode());       //지역
+        hobby.setIntro(hobbyDTO.getIntro());               //소개
+        hobby.setTutorIntro(hobbyDTO.getTutorIntro());     //강사소개
+        hobby.setDate(hobbyDTO.getDate());                 //날짜
+        hobby.setStartTime(hobbyDTO.getStartTime());       //시작시간
+        hobby.setEndTime(hobbyDTO.getEndTime());           //끝나는 시간
+
+
+        hobbyKeywordRepository.deleteAllInBatch(hobby.getHobbyKeywordList());
+        storageRepository.deleteAllByHobbyCode(hobby.getHobbyCode());
+
+        for (int i = 0; i < keyword.size(); i++) {
+            Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
+            hobbyKeywordList.add(new HobbyKeyword(new HobbyPk(hobby.getHobbyCode(), findKeyword.getKeywordCode()), hobby, findKeyword));
+
+        }
+
+
+        hobby.setHobbyKeywordList(hobbyKeywordList);
+        System.out.println(hobby.getHobbyKeywordList());
+
+
+        try {
+            for (int i = 0; i < files.size(); i++) {
+                HobbyImage image = new HobbyImage();
+                image.setHobbyCode(hobby.getHobbyCode());
+                image.setName(files.get(i).getOriginalFilename());
+                image.setType(files.get(i).getContentType());
+                image.setImageDate(ImageUtils.compressImage(files.get(i).getBytes()));
+                hobbyImages.add(image);
+            }
+        } catch (IOException e) {
+            return 0;
+        }
+
+
+        hobby.setHobbyImages(hobbyImages);
+        Hobby findHobby = hobbyRepository.save(hobby);
+
+        return 1;
     }
 }

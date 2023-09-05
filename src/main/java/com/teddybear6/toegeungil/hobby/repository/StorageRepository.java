@@ -13,4 +13,6 @@ public interface StorageRepository extends JpaRepository<HobbyImage, Integer> {
     HobbyImage findById(int id);
 
     List<HobbyImage> findByhobbyCode(int hobbyCode);
+
+    void deleteAllByHobbyCode(int hobbyCode);
 }
