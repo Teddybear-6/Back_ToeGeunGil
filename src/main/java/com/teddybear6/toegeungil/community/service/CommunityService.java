@@ -6,7 +6,6 @@ import com.teddybear6.toegeungil.community.repository.CommunityRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +18,7 @@ public class CommunityService {
     public CommunityService(CommunityRepository communityRepository) {
         this.communityRepository = communityRepository;
     }
+
 
     public List<Community> findAllCommunity() {
 
@@ -71,7 +71,19 @@ public class CommunityService {
         } else{
             return 0;
         }
+    }
 
+    @Transactional
+    public int deleteCommunityId(int communityNum) {
+
+        Community community = communityRepository.findById(communityNum);
+
+        if(community == null){
+            return 0;
+        }
+
+        communityRepository.delete(community);
+        return 1;
     }
 
 }

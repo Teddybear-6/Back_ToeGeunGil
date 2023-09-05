@@ -69,6 +69,9 @@ public class CommunityController {
     @PutMapping("/{communityNum}") // 커뮤니티 수정
     public ResponseEntity<?> updateCommunity(@PathVariable int communityNum, @RequestParam String communityTitle, @RequestParam String communityIntro,
                                              @RequestParam int categoryNum, @RequestParam int keywordNum, @RequestParam int locationNum, @RequestParam String communityStatus){
+
+        // 유효성 검사 체크 (RequestParam)으로 코드만 받아오고 나머지는 service 로직에서 찾아오기 .,...
+
         Community findCommunity = communityService.findByCommunityCode(communityNum);
 
         if(Objects.isNull(findCommunity)){
@@ -82,6 +85,25 @@ public class CommunityController {
             return ResponseEntity.ok().body("커뮤니티 수정에 성공했습니다.");
         } else {
             return ResponseEntity.status(400).body("커뮤니티 수정에 실패하였습니다.");
+        }
+    }
+
+
+    @DeleteMapping("/{communityNum}")
+    public ResponseEntity<?> deleteCommunity(@PathVariable int communityNum){
+
+        Community community = communityService.findByCommunityCode(communityNum);
+
+        if(Objects.isNull(community)){
+            return ResponseEntity.status(404).body("커뮤니티가 존재하지 않습니다.");
+        }
+
+        int result = communityService.deleteCommunityId(communityNum);
+
+        if(result > 0){
+            return ResponseEntity.ok().body("커뮤니티가 삭제 완료되었습니다.");
+        }else {
+            return ResponseEntity.status(500).body("커뮤니티가 삭제되지 않았습니다.");
         }
     }
 
