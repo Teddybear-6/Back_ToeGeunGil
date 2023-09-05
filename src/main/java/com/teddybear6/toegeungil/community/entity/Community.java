@@ -14,15 +14,15 @@ public class Community {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "community_num") // 커뮤니티 번호
     private int communityNum;
-    @Column(name = "community_title") // 커뮤니티 제목
+    @Column(name = "community_title", nullable = false) // 커뮤니티 제목
     private String communityTitle;
-    @Column(name = "community_intro") // 커뮤니티 소개
+    @Column(name = "community_intro", nullable = false) // 커뮤니티 소개
     private String communityIntro;
-    @Column(name = "category_num") // 카테고리 번호
+    @Column(name = "category_num", nullable = false) // 카테고리 번호
     private int categoryNum;
-    @Column(name = "keyword_num") // 키워드 번호
+    @Column(name = "keyword_num", nullable = false) // 키워드 번호
     private int keywordNum;
-    @Column(name = "location_num") // 지역 번호
+    @Column(name = "location_num", nullable = false) // 지역 번호
     private int locationNum;
     @Column(name = "community_status") // 커뮤니티 상태
     private String communityStatus;
