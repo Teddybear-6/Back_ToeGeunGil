@@ -55,25 +55,26 @@ public class NoticeController {
 
 
     /* <PUT> /notices/{noticeNum} : 공지사항 수정 */
-//    @PutMapping("/{noticeNum}")
-//    public ResponseEntity<?> updateNotice(Notice notice, NoticeDetailDTO noticeDetailDTO) {
-//        Notice findnotice = noticeService.findNoticeByCode(notice.getNoticeNum());
-//
-//        /* 조회 성공 시 엔티티 존재, 실패할 시 업데이트 할 대상 존재하지 않음 */
-//        if (Objects.isNull(findnotice)) {
-//            return ResponseEntity.ok().body("공지사항이 존재하지 않습니다");
-//        }
-//
-//        int result = noticeService.updateNotice(noticeDetailDTO);
-//
-//        /* 업데이트 성공,실패 여부 */
-//        if(result >0){
-//            return ResponseEntity.ok().body("공지사항 수정 성공입니다");
-//        }else {
-//            return ResponseEntity.status(400).body("공지사항 수정 실패입니다");
-//        }
-//
-//    }
+    @PutMapping("/{noticeNum}")
+    public ResponseEntity<?> updateNotice(@PathVariable int noticeNum, @RequestBody NoticeDetailDTO noticeDetailDTO) {
+
+        Notice findnotice = noticeService.findNoticeByCode(noticeNum);
+
+        /* 조회 성공 시 엔티티 존재, 실패할 시 업데이트 할 대상 존재하지 않음 */
+        if (Objects.isNull(findnotice)) {
+            return ResponseEntity.status(404).body("공지사항이 존재하지 않습니다");
+        }
+
+        int result = noticeService.updateNotice(findnotice, noticeDetailDTO);
+
+        /* 업데이트 성공,실패 여부 */
+        if(result >0){
+            return ResponseEntity.ok().body("공지사항 수정 성공입니다");
+        }else {
+            return ResponseEntity.status(400).body("공지사항 수정 실패입니다");
+        }
+
+    }
 
     /* <DELETE> /notices/{noticeNum} : 공지사항 삭제 */
     @DeleteMapping("/{noticeNum}")

@@ -6,6 +6,7 @@ import com.teddybear6.toegeungil.notice.repository.NoticeRegistory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,15 +44,19 @@ public class NoticeService {
     }
 
     /* 수정 */
-//    public int updateNotice(NoticeDetailDTO noticeDetailDTO) {
-//        if (!Objects.isNull() {
-//
-//        }
-//    }
+    @Transactional
+    public int updateNotice(Notice findnotice, NoticeDetailDTO noticeDetailDTO) {
+        findnotice.setNoticeTitle(noticeDetailDTO.getNoticeTitle());
+        findnotice.setNoticeContent(noticeDetailDTO.getNoticeContent());
 
-    //    public int updateNotice(Notice findnotice, Notice upnotice) {
-//        if(!Objects.isNull(upnotice.NoticeDetailDto()))
-//    }
+        Notice result = noticeRegistory.save(findnotice);
+
+        if (Objects.isNull(result)) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
 
     /* 삭제 */
     public Notice deleteNotice(int noticeNum) {
@@ -62,6 +67,4 @@ public class NoticeService {
 
         return notice;
     }
-
-
 }
