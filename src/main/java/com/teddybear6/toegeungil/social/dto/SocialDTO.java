@@ -25,11 +25,11 @@ public class SocialDTO {
 
     private int categoryCode; //카테고리 번호(FK)
 
-    private int keywordNum; //키워드 번호(FK)
+    private int keywordCode; //키워드 번호(FK)
 
-    private int areaNum; //지역 번호(FK)
+    private int localCode; //지역 번호(FK)
 
-    private String areaDetails; //지역 상세
+    private String localDetails; //지역 상세
 
     private String socialIntro; //모임 소개
 
@@ -55,9 +55,9 @@ public class SocialDTO {
         this.socialEndTime = social.getSocialEndTime();
         this.fileNum = social.getFileNum();
         this.categoryCode = social.getCategoryCode();
-        this.keywordNum = social.getKeywordNum();
-        this.areaNum = social.getAreaNum();
-        this.areaDetails = social.getAreaDetails();
+        this.keywordCode = social.getKeywordCode();
+        this.localCode = social.getLocalCode();
+        this.localDetails = social.getLocalDetails();
         this.socialIntro = social.getSocialIntro();
         this.socialOther = social.getSocialOther();
         this.postRegDate = social.getPostRegDate();
@@ -66,8 +66,8 @@ public class SocialDTO {
     }
 
     public SocialDTO(int socialNum, int userNum, String socialName, Date socialDate, int socialFixedNum,
-                     Date socialStartTime, Date socialEndTime, int fileNum, int categoryCode, int keywordNum, int areaNum,
-                     String areaDetails, String socialIntro, String socialOther, Date postRegDate, Date postModiDate, String socialState) {
+                     Date socialStartTime, Date socialEndTime, int fileNum, int categoryCode, int keywordCode, int localCode,
+                     String localDetails, String socialIntro, String socialOther, Date postRegDate, Date postModiDate, String socialState) {
         this.socialNum = socialNum;
         this.userNum = userNum;
         this.socialName = socialName;
@@ -77,9 +77,9 @@ public class SocialDTO {
         this.socialEndTime = socialEndTime;
         this.fileNum = fileNum;
         this.categoryCode = categoryCode;
-        this.keywordNum = keywordNum;
-        this.areaNum = areaNum;
-        this.areaDetails = areaDetails;
+        this.keywordCode = keywordCode;
+        this.localCode = localCode;
+        this.localDetails = localDetails;
         this.socialIntro = socialIntro;
         this.socialOther = socialOther;
         this.postRegDate = postRegDate;
@@ -159,28 +159,28 @@ public class SocialDTO {
         this.categoryCode = categoryCode;
     }
 
-    public int getKeywordNum() {
-        return keywordNum;
+    public int getKeywordCode() {
+        return keywordCode;
     }
 
-    public void setKeywordNum(int keywordNum) {
-        this.keywordNum = keywordNum;
+    public void setKeywordCode(int keywordCode) {
+        this.keywordCode = keywordCode;
     }
 
-    public int getAreaNum() {
-        return areaNum;
+    public int getLocalCode() {
+        return localCode;
     }
 
-    public void setAreaNum(int areaNum) {
-        this.areaNum = areaNum;
+    public void setLocalCode(int localCode) {
+        this.localCode = localCode;
     }
 
-    public String getAreaDetails() {
-        return areaDetails;
+    public String getLocalDetails() {
+        return localDetails;
     }
 
-    public void setAreaDetails(String areaDetails) {
-        this.areaDetails = areaDetails;
+    public void setLocalDetails(String localDetails) {
+        this.localDetails = localDetails;
     }
 
     public String getSocialIntro() {
@@ -235,9 +235,9 @@ public class SocialDTO {
                 ", socialEndTime=" + socialEndTime +
                 ", fileNum=" + fileNum +
                 ", categoryCode=" + categoryCode +
-                ", keywordNum=" + keywordNum +
-                ", areaNum=" + areaNum +
-                ", areaDetails='" + areaDetails + '\'' +
+                ", keywordCode=" + keywordCode +
+                ", localCode=" + localCode +
+                ", localDetails='" + localDetails + '\'' +
                 ", socialIntro='" + socialIntro + '\'' +
                 ", socialOther='" + socialOther + '\'' +
                 ", postRegDate=" + postRegDate +
