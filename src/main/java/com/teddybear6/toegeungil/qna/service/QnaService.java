@@ -28,6 +28,19 @@ public class QnaService {
     }
 
     @Transactional
+    public int registQuestion(Question menu) {
+
+        Question result = questionRepository.save(menu);
+        System.out.println(result);
+
+        if(Objects.isNull(result)){
+            return 0;
+        }else{
+            return 1;
+        }
+    }
+
+    @Transactional
     public int updateQuestion(Question findQuestion, Question updateQuestion){
         if(!Objects.isNull(updateQuestion.getQuestionTitle())){
             findQuestion.setQuestionTitle(updateQuestion.getQuestionTitle());
