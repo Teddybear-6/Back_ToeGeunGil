@@ -267,6 +267,8 @@ public class HobbyController {
      *
      * */
 
+
+
     //찜하기
     /*
      * 참여하기랑 비슷한 로직
@@ -274,5 +276,7 @@ public class HobbyController {
 
 
     //찜리스트 보기?
+
+
 
 }

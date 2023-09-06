@@ -211,6 +211,7 @@ public class HobbyService {
 
     }
 
+    @Transactional
     public int joinHobby(HobbyJoin join) {
         HobbyJoin hobbyJoin = hobbyJoinRepository.save(join);
 
@@ -222,6 +223,7 @@ public class HobbyService {
 
     }
 
+    @Transactional
     public int unJoinHobby(HobbyJoin hobbyJoin) {
 
         hobbyJoinRepository.deleteById(hobbyJoin.getJoinNum());
