@@ -1,13 +1,16 @@
 package com.teddybear6.toegeungil.social.service;
 
-import com.teddybear6.toegeungil.social.dto.FileDTO;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
+import com.teddybear6.toegeungil.social.entity.Image;
 import com.teddybear6.toegeungil.social.entity.Social;
-import com.teddybear6.toegeungil.social.repository.FileRepository;
+import com.teddybear6.toegeungil.social.repository.ImageRepository;
 import com.teddybear6.toegeungil.social.repository.SocialRepository;
+import com.teddybear6.toegeungil.social.utils.ImageUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,11 +18,11 @@ import java.util.Objects;
 public class SocialService {
 
     private final SocialRepository socialRepository; //소셜
-    private final FileRepository fileRepository; //파일
+    private final ImageRepository imageRepository; //파일
 
-    public SocialService(SocialRepository socialRepository, FileRepository fileRepository) {
+    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository) {
         this.socialRepository = socialRepository;
-        this.fileRepository = fileRepository;
+        this.imageRepository = imageRepository;
     }
 
     public List<Social> readAllSocial() {
@@ -108,12 +111,22 @@ public class SocialService {
         }
     }
 
-
     /*
     사진*/
     @Transactional
-    public int saveSocialImage(FileDTO fileDTO) {
-        //FileDTO를 Entity로 변환하여 DB에 저장 후 FileNum 반환
-        return fileRepository.save(fileDTO.toEntity()).getFileNum();
+    public String uploadSocialImage(MultipartFile image) throws IOException {
+        Image imageData = imageRepository.save(
+                new Image()
+                        .imageName(image.getOriginalFilename())
+                        .imageType(image.getContentType())
+                        .imageData(ImageUtils.compressImage(image.getBytes()))
+                        .builder()
+        );
+
+        if (imageData != null) {
+            return "uploadSocialImage : " + image.getOriginalFilename();
+        }
+
+        return null;
     }
 }
