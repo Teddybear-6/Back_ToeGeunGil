@@ -5,8 +5,8 @@ import java.sql.Date;
 public class ReportDTO {
 
     private int reportNum; // 신고 번호
-    private String userId; // 신고 하는 회원(강사) 아이디 (수정하기)
-    private String userId2; // 신고 당하는 회원(강사) 아이디 (수정하기)
+    private String reportMember; // 신고 하는 회원
+    private String receiveMember; // 신고 받는 회원
     private int categoryNum; // 카테고리 번호
     private String reportContent; // 신고하기 내용
     private Date reportDate; // 신고 날짜
@@ -15,10 +15,10 @@ public class ReportDTO {
     public ReportDTO() {
     }
 
-    public ReportDTO(int reportNum, String userId, String userId2, int categoryNum, String reportContent, Date reportDate, String reportStatus) {
+    public ReportDTO(int reportNum, String reportMember, String receiveMember, int categoryNum, String reportContent, Date reportDate, String reportStatus) {
         this.reportNum = reportNum;
-        this.userId = userId;
-        this.userId2 = userId2;
+        this.reportMember = reportMember;
+        this.receiveMember = receiveMember;
         this.categoryNum = categoryNum;
         this.reportContent = reportContent;
         this.reportDate = reportDate;
@@ -33,20 +33,20 @@ public class ReportDTO {
         this.reportNum = reportNum;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getReportMember() {
+        return reportMember;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setReportMember(String reportMember) {
+        this.reportMember = reportMember;
     }
 
-    public String getUserId2() {
-        return userId2;
+    public String getReceiveMember() {
+        return receiveMember;
     }
 
-    public void setUserId2(String userId2) {
-        this.userId2 = userId2;
+    public void setReceiveMember(String receiveMember) {
+        this.receiveMember = receiveMember;
     }
 
     public int getCategoryNum() {
@@ -85,8 +85,8 @@ public class ReportDTO {
     public String toString() {
         return "ReportDTO{" +
                 "reportNum=" + reportNum +
-                ", userId='" + userId + '\'' +
-                ", userId2='" + userId2 + '\'' +
+                ", reportMember='" + reportMember + '\'' +
+                ", receiveMember='" + receiveMember + '\'' +
                 ", categoryNum=" + categoryNum +
                 ", reportContent='" + reportContent + '\'' +
                 ", reportDate=" + reportDate +
