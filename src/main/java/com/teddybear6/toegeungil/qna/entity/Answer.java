@@ -1,9 +1,6 @@
 package com.teddybear6.toegeungil.qna.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -23,6 +20,7 @@ public class Answer {
     private String answerNick;                  //답변자 닉네임
 
     @Column(name = "ansDate")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date answerDate;                    //답변 생성일
 
     @Column(name = "ansDelete")
