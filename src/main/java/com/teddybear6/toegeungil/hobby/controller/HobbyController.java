@@ -300,8 +300,8 @@ public class HobbyController {
         if (Objects.isNull(hobby) || hobby.getClose().equals("N") || Objects.isNull(hobbyJoin)) {
             return ResponseEntity.status(404).body("후기를 작성할 수 없습니다.");
         }
-        HobbyReview findHobbyReview = hobbyService.findByIdReview(hobbyCode,hobbyReviewDTO.getUserNo());
-        if(!Objects.isNull(findHobbyReview) && !findHobbyReview.getReviewStatus().equals("Y")){
+        HobbyReview findHobbyReview = hobbyService.findByIdReview(hobbyCode, hobbyReviewDTO.getUserNo());
+        if (!Objects.isNull(findHobbyReview) && !findHobbyReview.getReviewStatus().equals("Y")) {
             return ResponseEntity.status(404).body("이미 작성하셨습니다.");
         }
         hobbyReviewDTO.setHobbyCode(hobbyCode);
@@ -336,17 +336,17 @@ public class HobbyController {
 
     //후기 삭제
     @DeleteMapping("/review/{reviewCode}")
-    public ResponseEntity<?> removeReview(@PathVariable int reviewCode){
+    public ResponseEntity<?> removeReview(@PathVariable int reviewCode) {
         HobbyReview hobbyReview = hobbyService.findByReviewCode(reviewCode);
-        if(Objects.isNull(hobbyReview)){
+        if (Objects.isNull(hobbyReview)) {
             return ResponseEntity.status(404).body("후기가 없습니다.");
         }
         hobbyReview.setReviewStatus("N");
         int result = hobbyService.deleteByReviewCode(hobbyReview);
 
-        if(result>0){
+        if (result > 0) {
             return ResponseEntity.ok().body("삭제 완료됐습니다.");
-        }else {
+        } else {
             return ResponseEntity.status(404).body("삭제 실패했습니다.");
         }
 
@@ -354,18 +354,18 @@ public class HobbyController {
 
     //후기 수정
     @PutMapping("/review/{reviewCode}")
-    public ResponseEntity<?> modifyReview(@PathVariable int reviewCode, @RequestBody HobbyReviewDTO hobbyReviewDTO){
+    public ResponseEntity<?> modifyReview(@PathVariable int reviewCode, @RequestBody HobbyReviewDTO hobbyReviewDTO) {
         hobbyReviewDTO.setReviewCode(reviewCode);
         HobbyReview hobbyReview = hobbyService.findByReviewCode(reviewCode);
-        if(Objects.isNull(hobbyReview)){
+        if (Objects.isNull(hobbyReview)) {
             return ResponseEntity.status(404).body("후기가 없습니다.");
         }
 
         int result = hobbyService.updateReview(hobbyReviewDTO);
 
-        if(result>0){
+        if (result > 0) {
             return ResponseEntity.ok().body("수정 성공했습니다.");
-        }else {
+        } else {
             return ResponseEntity.status(500).body("수정 실패했습니다.");
         }
 
@@ -373,4 +373,18 @@ public class HobbyController {
     }
 
 
+    //카테고리 별 취미 조회
+
+    @GetMapping("/category/{categoryCode}")
+    public ResponseEntity<List<?>> categoryHobby(@PathVariable int categoryCode,final Pageable pageable) {
+        List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCode(categoryCode,pageable);
+
+        if (hobbies.size() == 0) {
+            List<String> error = new ArrayList<>();
+            error.add("해당되는 취미가 없습니다.");
+            return ResponseEntity.status(404).body(error);
+        }
+
+        return ResponseEntity.ok().body(hobbies);
+    }
 }

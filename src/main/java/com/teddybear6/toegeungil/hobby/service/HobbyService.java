@@ -315,4 +315,23 @@ public class HobbyService {
 
 
     }
+
+    public List<HobbyGetDTO> findByCategoryCode(int categoryCode,Pageable pageable) {
+        List<Hobby> hobbies = hobbyRepository.findByCategoryCode(categoryCode,pageable);
+
+        List<HobbyGetDTO> hobbyGetDTOS = hobbies.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
+
+        for (int i = 0; i < hobbies.size(); i++) {
+            List<Keyword> keyword = new ArrayList<>();
+            List<HobbyKeywordDTO> keywordDTOList = new ArrayList<>();
+            for (int j = 0; j < hobbies.get(i).getHobbyKeywordList().size(); j++) {
+                keyword.add(hobbies.get(i).getHobbyKeywordList().get(j).getKeyword());
+                keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
+            }
+            hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
+        }
+
+        System.out.println(hobbyGetDTOS);
+        return hobbyGetDTOS;
+    }
 }
