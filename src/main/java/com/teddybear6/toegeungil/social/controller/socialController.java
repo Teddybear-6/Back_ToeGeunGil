@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -137,28 +139,6 @@ public class socialController {
     public ResponseEntity<?> uploadSocialImage(@RequestParam(name = "image"/*key*/)MultipartFile image) throws IOException {
         String uploadImage = socialService.uploadSocialImage(image);
         return ResponseEntity.ok().body(uploadImage);
-//        //폴더 생성과 파일명을 새로 부여하기 위한 현재 시간 가져오기
-//        LocalDateTime now = LocalDateTime.now();
-//        int year = now.getYear();
-//        int month = now.getMonthValue();
-//        int day = now.getDayOfMonth();
-//        int hour = now.getHour();
-//        int minute = now.getMinute();
-//        int second = now.getSecond();
-//        int millis = now.get(ChronoField.MILLI_OF_SECOND);
-//
-//        //파일이 저장될 절대 경로
-//        String absolutePath = new File("/DEV/21_project02").getAbsolutePath() + "/";
-//        System.out.println(absolutePath);
-//        //새로 부여한 이미지명
-//        String newFileName = "image" + hour + minute + second + millis;
-//        System.out.println(newFileName);
-//        //정규식을 이용한 확장자 추출
-//        String fileExtension = '.' + image.getOriginalFilename().replaceAll("^.*\\.(.*)$", "$1");
-//        System.out.println(fileExtension);
-//        //저장될 폴더 경로
-//        String path = "images/test/" + year + "/" + month + "/" + day;
-//        System.out.println(path);
     }
 
 

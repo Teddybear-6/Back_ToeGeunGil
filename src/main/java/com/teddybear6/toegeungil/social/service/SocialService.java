@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.Objects;
 
@@ -115,9 +117,23 @@ public class SocialService {
     사진*/
     @Transactional
     public String uploadSocialImage(MultipartFile image) throws IOException {
+
+        //image_name을 새로 부여하기 위한 현재 시간 가져오기
+        LocalDateTime now = LocalDateTime.now();
+        int year = now.getYear();
+        int month = now.getMonthValue();
+        int day = now.getDayOfMonth();
+        int hour = now.getHour();
+        int minute = now.getMinute();
+        int second = now.getSecond();
+        int millis = now.get(ChronoField.MILLI_OF_SECOND);
+
+        //새로 부여하는 image_name
+        String newFileName = "image" + year + month + day + hour + minute + second + millis;
+
         Image imageData = imageRepository.save(
                 new Image()
-                        .imageName(image.getOriginalFilename())
+                        .imageName(newFileName/*시간으로 저장*/) //이미지명으로 저장하고 싶을 경우 image.getOriginalFilename()
                         .imageType(image.getContentType())
                         .imageData(ImageUtils.compressImage(image.getBytes()))
                         .builder()
