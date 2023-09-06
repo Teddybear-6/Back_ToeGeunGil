@@ -117,7 +117,7 @@ public class SocialService {
     사진*/
     @Transactional
     public String uploadSocialImage(MultipartFile image) throws IOException {
-
+        //사진 업로드
         //image_name을 새로 부여하기 위한 현재 시간 가져오기
         LocalDateTime now = LocalDateTime.now();
         int year = now.getYear();
@@ -127,7 +127,6 @@ public class SocialService {
         int minute = now.getMinute();
         int second = now.getSecond();
         int millis = now.get(ChronoField.MILLI_OF_SECOND);
-
         //새로 부여하는 image_name
         String newFileName = "image" + year + month + day + hour + minute + second + millis;
 
@@ -142,7 +141,13 @@ public class SocialService {
         if (imageData != null) {
             return "uploadSocialImage : " + image.getOriginalFilename();
         }
-
         return null;
+    }
+
+    public byte[] downloadSocialImage(String imageName) {
+        //사진 다운로드(보여주기)
+        Image imageData = imageRepository.findByImageName(imageName)
+                .orElseThrow(RuntimeException::new);
+        return ImageUtils.decompressImage(imageData.getImageData());
     }
 }

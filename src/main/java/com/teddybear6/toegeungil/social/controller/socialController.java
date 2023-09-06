@@ -3,6 +3,7 @@ package com.teddybear6.toegeungil.social.controller;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import com.teddybear6.toegeungil.social.entity.Social;
 import com.teddybear6.toegeungil.social.service.SocialService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,6 +46,7 @@ public class socialController {
     - 사진파일(File) */
 
     private final SocialService socialService;
+
     public socialController(SocialService socialService) {
         this.socialService = socialService;
     }
@@ -133,14 +135,16 @@ public class socialController {
     }
 
     /*
-    게시글 삭제는 수정에서 게시글 상태 Y -> N으로 변경*/
-
-    @PostMapping("/image")
-    public ResponseEntity<?> uploadSocialImage(@RequestParam(name = "image"/*key*/)MultipartFile image) throws IOException {
+    사진 https://velog.io/@mooh2jj/SpringBoot-File-uploaddownload-%EA%B5%AC%ED%98%84*/
+    @PostMapping("/image") //사진 업로드
+    public ResponseEntity<?> uploadSocialImage(@RequestParam(name = "image"/*key*/) MultipartFile image) throws IOException {
         String uploadImage = socialService.uploadSocialImage(image);
         return ResponseEntity.ok().body(uploadImage);
     }
 
-
-
+    @GetMapping("/image/{imageName}") //사진 다운로드
+    public ResponseEntity<?> downloadSocialImage(@PathVariable("imageName") String imageName) {
+        byte[] downloadImage = socialService.downloadSocialImage(imageName);
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(downloadImage);
+    }
 }
