@@ -1,12 +1,10 @@
 package com.teddybear6.toegeungil.hobby.controller;
 
-import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
-import com.teddybear6.toegeungil.hobby.dto.HobbyGetDTO;
-import com.teddybear6.toegeungil.hobby.dto.HobbyKeywordDTO;
-import com.teddybear6.toegeungil.hobby.dto.ImageIdDTO;
+import com.teddybear6.toegeungil.hobby.dto.*;
 import com.teddybear6.toegeungil.hobby.entity.Hobby;
 import com.teddybear6.toegeungil.hobby.entity.HobbyImage;
 import com.teddybear6.toegeungil.hobby.entity.HobbyJoin;
+import com.teddybear6.toegeungil.hobby.entity.HobbyReview;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
 
 
@@ -129,7 +127,12 @@ public class HobbyController {
         }
 
         int result = hobbyService.updateHobby(hobby, hobbyDTO, files);
-        return ResponseEntity.ok().body("테스트");
+        if(result>0){
+            return ResponseEntity.ok().body("수정 성공했습니다.");
+        }else {
+            return ResponseEntity.status(500).body("수정 실패했습니다.");
+        }
+
     }
 
 
@@ -257,6 +260,19 @@ public class HobbyController {
         }
     }
 
+    //마감하기
+
+    @GetMapping("/close/{hobbyCode}")
+    public ResponseEntity<?> closeHobby(@PathVariable int hobbyCode){
+        int result = hobbyService.closeHobby(hobbyCode);
+
+        if(result>0){
+            return ResponseEntity.ok().body("마감처리 되었습니다.");
+        }else {
+            return ResponseEntity.status(404).body("존재하지 않는 취미 입니다.");
+        }
+
+    }
 
     //참가자 get요청
     /*
@@ -268,7 +284,6 @@ public class HobbyController {
      * */
 
 
-
     //찜하기
     /*
      * 참여하기랑 비슷한 로직
@@ -277,6 +292,28 @@ public class HobbyController {
 
     //찜리스트 보기?
 
+    //후기
 
+
+    @PostMapping("/review/{hobbyCode}")
+    public ResponseEntity<?> hobbyReview(@PathVariable int hobbyCode,  @RequestBody HobbyReviewDTO hobbyReviewDTO) {
+        Hobby hobby = hobbyService.findById(hobbyCode);
+        HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode,hobbyReviewDTO.getUserNo());
+        if(Objects.isNull(hobby) || hobby.getClose().equals("N") || Objects.isNull(hobbyJoin)){
+            return ResponseEntity.status(404).body("후기를 작성할 수 없습니다.");
+        }
+        hobbyReviewDTO.setHobbyCode(hobbyCode);
+        HobbyReview hobbyReview = new HobbyReview(hobbyReviewDTO);
+
+        int result = hobbyService.registReview(hobbyReview);
+
+        if(result>0){
+            return ResponseEntity.ok().body("후기 등록 성공했습니다.");
+        }else {
+            return ResponseEntity.status(500).body("후기 등록 실패 했습니다.");
+        }
+
+
+    }
 
 }

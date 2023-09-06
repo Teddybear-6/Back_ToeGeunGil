@@ -4,10 +4,7 @@ import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
 import com.teddybear6.toegeungil.hobby.dto.HobbyGetDTO;
 import com.teddybear6.toegeungil.hobby.dto.HobbyKeywordDTO;
 import com.teddybear6.toegeungil.hobby.entity.*;
-import com.teddybear6.toegeungil.hobby.repository.HobbyJoinRepository;
-import com.teddybear6.toegeungil.hobby.repository.HobbyKeywordRepository;
-import com.teddybear6.toegeungil.hobby.repository.HobbyRepository;
-import com.teddybear6.toegeungil.hobby.repository.StorageRepository;
+import com.teddybear6.toegeungil.hobby.repository.*;
 import com.teddybear6.toegeungil.hobby.utils.ImageUtils;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.keyword.repository.KeywordRepository;
@@ -34,13 +31,16 @@ public class HobbyService {
 
     private final HobbyJoinRepository hobbyJoinRepository;
 
+    private final HobbyReviewRepository hobbyReviewRepository;
 
-    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository, HobbyJoinRepository hobbyJoinRepository) {
+
+    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository, HobbyJoinRepository hobbyJoinRepository, HobbyReviewRepository hobbyReviewRepository) {
         this.storageRepository = storageRepository;
         this.keywordRepository = keywordRepository;
         this.hobbyRepository = hobbyRepository;
         this.hobbyKeywordRepository = hobbyKeywordRepository;
         this.hobbyJoinRepository = hobbyJoinRepository;
+        this.hobbyReviewRepository = hobbyReviewRepository;
     }
 
     public String uploadImage(MultipartFile file) throws IOException {
@@ -205,7 +205,7 @@ public class HobbyService {
     }
 
     public HobbyJoin findJoin(int hobbyCode, int userNo) {
-        HobbyJoin hobbyJoin = hobbyJoinRepository.findByHobbyCodeAndUserNo(hobbyCode,userNo);
+        HobbyJoin hobbyJoin = hobbyJoinRepository.findByHobbyCodeAndUserNo(hobbyCode, userNo);
 
         return hobbyJoin;
 
@@ -215,9 +215,9 @@ public class HobbyService {
     public int joinHobby(HobbyJoin join) {
         HobbyJoin hobbyJoin = hobbyJoinRepository.save(join);
 
-        if(Objects.isNull(hobbyJoin)){
+        if (Objects.isNull(hobbyJoin)) {
             return 0;
-        }else {
+        } else {
             return 1;
         }
 
@@ -227,13 +227,13 @@ public class HobbyService {
     public int unJoinHobby(HobbyJoin hobbyJoin) {
 
         hobbyJoinRepository.deleteById(hobbyJoin.getJoinNum());
-       HobbyJoin findHobbyJoin = hobbyJoinRepository.findById(hobbyJoin.getJoinNum());
+        HobbyJoin findHobbyJoin = hobbyJoinRepository.findById(hobbyJoin.getJoinNum());
 
-       if(Objects.isNull(findHobbyJoin)){
-           return 1;
-       }else {
-           return 2;
-       }
+        if (Objects.isNull(findHobbyJoin)) {
+            return 1;
+        } else {
+            return 2;
+        }
 
     }
 
@@ -241,6 +241,29 @@ public class HobbyService {
         List<HobbyJoin> hobbyJoins = hobbyJoinRepository.findAllByHobbyCode(hobbyCode);
 
         return hobbyJoins;
+
+    }
+
+    public int registReview(HobbyReview hobbyReview) {
+        HobbyReview findReview = hobbyReviewRepository.save(hobbyReview);
+
+        if (Objects.isNull(findReview)) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    @Transactional
+    public int closeHobby(int hobbyCode) {
+        Hobby hobby = hobbyRepository.findById(hobbyCode);
+        if (Objects.isNull(hobby)) {
+            return 0;
+        }
+
+        hobby.setClose("Y");
+        return 1;
+
 
     }
 }

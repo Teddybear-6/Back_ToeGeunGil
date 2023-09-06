@@ -63,7 +63,8 @@ public class Hobby {
     @Column(name="tutor_intro")
     private String tutorIntro;
 
-    @Column(name = "close")
+    @Column(name = "close", columnDefinition = "varchar(1)")
+    @ColumnDefault("'N'")
     private String close;
 
     @Column(name = "hobby_status",columnDefinition = "varchar(1)")
@@ -93,11 +94,16 @@ public class Hobby {
     private List<HobbyImage> hobbyImages;
 
 
+    @JoinColumn(name = "hobby_code")
+    @OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    private List<HobbyReview> hobbyReviews;
+
+
 
     public Hobby() {
     }
 
-    public Hobby(int hobbyCode, String hobbyTitle, int tutorCode, int maxPersonnel, int hobbyPrice, String intro, int localCode, Date date, Date startTime, Date endTime, int categoryCode, String tutorIntro, String close, String hobbyStatus, Date crateDate, Date updateDate, List<HobbyKeyword> hobbyKeywordList, List<HobbyImage> hobbyImages) {
+    public Hobby(int hobbyCode, String hobbyTitle, int tutorCode, int maxPersonnel, int hobbyPrice, String intro, int localCode, Date date, Date startTime, Date endTime, int categoryCode, String tutorIntro, String close, String hobbyStatus, Date crateDate, Date updateDate, List<HobbyKeyword> hobbyKeywordList, List<HobbyImage> hobbyImages, List<HobbyReview> hobbyReviews) {
         this.hobbyCode = hobbyCode;
         this.hobbyTitle = hobbyTitle;
         this.tutorCode = tutorCode;
@@ -116,6 +122,7 @@ public class Hobby {
         this.updateDate = updateDate;
         this.hobbyKeywordList = hobbyKeywordList;
         this.hobbyImages = hobbyImages;
+        this.hobbyReviews = hobbyReviews;
     }
 
     public Hobby(HobbyDTO hobbyDTO) {
@@ -277,6 +284,14 @@ public class Hobby {
         this.hobbyImages = hobbyImages;
     }
 
+    public List<HobbyReview> getHobbyReviews() {
+        return hobbyReviews;
+    }
+
+    public void setHobbyReviews(List<HobbyReview> hobbyReviews) {
+        this.hobbyReviews = hobbyReviews;
+    }
+
     @Override
     public String toString() {
         return "Hobby{" +
@@ -298,6 +313,7 @@ public class Hobby {
                 ", updateDate=" + updateDate +
                 ", hobbyKeywordList=" + hobbyKeywordList +
                 ", hobbyImages=" + hobbyImages +
+                ", hobbyReviews=" + hobbyReviews +
                 '}';
     }
 }
