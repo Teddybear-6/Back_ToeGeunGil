@@ -46,22 +46,14 @@ public class Notice {
     public Notice() {
     }
 
-    public Notice(int num, int noticeNum, String noticeTitle, String noticeContent, Date noticeDate, Date noticeModiDate, String noticeState) {
-        this.num = num;
+    public Notice(int noticeNum, int noticeMember, String noticeTitle, String noticeContent, Date noticeDate, Date noticeModiDate, String noticeState) {
         this.noticeNum = noticeNum;
+        this.noticeMember = noticeMember;
         this.noticeTitle = noticeTitle;
         this.noticeContent = noticeContent;
         this.noticeDate = noticeDate;
         this.noticeModiDate = noticeModiDate;
         this.noticeState = noticeState;
-    }
-
-    public int getNum() {
-        return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
     }
 
     public int getNoticeNum() {
@@ -70,6 +62,14 @@ public class Notice {
 
     public void setNoticeNum(int noticeNum) {
         this.noticeNum = noticeNum;
+    }
+
+    public int getNoticeMember() {
+        return noticeMember;
+    }
+
+    public void setNoticeMember(int noticeMember) {
+        this.noticeMember = noticeMember;
     }
 
     public String getNoticeTitle() {
@@ -115,8 +115,8 @@ public class Notice {
     @Override
     public String toString() {
         return "Notice{" +
-                "num=" + num +
-                ", noticeNum=" + noticeNum +
+                "noticeNum=" + noticeNum +
+                ", noticeMember=" + noticeMember +
                 ", noticeTitle='" + noticeTitle + '\'' +
                 ", noticeContent='" + noticeContent + '\'' +
                 ", noticeDate=" + noticeDate +
