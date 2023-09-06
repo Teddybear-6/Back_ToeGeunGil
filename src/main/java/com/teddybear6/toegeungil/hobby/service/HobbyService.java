@@ -3,10 +3,8 @@ package com.teddybear6.toegeungil.hobby.service;
 import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
 import com.teddybear6.toegeungil.hobby.dto.HobbyGetDTO;
 import com.teddybear6.toegeungil.hobby.dto.HobbyKeywordDTO;
-import com.teddybear6.toegeungil.hobby.entity.Hobby;
-import com.teddybear6.toegeungil.hobby.entity.HobbyImage;
-import com.teddybear6.toegeungil.hobby.entity.HobbyKeyword;
-import com.teddybear6.toegeungil.hobby.entity.HobbyPk;
+import com.teddybear6.toegeungil.hobby.entity.*;
+import com.teddybear6.toegeungil.hobby.repository.HobbyJoinRepository;
 import com.teddybear6.toegeungil.hobby.repository.HobbyKeywordRepository;
 import com.teddybear6.toegeungil.hobby.repository.HobbyRepository;
 import com.teddybear6.toegeungil.hobby.repository.StorageRepository;
@@ -34,12 +32,15 @@ public class HobbyService {
 
     private final HobbyKeywordRepository hobbyKeywordRepository;
 
+    private final HobbyJoinRepository hobbyJoinRepository;
 
-    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository) {
+
+    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository, HobbyJoinRepository hobbyJoinRepository) {
         this.storageRepository = storageRepository;
         this.keywordRepository = keywordRepository;
         this.hobbyRepository = hobbyRepository;
         this.hobbyKeywordRepository = hobbyKeywordRepository;
+        this.hobbyJoinRepository = hobbyJoinRepository;
     }
 
     public String uploadImage(MultipartFile file) throws IOException {
@@ -201,5 +202,43 @@ public class HobbyService {
         Hobby findHobby = hobbyRepository.save(hobby);
 
         return 1;
+    }
+
+    public HobbyJoin findJoin(int hobbyCode, int userNo) {
+        HobbyJoin hobbyJoin = hobbyJoinRepository.findByHobbyCodeAndUserNo(hobbyCode,userNo);
+
+        return hobbyJoin;
+
+    }
+
+    public int joinHobby(HobbyJoin join) {
+        HobbyJoin hobbyJoin = hobbyJoinRepository.save(join);
+
+        if(Objects.isNull(hobbyJoin)){
+            return 0;
+        }else {
+            return 1;
+        }
+
+    }
+
+    public int unJoinHobby(HobbyJoin hobbyJoin) {
+
+        hobbyJoinRepository.deleteById(hobbyJoin.getJoinNum());
+       HobbyJoin findHobbyJoin = hobbyJoinRepository.findById(hobbyJoin.getJoinNum());
+
+       if(Objects.isNull(findHobbyJoin)){
+           return 1;
+       }else {
+           return 2;
+       }
+
+    }
+
+    public List<HobbyJoin> findAllJoin(int hobbyCode) {
+        List<HobbyJoin> hobbyJoins = hobbyJoinRepository.findAllByHobbyCode(hobbyCode);
+
+        return hobbyJoins;
+
     }
 }

@@ -6,6 +6,7 @@ import com.teddybear6.toegeungil.hobby.dto.HobbyKeywordDTO;
 import com.teddybear6.toegeungil.hobby.dto.ImageIdDTO;
 import com.teddybear6.toegeungil.hobby.entity.Hobby;
 import com.teddybear6.toegeungil.hobby.entity.HobbyImage;
+import com.teddybear6.toegeungil.hobby.entity.HobbyJoin;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
 
 
@@ -119,15 +120,15 @@ public class HobbyController {
 
     //수정
     @PutMapping("/{hobbyCode}")
-    public ResponseEntity<?> updateHobby(@PathVariable int hobbyCode, @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") List<MultipartFile> files){
+    public ResponseEntity<?> updateHobby(@PathVariable int hobbyCode, @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") List<MultipartFile> files) {
 
 
         Hobby hobby = hobbyService.findById(hobbyCode);
-        if(Objects.isNull(hobby)){
+        if (Objects.isNull(hobby)) {
             return ResponseEntity.status(404).body("존재하지 않는 취미입니다.");
         }
 
-        int result = hobbyService.updateHobby(hobby,hobbyDTO,files);
+        int result = hobbyService.updateHobby(hobby, hobbyDTO, files);
         return ResponseEntity.ok().body("테스트");
     }
 
@@ -191,31 +192,86 @@ public class HobbyController {
 
     //참여하기
     /* 포스트?
-    * api 어떻게 하지
-    * /참여하기 @RequestParam  취미번호 , 회원정보?
-    * ?
-    * 참여하기 요청하면  매핑 테이블에 취미번호와 회원 번호 저장?
-    * 이미 있으면  회원 번호로 검색해서 삭제
-    *
-    * 취미 조회하고 없거나 마감했으면 문닫았다고 리턴 해주고
-    * 있으면 이미 참여했는지 조회 없으면 저장해주고 참여하기 완료 됐다고 리턴
-    * 있으면 삭제해주고 취소했다고 리턴
-    * */
+     * api 어떻게 하지
+     * /참여하기 @RequestParam?   취미번호 , 회원정보?
+     * ?
+     * 참여하기 요청하면  매핑 테이블에 취미번호와 회원 번호 저장? 연관 관계는? 지금 유저 엔티티가 없다
+     *
+     *
+     * 이미 있으면  회원 번호로 검색해서 삭제
+     *
+     * 취미 조회하고 없거나 마감했으면 문닫았다고 리턴 해주고
+     * 있으면 이미 참여했는지 조회 없으면 저장해주고 참여하기 완료 됐다고 리턴
+     * 있으면 삭제해주고 취소했다고 리턴 true ? false
+     * 버튼 같은건 어쩌지
+     *
+     * join
+     * */
+
+    @PostMapping("/join/{hobbyCode}")
+    public ResponseEntity<?> joinHobby(@PathVariable int hobbyCode, int userNo) {
+        System.out.println(userNo);
+        Hobby hobby = hobbyService.findById(hobbyCode);
+        if (hobby.getClose().equals("Y")) {
+            return ResponseEntity.ok().body("마감되었습니다.");
+        }
+
+        HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, userNo);
+
+
+        if (Objects.isNull(hobbyJoin)) {
+            List<HobbyJoin> HobbyJoin = hobbyService.findAllJoin(hobbyCode);
+            if (hobby.getMaxPersonnel() <= HobbyJoin.size()) {
+                return ResponseEntity.ok().body("참가 인원을 초과했습니다.");
+            }
+            HobbyJoin join = new HobbyJoin();
+            join.setHobbyCode(hobbyCode);
+            join.setUserNo(userNo);
+            int result = hobbyService.joinHobby(join);
+            if (result > 0) {
+                return ResponseEntity.ok().body("참가 완료되었습니다.");
+            } else {
+                return ResponseEntity.status(500).body("등록할 수 없습니다.");
+            }
+
+        }
+        int resultUnJoin = hobbyService.unJoinHobby(hobbyJoin);
+        if (resultUnJoin > 0) {
+            return ResponseEntity.ok().body("참가 취소 되었습니다.");
+        } else {
+            return ResponseEntity.status(500).body("참가 취소 실패했습니다.");
+        }
+
+
+    }
+
+    //참가여부
+    @GetMapping("/join/{hobbyCode}")
+    public ResponseEntity<?> join(@PathVariable int hobbyCode, int userNo) {
+        HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, userNo);
+
+        if (Objects.isNull(hobbyJoin)) {
+            return ResponseEntity.ok().body(false);
+        } else {
+            return ResponseEntity.ok().body(true);
+        }
+    }
 
 
     //참가자 get요청
     /*
-    * 취미번호로 참가자 조회하기
-    * 참가자 회원번호 리턴
-    *
-    *
-    *
-    * */
+     * 취미번호로 참가자 조회하기
+     * 참가자 회원번호 리턴
+     *
+     *
+     *
+     * */
 
     //찜하기
     /*
-    * 참여하기랑 비슷한 로직
-    * */
+     * 참여하기랑 비슷한 로직
+     * */
+
 
     //찜리스트 보기?
 
