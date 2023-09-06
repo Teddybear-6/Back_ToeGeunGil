@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.report.entity;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -27,6 +28,9 @@ public class Report {
     @Column(name = "category_num")
     private int categoryNum;            // 카테고리 번호
 
+    @Column(name = "category_content")
+    private String categoryContent;     // 카테고리 내용
+
     @Column(name = "report_content")
     private String reportContent;       // 신고 내용
 
@@ -36,16 +40,18 @@ public class Report {
     private Date reportDate;            // 신고 상태
 
     @Column(name = "report_status", columnDefinition = "varchar(1)")
+    @ColumnDefault("'Y'")
     private String reportStatus;
 
     public Report() {
     }
 
-    public Report(int reportNum, String reportMember, String receiveMember, int categoryNum, String reportContent, Date reportDate, String reportStatus) {
+    public Report(int reportNum, String reportMember, String receiveMember, int categoryNum, String categoryContent, String reportContent, Date reportDate, String reportStatus) {
         this.reportNum = reportNum;
         this.reportMember = reportMember;
         this.receiveMember = receiveMember;
         this.categoryNum = categoryNum;
+        this.categoryContent = categoryContent;
         this.reportContent = reportContent;
         this.reportDate = reportDate;
         this.reportStatus = reportStatus;
@@ -83,6 +89,14 @@ public class Report {
         this.categoryNum = categoryNum;
     }
 
+    public String getCategoryContent() {
+        return categoryContent;
+    }
+
+    public void setCategoryContent(String categoryContent) {
+        this.categoryContent = categoryContent;
+    }
+
     public String getReportContent() {
         return reportContent;
     }
@@ -114,6 +128,7 @@ public class Report {
                 ", reportMember='" + reportMember + '\'' +
                 ", receiveMember='" + receiveMember + '\'' +
                 ", categoryNum=" + categoryNum +
+                ", categoryContent='" + categoryContent + '\'' +
                 ", reportContent='" + reportContent + '\'' +
                 ", reportDate=" + reportDate +
                 ", reportStatus='" + reportStatus + '\'' +
