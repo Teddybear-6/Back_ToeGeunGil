@@ -4,6 +4,7 @@ import java.sql.Date;
 
 public class ReportDTO {
 
+    private int reportNum; // 신고 번호
     private String userId; // 신고 하는 회원(강사) 아이디 (수정하기)
     private String userId2; // 신고 당하는 회원(강사) 아이디 (수정하기)
     private int categoryNum; // 카테고리 번호
@@ -14,13 +15,22 @@ public class ReportDTO {
     public ReportDTO() {
     }
 
-    public ReportDTO(String userId, String userId2, int categoryNum, String reportContent, Date reportDate, String reportStatus) {
+    public ReportDTO(int reportNum, String userId, String userId2, int categoryNum, String reportContent, Date reportDate, String reportStatus) {
+        this.reportNum = reportNum;
         this.userId = userId;
         this.userId2 = userId2;
         this.categoryNum = categoryNum;
         this.reportContent = reportContent;
         this.reportDate = reportDate;
         this.reportStatus = reportStatus;
+    }
+
+    public int getReportNum() {
+        return reportNum;
+    }
+
+    public void setReportNum(int reportNum) {
+        this.reportNum = reportNum;
     }
 
     public String getUserId() {
@@ -74,7 +84,8 @@ public class ReportDTO {
     @Override
     public String toString() {
         return "ReportDTO{" +
-                "userId='" + userId + '\'' +
+                "reportNum=" + reportNum +
+                ", userId='" + userId + '\'' +
                 ", userId2='" + userId2 + '\'' +
                 ", categoryNum=" + categoryNum +
                 ", reportContent='" + reportContent + '\'' +
