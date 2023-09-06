@@ -161,6 +161,7 @@ public class HobbyService {
         hobby.setHobbyTitle(hobbyDTO.getHobbyTitle());     //제목
         hobby.setHobbyPrice(hobbyDTO.getHobbyPrice());     //가격
         hobby.setClose(hobbyDTO.getClose());               //마감여부
+        System.out.println(hobbyDTO.getClose());
         hobby.setCategoryCode(hobbyDTO.getCategoryCode()); //카테고리
         hobby.setLocalCode(hobbyDTO.getLocalCode());       //지역
         hobby.setIntro(hobbyDTO.getIntro());               //소개
@@ -170,17 +171,16 @@ public class HobbyService {
         hobby.setEndTime(hobbyDTO.getEndTime());           //끝나는 시간
 
 
-        hobbyKeywordRepository.deleteAllInBatch(hobby.getHobbyKeywordList());
-        storageRepository.deleteAllByHobbyCode(hobby.getHobbyCode());
-
         for (int i = 0; i < keyword.size(); i++) {
             Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
             hobbyKeywordList.add(new HobbyKeyword(new HobbyPk(hobby.getHobbyCode(), findKeyword.getKeywordCode()), hobby, findKeyword));
 
         }
 
-
+        //따로 지워줄 경우 에러가 나지만 clear 후 set 해주면 된다
+        hobby.getHobbyKeywordList().clear();
         hobby.setHobbyKeywordList(hobbyKeywordList);
+        hobby.getHobbyImages().clear();
         System.out.println(hobby.getHobbyKeywordList());
 
 
@@ -265,5 +265,36 @@ public class HobbyService {
         return 1;
 
 
+    }
+
+    public List<HobbyReview> findAllReview(int hobbyCode) {
+
+        List<HobbyReview> hobbyReviews = hobbyReviewRepository.findAllByHobbyCode(hobbyCode);
+
+        return hobbyReviews;
+    }
+
+    public HobbyReview findByIdReview(int hobbyCode, int userNo) {
+        HobbyReview hobbyReview = hobbyReviewRepository.findAllByHobbyCodeAndUserNo(hobbyCode, userNo);
+        return hobbyReview;
+
+    }
+
+    public HobbyReview findByReviewCode(int reviewCode) {
+        HobbyReview hobbyReview = hobbyReviewRepository.findById(reviewCode);
+
+        return hobbyReview;
+    }
+
+
+    public int deleteByReviewCode(HobbyReview hobbyReview) {
+        HobbyReview findReiview =  hobbyReviewRepository.save(hobbyReview);
+        System.out.println(findReiview.getReviewStatus());
+
+        if(findReiview.getReviewStatus().equals("N")){
+            return 1;
+        }else {
+            return 0;
+        }
     }
 }

@@ -2,14 +2,22 @@ package com.teddybear6.toegeungil.hobby.entity;
 
 
 import com.teddybear6.toegeungil.hobby.dto.HobbyReviewDTO;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity(name = "hobby_review")
 @Table(name = "hobby_review")
+@EntityListeners(AuditingEntityListener.class)
+@DynamicInsert
+@Where(clause = "review_status='Y'")
+
 public class HobbyReview {
 
 
@@ -43,11 +51,15 @@ public class HobbyReview {
     @LastModifiedDate
     private Date updateDate;
 
+    @Column(name = "review_status",columnDefinition = "varchar(1)" )
+    @ColumnDefault("'Y'")
+    private String reviewStatus;
+
 
     public HobbyReview() {
     }
 
-    public HobbyReview(int reviewCode, int hobbyCode, int userNo, String content, int score, Date crateDate, Date updateDate) {
+    public HobbyReview(int reviewCode, int hobbyCode, int userNo, String content, int score, Date crateDate, Date updateDate, String reviewStatus) {
         this.reviewCode = reviewCode;
         this.hobbyCode = hobbyCode;
         this.userNo = userNo;
@@ -55,14 +67,15 @@ public class HobbyReview {
         this.score = score;
         this.crateDate = crateDate;
         this.updateDate = updateDate;
+        this.reviewStatus = reviewStatus;
     }
-
 
     public HobbyReview(HobbyReviewDTO hobbyReviewDTO) {
         this.hobbyCode = hobbyReviewDTO.getHobbyCode();
         this.userNo = hobbyReviewDTO.getUserNo();
         this.content = hobbyReviewDTO.getContent();
         this.score = hobbyReviewDTO.getScore();
+        this.reviewStatus=hobbyReviewDTO.getReviewStatus();
     }
 
     public int getReviewCode() {
@@ -121,6 +134,14 @@ public class HobbyReview {
         this.hobbyCode = hobbyCode;
     }
 
+    public String getReviewStatus() {
+        return reviewStatus;
+    }
+
+    public void setReviewStatus(String reviewStatus) {
+        this.reviewStatus = reviewStatus;
+    }
+
     @Override
     public String toString() {
         return "HobbyReview{" +
@@ -131,6 +152,7 @@ public class HobbyReview {
                 ", score=" + score +
                 ", crateDate=" + crateDate +
                 ", updateDate=" + updateDate +
+                ", reviewStatus='" + reviewStatus + '\'' +
                 '}';
     }
 }

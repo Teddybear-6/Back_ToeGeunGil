@@ -1,5 +1,7 @@
 package com.teddybear6.toegeungil.hobby.dto;
 
+import com.teddybear6.toegeungil.hobby.entity.HobbyReview;
+
 import java.util.Date;
 
 public class HobbyReviewDTO {
@@ -20,6 +22,8 @@ public class HobbyReviewDTO {
 
     private Date updateDate;
 
+    private String reviewStatus;
+
     public HobbyReviewDTO() {
     }
 
@@ -32,6 +36,19 @@ public class HobbyReviewDTO {
         this.crateDate = crateDate;
         this.updateDate = updateDate;
     }
+
+    public HobbyReviewDTO(HobbyReview hobbyReview) {
+        this.reviewCode = hobbyReview.getReviewCode();
+        this.hobbyCode = hobbyReview.getHobbyCode();
+        this.userNo = hobbyReview.getUserNo();
+        this.content = hobbyReview.getContent();
+        this.score = hobbyReview.getScore();
+        this.crateDate = hobbyReview.getCrateDate();
+        this.updateDate = hobbyReview.getUpdateDate();
+        this.reviewStatus=hobbyReview.getReviewStatus();
+    }
+
+
 
     public int getReviewCode() {
         return reviewCode;
@@ -89,6 +106,14 @@ public class HobbyReviewDTO {
         this.hobbyCode = hobbyCode;
     }
 
+    public String getReviewStatus() {
+        return reviewStatus;
+    }
+
+    public void setReviewStatus(String reviewStatus) {
+        this.reviewStatus = reviewStatus;
+    }
+
     @Override
     public String toString() {
         return "HobbyReviewDTO{" +
@@ -99,6 +124,7 @@ public class HobbyReviewDTO {
                 ", score=" + score +
                 ", crateDate=" + crateDate +
                 ", updateDate=" + updateDate +
+                ", reviewStatus='" + reviewStatus + '\'' +
                 '}';
     }
 }
