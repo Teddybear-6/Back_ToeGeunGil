@@ -3,6 +3,7 @@ package com.teddybear6.toegeungil.hobby.service;
 import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
 import com.teddybear6.toegeungil.hobby.dto.HobbyGetDTO;
 import com.teddybear6.toegeungil.hobby.dto.HobbyKeywordDTO;
+import com.teddybear6.toegeungil.hobby.dto.HobbyReviewDTO;
 import com.teddybear6.toegeungil.hobby.entity.*;
 import com.teddybear6.toegeungil.hobby.repository.*;
 import com.teddybear6.toegeungil.hobby.utils.ImageUtils;
@@ -287,6 +288,7 @@ public class HobbyService {
     }
 
 
+    @Transactional
     public int deleteByReviewCode(HobbyReview hobbyReview) {
         HobbyReview findReiview =  hobbyReviewRepository.save(hobbyReview);
         System.out.println(findReiview.getReviewStatus());
@@ -296,5 +298,21 @@ public class HobbyService {
         }else {
             return 0;
         }
+    }
+
+    @Transactional
+    public int updateReview(HobbyReviewDTO hobbyReviewDTO) {
+        HobbyReview findReview = hobbyReviewRepository.findById(hobbyReviewDTO.getReviewCode());
+
+        findReview.setContent(hobbyReviewDTO.getContent());
+        findReview.setScore(hobbyReviewDTO.getScore());
+
+        if(findReview.getContent().equals(hobbyReviewDTO.getContent()) && findReview.getScore()==hobbyReviewDTO.getScore()){
+            return 1;
+        }else {
+            return 0;
+        }
+
+
     }
 }
