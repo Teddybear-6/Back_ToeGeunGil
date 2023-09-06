@@ -46,33 +46,6 @@ public class CommunityService {
         }
     }
 
-//    @Transactional
-//    public int communityUpdate(Community findCommunity, String communityTitle, String communityIntro, int categoryNum, int keywordNum, int locationNum, String communityStatus) {
-//
-//        // 업데이트할 community 게시글이 있는지 확인한다.
-//        if(findCommunity == null){
-//            return 0;
-//        }
-//
-//        // 매개 변수의 값으로 기존 커뮤니티의 필드를 업데이트한다.
-//        findCommunity.setCommunityTitle(communityTitle);
-//        findCommunity.setCommunityIntro(communityIntro);
-//        findCommunity.setCategoryNum(categoryNum);
-//        findCommunity.setKeywordNum(keywordNum);
-//        findCommunity.setLocationNum(locationNum);
-//        findCommunity.setCommunityStatus(communityStatus);
-//        findCommunity.setPostUpdateDate(new Date()); // 수정 날짜 업데이트
-//
-//        // update된 community를 entity에 저장
-//        Community updateCommunity = communityRepository.save(findCommunity);
-//
-//        if(updateCommunity != null) {
-//            return 1;
-//        } else{
-//            return 0;
-//        }
-//    }
-
     @Transactional
     public int communityUpdate(Community findCommunity, CommunityDTO communityDTO) {
 
