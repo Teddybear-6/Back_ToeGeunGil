@@ -5,18 +5,17 @@ import com.teddybear6.toegeungil.qna.service.QnaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/qna")
-public class QnaController {
+@RequestMapping("/question")
+public class QuestionController {
 
     private final QnaService qnaService;
 
-    public QnaController(QnaService qnaService) {
+    public QuestionController(QnaService qnaService) {
         this.qnaService = qnaService;
     }
     @GetMapping("/{queNum}")
@@ -63,6 +62,11 @@ public class QnaController {
             return ResponseEntity.status(400).body("수정 실패");
         }
 
+    }
 
+    @DeleteMapping("/{delete}")
+    public ResponseEntity<?> delete(@PathVariable int delete){
+        qnaService.deleteCode(delete);
+        return ResponseEntity.ok().body("삭제 완료");
     }
 }

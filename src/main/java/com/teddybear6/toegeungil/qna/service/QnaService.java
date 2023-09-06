@@ -8,29 +8,32 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 
+//질문 서비스
 @Service
 public class QnaService {
     private final QuestionRepository questionRepository;
 
     public QnaService(QuestionRepository questionRepository) {
         this.questionRepository = questionRepository;
-    }
+    }  //생성자
 
 
-    public Question findQuestionByCode(int questionCode){
-        Question question = questionRepository.findById(questionCode);
+    //question레파지토리에 있는 코드로 찾기
+    public Question findQuestionByCode(int questionNum){
+        Question question = questionRepository.findById(questionNum);
         return question;
 
     }
+
     public List<Question> findAllQuestion(){
         List<Question> questionList = questionRepository.findAll();
         return questionList;
     }
 
     @Transactional
-    public int registQuestion(Question menu) {
+    public int registQuestion(Question question) {
 
-        Question result = questionRepository.save(menu);
+        Question result = questionRepository.save(question);
         System.out.println(result);
 
         if(Objects.isNull(result)){
@@ -55,5 +58,13 @@ public class QnaService {
         }else {
             return 1;
         }
+    }
+
+    @Transactional
+    public void deleteCode(int del){
+        questionRepository.deleteById(del);
+
+        Question question = questionRepository.findById(del);
+        System.out.println(question);
     }
 }
