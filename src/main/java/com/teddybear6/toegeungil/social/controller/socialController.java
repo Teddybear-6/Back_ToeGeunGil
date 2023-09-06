@@ -1,6 +1,5 @@
 package com.teddybear6.toegeungil.social.controller;
 
-import com.teddybear6.toegeungil.social.dto.FileDTO;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import com.teddybear6.toegeungil.social.entity.Social;
 import com.teddybear6.toegeungil.social.service.SocialService;
@@ -8,11 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.PrePersist;
-import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -139,7 +134,7 @@ public class socialController {
     게시글 삭제는 수정에서 게시글 상태 Y -> N으로 변경*/
 
     @PostMapping("/image")
-    public ResponseEntity<?> uploadSocialImage(@RequestParam(name = "image")MultipartFile image) throws IOException {
+    public ResponseEntity<?> uploadSocialImage(@RequestParam(name = "image"/*key*/)MultipartFile image) throws IOException {
         String uploadImage = socialService.uploadSocialImage(image);
         return ResponseEntity.ok().body(uploadImage);
 //        //폴더 생성과 파일명을 새로 부여하기 위한 현재 시간 가져오기
