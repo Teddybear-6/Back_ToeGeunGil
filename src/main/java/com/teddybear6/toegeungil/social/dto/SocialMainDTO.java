@@ -15,4 +15,5 @@ public class SocialMainDTO {
     private String socialName; //게시글 제목
     private String keywordName; //키워드 이름
 
+
 }
