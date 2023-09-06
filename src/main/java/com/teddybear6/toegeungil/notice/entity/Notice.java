@@ -21,8 +21,8 @@ public class Notice {
     @Column(name = "notice_num") // 공지 번호
     private int noticeNum;
 
-    @Column(name = "num") // 회원 번호(fk)
-    private int num;
+    @Column(name = "notice_member") // 회원 번호(fk)
+    private int noticeMember;
     @Column(name = "notice_title") // 공지 제목
     private String noticeTitle;
 
