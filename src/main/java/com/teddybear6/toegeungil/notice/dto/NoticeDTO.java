@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class NoticeDTO {
 
-    private int num; // 관리자 회원 번호?? (수정하기)
+    private int noticeMember; // 관리자 회원 번호
     private int noticeNum; // 공지 번호
     private String noticeTitle; // 공지 제목
     private String noticeContent; // 공지 내용
@@ -15,8 +15,8 @@ public class NoticeDTO {
     public NoticeDTO() {
     }
 
-    public NoticeDTO(int num, int noticeNum, String noticeTitle, String noticeContent, Date noticeDate, Date noticeModiDate, String noticeState) {
-        this.num = num;
+    public NoticeDTO(int noticeMember, int noticeNum, String noticeTitle, String noticeContent, Date noticeDate, Date noticeModiDate, String noticeState) {
+        this.noticeMember = noticeMember;
         this.noticeNum = noticeNum;
         this.noticeTitle = noticeTitle;
         this.noticeContent = noticeContent;
@@ -25,12 +25,12 @@ public class NoticeDTO {
         this.noticeState = noticeState;
     }
 
-    public int getNum() {
-        return num;
+    public int getNoticeMember() {
+        return noticeMember;
     }
 
-    public void setNum(int num) {
-        this.num = num;
+    public void setNoticeMember(int noticeMember) {
+        this.noticeMember = noticeMember;
     }
 
     public int getNoticeNum() {
@@ -84,7 +84,7 @@ public class NoticeDTO {
     @Override
     public String toString() {
         return "NoticeDTO{" +
-                "num=" + num +
+                "noticeMember=" + noticeMember +
                 ", noticeNum=" + noticeNum +
                 ", noticeTitle='" + noticeTitle + '\'' +
                 ", noticeContent='" + noticeContent + '\'' +
