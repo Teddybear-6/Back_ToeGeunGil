@@ -16,19 +16,23 @@ public class Image {
     private String imageName; //저장될 파일 이름 (파일명이 겹치는 것을 방지하기 위해)
 
     @Column(name = "image_type")
-    private String imageType; //기존 파일 이름
+    private String imageType; //확장자 타입
+
+    @Column(name = "image_ori_name")
+    private String imageOriName; //기존 파일 이름
 
     @Lob
     @Column(name = "image_data")
-    private byte[] imageData; //저장 경로
+    private byte[] imageData; //byte[]로 변환후 저장
 
     public Image() {
     }
 
-    public Image(Long imageId, String imageName, String imageType, byte[] imageData) {
+    public Image(Long imageId, String imageName, String imageType, String imageOriName,byte[] imageData) {
         this.imageId = imageId;
         this.imageName = imageName;
         this.imageType = imageType;
+        this.imageOriName = imageOriName;
         this.imageData = imageData;
     }
 
@@ -49,13 +53,18 @@ public class Image {
         return this;
     }
 
+    public Image imageOriName(String imageOriName) {
+        this.imageOriName = imageOriName;
+        return this;
+    }
+
     public Image imageData(byte[] imageData) {
         this.imageData = imageData;
         return this;
     }
 
     public Image builder() {
-        return new Image(imageId, imageName, imageType, imageData);
+        return new Image(imageId, imageName, imageType, imageOriName, imageData);
     }
 
 
@@ -72,6 +81,10 @@ public class Image {
         return imageType;
     }
 
+    public String getImageOriName() {
+        return imageOriName;
+    }
+
     public byte[] getImageData() {
         return imageData;
     }
@@ -82,6 +95,7 @@ public class Image {
                 "imageId=" + imageId +
                 ", imageName='" + imageName + '\'' +
                 ", imageType='" + imageType + '\'' +
+                ", imageOriName='" + imageOriName + '\'' +
                 ", imageData=" + Arrays.toString(imageData) +
                 '}';
     }

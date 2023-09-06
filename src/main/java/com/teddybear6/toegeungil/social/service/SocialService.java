@@ -132,7 +132,8 @@ public class SocialService {
 
         Image imageData = imageRepository.save(
                 new Image()
-                        .imageName(newFileName/*시간으로 저장*/) //이미지명으로 저장하고 싶을 경우 image.getOriginalFilename()
+                        .imageName(newFileName/*시간으로 저장*/)
+                        .imageOriName(image.getOriginalFilename())
                         .imageType(image.getContentType())
                         .imageData(ImageUtils.compressImage(image.getBytes()))
                         .builder()
