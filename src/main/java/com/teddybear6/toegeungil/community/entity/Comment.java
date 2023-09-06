@@ -33,8 +33,75 @@ public class Comment {
     @Temporal(TemporalType.DATE)
     private Date commentUpdateDate; // comment 수정 날짜
 
+    public Comment() {
+    }
 
+    public Comment(int commentNum, int userNum, int communityNum, String commentDetail, Date commentWriteDate, Date commentUpdateDate) {
+        this.commentNum = commentNum;
+        this.userNum = userNum;
+        this.communityNum = communityNum;
+        this.commentDetail = commentDetail;
+        this.commentWriteDate = commentWriteDate;
+        this.commentUpdateDate = commentUpdateDate;
+    }
 
+    public int getCommentNum() {
+        return commentNum;
+    }
 
+    public void setCommentNum(int commentNum) {
+        this.commentNum = commentNum;
+    }
 
+    public int getUserNum() {
+        return userNum;
+    }
+
+    public void setUserNum(int userNum) {
+        this.userNum = userNum;
+    }
+
+    public int getCommunityNum() {
+        return communityNum;
+    }
+
+    public void setCommunityNum(int communityNum) {
+        this.communityNum = communityNum;
+    }
+
+    public String getCommentDetail() {
+        return commentDetail;
+    }
+
+    public void setCommentDetail(String commentDetail) {
+        this.commentDetail = commentDetail;
+    }
+
+    public Date getCommentWriteDate() {
+        return commentWriteDate;
+    }
+
+    public void setCommentWriteDate(Date commentWriteDate) {
+        this.commentWriteDate = commentWriteDate;
+    }
+
+    public Date getCommentUpdateDate() {
+        return commentUpdateDate;
+    }
+
+    public void setCommentUpdateDate(Date commentUpdateDate) {
+        this.commentUpdateDate = commentUpdateDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "commentNum=" + commentNum +
+                ", userNum=" + userNum +
+                ", communityNum=" + communityNum +
+                ", commentDetail='" + commentDetail + '\'' +
+                ", commentWriteDate=" + commentWriteDate +
+                ", commentUpdateDate=" + commentUpdateDate +
+                '}';
+    }
 }
