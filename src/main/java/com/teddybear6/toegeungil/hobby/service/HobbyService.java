@@ -6,7 +6,7 @@ import com.teddybear6.toegeungil.hobby.dto.HobbyKeywordDTO;
 import com.teddybear6.toegeungil.hobby.dto.HobbyReviewDTO;
 import com.teddybear6.toegeungil.hobby.entity.*;
 import com.teddybear6.toegeungil.hobby.repository.*;
-import com.teddybear6.toegeungil.hobby.utils.ImageUtils;
+import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.keyword.repository.KeywordRepository;
 

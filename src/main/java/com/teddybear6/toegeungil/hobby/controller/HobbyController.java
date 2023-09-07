@@ -8,7 +8,7 @@ import com.teddybear6.toegeungil.hobby.entity.HobbyReview;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
 
 
-import com.teddybear6.toegeungil.hobby.utils.ImageUtils;
+import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -212,6 +212,7 @@ public class HobbyController {
      * join
      * */
 
+    //참가하기
     @PostMapping("/join/{hobbyCode}")
     public ResponseEntity<?> joinHobby(@PathVariable int hobbyCode, int userNo) {
         System.out.println(userNo);
