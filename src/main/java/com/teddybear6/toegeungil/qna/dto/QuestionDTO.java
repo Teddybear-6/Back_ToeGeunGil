@@ -1,36 +1,28 @@
-package com.teddybear6.toegeungil.qna.entity;
+package com.teddybear6.toegeungil.qna.dto;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "qna_question")
-public class Question {
-    //질문 관련 엔티티
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  //기본키 1씩 증가
-    @Column(name = "queNum")
+public class QuestionDTO {
     private int questionNum;                            //질문 번호
-    @Column(name = "queTitle")
+
     private String questionTitle;                       //질문 타이틀
-    @Column(name = "queContent")
+
     private String questionContent;                     //질문 내용
-    @Column(name = "queNickName")
+
     private String questionNick;                        //질문 작성자
-    @Column(name = "queDate")
+
     private Date questionDate;                          //질문 생성일
-    @Column(name = "queUpdate")
+
     private Date questionUpdate;                        //질문 수정일
-    @Column(name = "queDelete")
+
     private Date questionDelete;                        //질문 삭제일
-    @Column(name = "queStatus")
+
     private String questionStatus;                      //질문 상태
 
-    public Question() {
+    public QuestionDTO() {
     }
 
-    public Question(int questionNum, String questionTitle, String questionContent, String questionNick, Date questionDate, Date questionUpdate, Date questionDelete, String questionStatus) {
+    public QuestionDTO(int questionNum, String questionTitle, String questionContent, String questionNick, Date questionDate, Date questionUpdate, Date questionDelete, String questionStatus) {
         this.questionNum = questionNum;
         this.questionTitle = questionTitle;
         this.questionContent = questionContent;
@@ -107,7 +99,7 @@ public class Question {
 
     @Override
     public String toString() {
-        return "Question{" +
+        return "QuestionDTO{" +
                 "questionNum=" + questionNum +
                 ", questionTitle='" + questionTitle + '\'' +
                 ", questionContent='" + questionContent + '\'' +
