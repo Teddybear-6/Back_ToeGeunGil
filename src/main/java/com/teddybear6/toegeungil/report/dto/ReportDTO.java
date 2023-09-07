@@ -7,7 +7,6 @@ public class ReportDTO {
     private int reportNum; // 신고 번호
     private String reportMember; // 신고 하는 회원
     private String receiveMember; // 신고 받는 회원
-    private int categoryNum; // 카테고리 번호
     private String categoryContent; // 카테고리 내용
     private String reportContent; // 신고하기 내용 (기타일 경우에만 해당)
     private Date reportDate; // 신고 날짜
@@ -16,11 +15,10 @@ public class ReportDTO {
     public ReportDTO() {
     }
 
-    public ReportDTO(int reportNum, String reportMember, String receiveMember, int categoryNum, String categoryContent, String reportContent, Date reportDate, String reportStatus) {
+    public ReportDTO(int reportNum, String reportMember, String receiveMember, String categoryContent, String reportContent, Date reportDate, String reportStatus) {
         this.reportNum = reportNum;
         this.reportMember = reportMember;
         this.receiveMember = receiveMember;
-        this.categoryNum = categoryNum;
         this.categoryContent = categoryContent;
         this.reportContent = reportContent;
         this.reportDate = reportDate;
@@ -49,14 +47,6 @@ public class ReportDTO {
 
     public void setReceiveMember(String receiveMember) {
         this.receiveMember = receiveMember;
-    }
-
-    public int getCategoryNum() {
-        return categoryNum;
-    }
-
-    public void setCategoryNum(int categoryNum) {
-        this.categoryNum = categoryNum;
     }
 
     public String getCategoryContent() {
@@ -97,7 +87,6 @@ public class ReportDTO {
                 "reportNum=" + reportNum +
                 ", reportMember='" + reportMember + '\'' +
                 ", receiveMember='" + receiveMember + '\'' +
-                ", categoryNum=" + categoryNum +
                 ", categoryContent='" + categoryContent + '\'' +
                 ", reportContent='" + reportContent + '\'' +
                 ", reportDate=" + reportDate +
