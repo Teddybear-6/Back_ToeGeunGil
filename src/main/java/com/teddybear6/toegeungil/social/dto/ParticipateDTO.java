@@ -1,5 +1,7 @@
 package com.teddybear6.toegeungil.social.dto;
 
+import com.teddybear6.toegeungil.social.entity.Participate;
+
 import javax.persistence.Column;
 
 public class ParticipateDTO {
@@ -13,34 +15,50 @@ public class ParticipateDTO {
     public ParticipateDTO() {
     }
 
+    public ParticipateDTO(Participate participate) {
+        //Participate Entity를 ParticipateDTO 한 번에 담아주기 위해 생성
+        this.participateNum = participate.getParticipateNum();
+        this.socialNum = participate.getSocialNum();
+        this.userNum = participate.getUserNum();
+    }
+
     public ParticipateDTO(int participateNum, int socialNum, int userNum) {
         this.participateNum = participateNum;
         this.socialNum = socialNum;
         this.userNum = userNum;
     }
 
-    public int getParticipateNum() {
-        return participateNum;
+    /*Builder*/
+    public ParticipateDTO participateNum(int participateNum) {
+        this.participateNum = participateNum;
+        return this;
     }
 
-    public void setParticipateNum(int participateNum) {
-        this.participateNum = participateNum;
+    public ParticipateDTO socialNum(int socialNum) {
+        this.socialNum = socialNum;
+        return this;
+    }
+
+    public ParticipateDTO userNum(int userNum) {
+        this.userNum = userNum;
+        return this;
+    }
+
+    public ParticipateDTO builder() {
+        return new ParticipateDTO(participateNum, socialNum, userNum);
+    }
+
+    /*Getter*/
+    public int getParticipateNum() {
+        return participateNum;
     }
 
     public int getSocialNum() {
         return socialNum;
     }
 
-    public void setSocialNum(int socialNum) {
-        this.socialNum = socialNum;
-    }
-
     public int getUserNum() {
         return userNum;
-    }
-
-    public void setUserNum(int userNum) {
-        this.userNum = userNum;
     }
 
     @Override
