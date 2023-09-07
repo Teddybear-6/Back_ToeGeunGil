@@ -25,29 +25,25 @@ public class Report {
     @Column(name = "receive_member")
     private String receiveMember;       // 신고 받는 회원
 
-    @Column(name = "category_ontent")
-    private int categoryContent;        // 카테고리 내용
-
     @Column(name = "report_content")
     private String reportContent;       // 신고 내용
 
     @Column(name = "report_date")
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
-    private Date reportDate;            // 신고 상태
+    private Date reportDate;            // 신고 날짜
 
     @Column(name = "report_status", columnDefinition = "varchar(1)")
     @ColumnDefault("'Y'")
-    private String reportStatus;
+    private String reportStatus;        // 신고 상태
 
     public Report() {
     }
 
-    public Report(int reportNum, String reportMember, String receiveMember, int categoryContent, String reportContent, Date reportDate, String reportStatus) {
+    public Report(int reportNum, String reportMember, String receiveMember, String reportContent, Date reportDate, String reportStatus) {
         this.reportNum = reportNum;
         this.reportMember = reportMember;
         this.receiveMember = receiveMember;
-        this.categoryContent = categoryContent;
         this.reportContent = reportContent;
         this.reportDate = reportDate;
         this.reportStatus = reportStatus;
@@ -75,14 +71,6 @@ public class Report {
 
     public void setReceiveMember(String receiveMember) {
         this.receiveMember = receiveMember;
-    }
-
-    public int getCategoryContent() {
-        return categoryContent;
-    }
-
-    public void setCategoryContent(int categoryContent) {
-        this.categoryContent = categoryContent;
     }
 
     public String getReportContent() {
@@ -115,7 +103,6 @@ public class Report {
                 "reportNum=" + reportNum +
                 ", reportMember='" + reportMember + '\'' +
                 ", receiveMember='" + receiveMember + '\'' +
-                ", categoryContent=" + categoryContent +
                 ", reportContent='" + reportContent + '\'' +
                 ", reportDate=" + reportDate +
                 ", reportStatus='" + reportStatus + '\'' +
