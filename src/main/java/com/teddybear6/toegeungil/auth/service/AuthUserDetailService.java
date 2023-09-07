@@ -1,8 +1,8 @@
-package com.teddybear6.toegeungil.authjwt.auth.command.application.service;
+package com.teddybear6.toegeungil.auth.service;
 
-import com.teddybear6.toegeungil.authjwt.auth.command.application.controller.AuthController;
-import com.teddybear6.toegeungil.authjwt.auth.command.application.dto.AuthUserDetail;
-import com.teddybear6.toegeungil.authjwt.user.command.domain.model.UserEntity;
+import com.teddybear6.toegeungil.auth.controller.AuthController;
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
+import com.teddybear6.toegeungil.user.entity.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

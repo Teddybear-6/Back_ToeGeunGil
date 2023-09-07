@@ -1,7 +1,7 @@
 package com.teddybear6.toegeungil.config;
 
-import com.teddybear6.toegeungil.authjwt.auth.command.application.controller.AuthController;
-import com.teddybear6.toegeungil.authjwt.auth.command.domain.aggregate.vo.UserRole;
+import com.teddybear6.toegeungil.auth.controller.AuthController;
+import com.teddybear6.toegeungil.auth.vo.UserRole;
 import com.teddybear6.toegeungil.config.exception.AuthenFailHandler;
 import com.teddybear6.toegeungil.config.filter.JwtAuthenticationFilter;
 import com.teddybear6.toegeungil.config.filter.JwtAuthorizationFilter;

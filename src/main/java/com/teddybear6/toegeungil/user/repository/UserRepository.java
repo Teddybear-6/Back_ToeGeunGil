@@ -1,7 +1,7 @@
-package com.teddybear6.toegeungil.authjwt.user.query.domain.repository;
+package com.teddybear6.toegeungil.user.repository;
 
-import com.teddybear6.toegeungil.authjwt.auth.command.domain.aggregate.vo.UserRole;
-import com.teddybear6.toegeungil.authjwt.user.command.domain.model.UserEntity;
+import com.teddybear6.toegeungil.auth.vo.UserRole;
+import com.teddybear6.toegeungil.user.entity.UserEntity;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;

@@ -3,10 +3,9 @@ package com.teddybear6.toegeungil.config;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.teddybear6.toegeungil.authjwt.auth.command.application.dto.AuthUserDetail;
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
 import java.util.Date;
 
 @Component

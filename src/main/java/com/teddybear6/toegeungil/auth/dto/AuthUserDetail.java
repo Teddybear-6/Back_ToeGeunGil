@@ -1,7 +1,6 @@
-package com.teddybear6.toegeungil.authjwt.auth.command.application.dto;
+package com.teddybear6.toegeungil.auth.dto;
 
-import com.teddybear6.toegeungil.authjwt.user.command.domain.model.UserEntity;
-import org.springframework.cglib.core.TypeUtils;
+import com.teddybear6.toegeungil.user.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

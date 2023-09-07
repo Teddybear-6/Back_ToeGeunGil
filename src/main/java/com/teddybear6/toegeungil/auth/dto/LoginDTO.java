@@ -1,4 +1,4 @@
-package com.teddybear6.toegeungil.authjwt.auth.command.application.dto;
+package com.teddybear6.toegeungil.auth.dto;
 
 public class LoginDTO {
 

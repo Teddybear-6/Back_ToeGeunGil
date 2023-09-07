@@ -1,4 +1,4 @@
-package com.teddybear6.toegeungil.authjwt.auth.command.domain.aggregate.vo;
+package com.teddybear6.toegeungil.auth.vo;
 
 public enum UserRole {
     ADMIN("ADMIN"), USER("USER");

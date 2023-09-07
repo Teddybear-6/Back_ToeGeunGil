@@ -1,6 +1,6 @@
-package com.teddybear6.toegeungil.authjwt.user.command.domain.model;
+package com.teddybear6.toegeungil.user.entity;
 
-import com.teddybear6.toegeungil.authjwt.auth.command.domain.aggregate.vo.UserRole;
+import com.teddybear6.toegeungil.auth.vo.UserRole;
 
 import java.util.ArrayList;
 import java.util.Arrays;

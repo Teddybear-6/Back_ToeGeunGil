@@ -2,10 +2,9 @@ package com.teddybear6.toegeungil.config.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.teddybear6.toegeungil.authjwt.auth.command.application.controller.AuthController;
-import com.teddybear6.toegeungil.authjwt.auth.command.application.dto.AuthUserDetail;
-import com.teddybear6.toegeungil.authjwt.user.command.domain.model.UserEntity;
-import com.teddybear6.toegeungil.config.AuthentitationManager;
+import com.teddybear6.toegeungil.auth.controller.AuthController;
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
+import com.teddybear6.toegeungil.user.entity.UserEntity;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +17,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.Security;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private final String AUTH_KEY;

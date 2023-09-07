@@ -1,6 +1,6 @@
-package com.teddybear6.toegeungil.authjwt.auth.command.application.dto;
+package com.teddybear6.toegeungil.auth.dto;
 
-import com.teddybear6.toegeungil.authjwt.auth.command.domain.aggregate.vo.UserRole;
+import com.teddybear6.toegeungil.auth.vo.UserRole;
 
 public class LoginReqDTO {
     private int userNo;

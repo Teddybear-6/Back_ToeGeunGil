@@ -1,10 +1,9 @@
 package com.teddybear6.toegeungil.config.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.teddybear6.toegeungil.authjwt.auth.command.application.dto.AuthUserDetail;
-import com.teddybear6.toegeungil.authjwt.auth.command.application.dto.LoginDTO;
-import com.teddybear6.toegeungil.authjwt.auth.command.application.dto.LoginReqDTO;
-import com.teddybear6.toegeungil.config.AuthentitationManager;
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
+import com.teddybear6.toegeungil.auth.dto.LoginDTO;
+import com.teddybear6.toegeungil.auth.dto.LoginReqDTO;
 import com.teddybear6.toegeungil.config.JwtConfig;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,7 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.naming.AuthenticationException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

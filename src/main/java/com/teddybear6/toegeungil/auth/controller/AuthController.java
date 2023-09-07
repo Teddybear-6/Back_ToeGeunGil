@@ -1,7 +1,7 @@
-package com.teddybear6.toegeungil.authjwt.auth.command.application.controller;
+package com.teddybear6.toegeungil.auth.controller;
 
-import com.teddybear6.toegeungil.authjwt.user.command.domain.model.UserEntity;
-import com.teddybear6.toegeungil.authjwt.user.query.application.UserController;
+import com.teddybear6.toegeungil.user.entity.UserEntity;
+import com.teddybear6.toegeungil.user.controller.UserController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

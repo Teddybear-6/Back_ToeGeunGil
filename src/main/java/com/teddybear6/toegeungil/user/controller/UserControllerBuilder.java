@@ -1,6 +1,6 @@
-package com.teddybear6.toegeungil.authjwt.user.query.application;
+package com.teddybear6.toegeungil.user.controller;
 
-import com.teddybear6.toegeungil.authjwt.user.query.domain.sevice.UserViewService;
+import com.teddybear6.toegeungil.user.sevice.UserViewService;
 
 public class UserControllerBuilder {
     private UserViewService userViewService;

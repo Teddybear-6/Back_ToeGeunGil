@@ -1,7 +1,7 @@
-package com.teddybear6.toegeungil.authjwt.user.query.application;
+package com.teddybear6.toegeungil.user.controller;
 
-import com.teddybear6.toegeungil.authjwt.user.command.domain.model.UserEntity;
-import com.teddybear6.toegeungil.authjwt.user.query.domain.sevice.UserViewService;
+import com.teddybear6.toegeungil.user.entity.UserEntity;
+import com.teddybear6.toegeungil.user.sevice.UserViewService;
 import org.springframework.stereotype.Controller;
 
 @Controller
