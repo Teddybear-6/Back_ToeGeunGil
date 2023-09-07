@@ -3,13 +3,11 @@ package com.teddybear6.toegeungil.report.controller;
 import com.teddybear6.toegeungil.report.entity.Report;
 import com.teddybear6.toegeungil.report.service.ReportService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/reports")
@@ -35,6 +33,15 @@ public class ReportController {
     }
 
     /* <GET> /reports/{reportID} : 신고 상세 조회 */
+    @GetMapping("/{reportNum}")
+    public ResponseEntity<Object> findReportByCode(@PathVariable int reportNum){
+        Report report = reportService.findReportByCode(reportNum);
+
+        if(Objects.isNull(reportNum)){
+            return ResponseEntity.status(404).body(new String("신고번호가 존재하지 않습니다"));
+        }
+        return ResponseEntity.ok().body(report);
+    }
 
 
     /* <POST> /reports: 신고 등록 */
