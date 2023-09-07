@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserRepository {
-    private PasswordEncoder passwordEncoder;
+    private  PasswordEncoder passwordEncoder;
 
     public UserRepository(@Lazy PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;

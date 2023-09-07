@@ -2,16 +2,26 @@ package com.teddybear6.toegeungil.user.entity;
 
 import com.teddybear6.toegeungil.auth.vo.UserRole;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+@Entity
+@Table(name = "user")
 public class UserEntity {
-
+    @Id
+    @Column(name = "userNo")
     private String userNo;
+    @Column(name = "userEmail")
     private String userEmail;
+    @Column(name = "userPassword")
     private String userPassword;
+    @Column(name = "userName")
     private String userName;
+    @Column(name = "role")
     private UserRole role;
 
 
