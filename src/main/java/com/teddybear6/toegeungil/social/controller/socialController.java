@@ -162,7 +162,7 @@ public class socialController {
     @PostMapping("/participate/{socialNum}") //21_소셜 참여(/participate)
     public ResponseEntity<?> SocialParticipateRegistration(@PathVariable int socialNum, ParticipateDTO participateDTO) {
         Participate participate = new Participate(participateDTO);
-        participate.socialNum(socialNum);
+        participate.socialNum(socialNum).userNum(1).builder();
         System.out.println(participate);
 
         int result = socialService.SocialParticipateRegistration(participate);
