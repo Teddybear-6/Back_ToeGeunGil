@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Arrays;
 
 @Entity
-@Table(name = "image_file")
+@Table(name = "social_image_file")
 public class Image {
 
     @Id

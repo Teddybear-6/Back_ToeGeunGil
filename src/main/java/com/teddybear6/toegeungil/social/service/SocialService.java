@@ -5,7 +5,7 @@ import com.teddybear6.toegeungil.social.entity.Image;
 import com.teddybear6.toegeungil.social.entity.Social;
 import com.teddybear6.toegeungil.social.repository.ImageRepository;
 import com.teddybear6.toegeungil.social.repository.SocialRepository;
-import com.teddybear6.toegeungil.social.utils.ImageUtils;
+import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -1,4 +1,4 @@
-package com.teddybear6.toegeungil.social.utils;
+package com.teddybear6.toegeungil.common.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
