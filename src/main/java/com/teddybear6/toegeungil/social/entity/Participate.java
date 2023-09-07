@@ -54,6 +54,18 @@ public class Participate { //참여하기
         return new Participate(participateNum, socialNum, userNum);
     }
 
+    public void setParticipateNum(int participateNum) {
+        this.participateNum = participateNum;
+    }
+
+    public void setSocialNum(int socialNum) {
+        this.socialNum = socialNum;
+    }
+
+    public void setUserNum(int userNum) {
+        this.userNum = userNum;
+    }
+
     /*getter*/
     public int getParticipateNum() {
         return participateNum;

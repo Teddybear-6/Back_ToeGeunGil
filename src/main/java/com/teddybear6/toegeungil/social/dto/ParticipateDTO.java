@@ -48,6 +48,18 @@ public class ParticipateDTO {
         return new ParticipateDTO(participateNum, socialNum, userNum);
     }
 
+    public void setParticipateNum(int participateNum) {
+        this.participateNum = participateNum;
+    }
+
+    public void setSocialNum(int socialNum) {
+        this.socialNum = socialNum;
+    }
+
+    public void setUserNum(int userNum) {
+        this.userNum = userNum;
+    }
+
     /*Getter*/
     public int getParticipateNum() {
         return participateNum;

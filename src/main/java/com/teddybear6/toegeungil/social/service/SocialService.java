@@ -159,7 +159,6 @@ public class SocialService {
     @Transactional
     public int SocialParticipateRegistration(Participate participate) {
         //21_소셜 참여(/participate)
-        System.out.println(participate);
         Participate result = participateRepository.save(participate);
 
         System.out.println(result);

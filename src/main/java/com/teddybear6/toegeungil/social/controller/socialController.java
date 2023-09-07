@@ -161,12 +161,10 @@ public class socialController {
 
     @PostMapping("/participate/{socialNum}") //21_소셜 참여(/participate)
     public ResponseEntity<?> SocialParticipateRegistration(@PathVariable int socialNum, ParticipateDTO participateDTO) {
-        Participate participate = new Participate(participateDTO);
-        participate.socialNum(socialNum).userNum(1).builder();
-        System.out.println(participate);
+        Participate participate = new Participate(participateDTO); //setter를 생성해주지 않으면 값이 안넘어옴...왜지?
+        participate.socialNum(socialNum).builder();
 
         int result = socialService.SocialParticipateRegistration(participate);
-        System.out.println(participate);
         if (result == 0) {
             //socialService.SocialParticipateRegistration 반환받은 값이 0일 경우
             return ResponseEntity.status(404).body("참여에 실패하였습니다.");
