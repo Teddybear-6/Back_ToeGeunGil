@@ -2,10 +2,7 @@ package com.teddybear6.toegeungil.social.entity;
 
 import com.teddybear6.toegeungil.social.dto.ParticipateDTO;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "social_participate")
@@ -13,6 +10,7 @@ public class Participate { //참여하기
 
     @Id
     @Column(name = "participate_num")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //DB에서 관리하는 전략 사용
     private int participateNum; //참여번호
 
     @Column(name = "social_num")

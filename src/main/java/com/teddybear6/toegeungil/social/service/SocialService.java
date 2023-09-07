@@ -2,8 +2,10 @@ package com.teddybear6.toegeungil.social.service;
 
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import com.teddybear6.toegeungil.social.entity.Image;
+import com.teddybear6.toegeungil.social.entity.Participate;
 import com.teddybear6.toegeungil.social.entity.Social;
 import com.teddybear6.toegeungil.social.repository.ImageRepository;
+import com.teddybear6.toegeungil.social.repository.ParticipateRepository;
 import com.teddybear6.toegeungil.social.repository.SocialRepository;
 import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import org.springframework.stereotype.Service;
@@ -21,10 +23,12 @@ public class SocialService {
 
     private final SocialRepository socialRepository; //소셜
     private final ImageRepository imageRepository; //파일
+    private final ParticipateRepository participateRepository; //소셜참여
 
-    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository) {
+    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository) {
         this.socialRepository = socialRepository;
         this.imageRepository = imageRepository;
+        this.participateRepository = participateRepository;
     }
 
     public List<Social> readAllSocial() {
@@ -117,7 +121,7 @@ public class SocialService {
     사진*/
     @Transactional
     public String uploadSocialImage(MultipartFile image) throws IOException {
-        //사진 업로드
+        //10_사진 업로드
         //image_name을 새로 부여하기 위한 현재 시간 가져오기
         LocalDateTime now = LocalDateTime.now();
         int year = now.getYear();
@@ -146,9 +150,21 @@ public class SocialService {
     }
 
     public byte[] downloadSocialImage(String imageName) {
-        //사진 다운로드(보여주기)
+        //11_사진 다운로드(보여주기)
         Image imageData = imageRepository.findByImageName(imageName)
                 .orElseThrow(RuntimeException::new);
         return ImageUtils.decompressImage(imageData.getImageData());
+    }
+
+    @Transactional
+    public int SocialParticipateRegistration(Participate participate) {
+        //21_소셜 참여(/participate)
+        Participate result = participateRepository.save(participate);
+
+        if (Objects.isNull(result)) {
+            return 0; //result가 null일 경우 0 반환
+        } else {
+            return 1;
+        }
     }
 }
