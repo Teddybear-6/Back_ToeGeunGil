@@ -4,6 +4,7 @@ import com.teddybear6.toegeungil.report.entity.Report;
 import com.teddybear6.toegeungil.report.repository.ReportRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -15,6 +16,11 @@ public class ReportService {
         this.reportRepository = reportRepository;
     }
 
+    public List<Report> findAllReport() {
+        List<Report> reportList = reportRepository.findAll();
+        return  reportList;
+    }
+
     public int registReport(Report report) {
         Report result = reportRepository.save(report);
 
@@ -24,4 +30,6 @@ public class ReportService {
             return 1;
         }
     }
+
+
 }

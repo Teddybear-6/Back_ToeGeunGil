@@ -3,9 +3,13 @@ package com.teddybear6.toegeungil.report.controller;
 import com.teddybear6.toegeungil.report.entity.Report;
 import com.teddybear6.toegeungil.report.service.ReportService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/reports")
@@ -18,14 +22,25 @@ public class ReportController {
     }
 
     /* <GET> /reports: 신고 목록 조회 */
+    @GetMapping
+    public ResponseEntity<List<?>> findAllReport(){
+        List<Report> reportList = reportService.findAllReport();
 
+        if (reportList.size() <= 0){
+            List<String> error = new ArrayList<>();
+            error.add("String");
+            return ResponseEntity.status(404).body(error);
+        }
+        return ResponseEntity.ok().body(reportList);
+    }
 
-    /* <GET> /reports/{reportID} : 신고  상세 조회 */
+    /* <GET> /reports/{reportID} : 신고 상세 조회 */
 
 
     /* <POST> /reports: 신고 등록 */
     @PostMapping
     private ResponseEntity<?> registReport(Report report){
+
         int result = reportService.registReport(report);
 
         if(result>0){
