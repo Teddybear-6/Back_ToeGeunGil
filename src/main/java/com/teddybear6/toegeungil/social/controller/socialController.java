@@ -161,6 +161,16 @@ public class socialController {
 
     @PostMapping("/participate/{socialNum}") //21_소셜 참여(/participate)
     public ResponseEntity<?> SocialParticipateRegistration(@PathVariable int socialNum, ParticipateDTO participateDTO) {
+
+        //여기는 참여하기(게시글번호 AND 회원번호)가 존재하는지 확인하는 부분
+        Participate findSocialParticipateRegistration = socialService.findSocialParticipateRegistration(participateDTO.getSocialNum(), participateDTO.getUserNum());
+        System.out.println("find : " + findSocialParticipateRegistration);
+        if (!Objects.isNull(findSocialParticipateRegistration)) {
+            //영속성 컨텍스트에 존재할 경우, "이미 참여 신청 되어있음"
+            return ResponseEntity.status(404).body("이미 참여 신청되어있습미다.");
+        }
+
+        //여기는 등록 부분
         Participate participate = new Participate(participateDTO); //setter를 생성해주지 않으면 값이 안넘어옴...왜지?
         participate.socialNum(socialNum).builder();
 
@@ -172,5 +182,7 @@ public class socialController {
             return ResponseEntity.ok().body("모임에 참여되었습니다.");
         }
     }
+
+
 
 }

@@ -168,4 +168,14 @@ public class SocialService {
             return 1;
         }
     }
+
+    public Participate findSocialParticipateRegistration(int socialNum, int userNum) {
+        //21_소셜 참여(/participate) -> 게시글번호 AND 회원번호의 정보가 있는지 확인하기. (참여하기 되어있는지 확인)
+        System.out.println("안녕 나 느는느느느느느느느 " + socialNum + ", " + userNum);
+        Participate participate = participateRepository.findBySocialNumAndUserNum(socialNum, userNum);
+
+        System.out.println("ser : " + participate);
+        return participate;
+    }
+
 }

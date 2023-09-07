@@ -4,5 +4,5 @@ import com.teddybear6.toegeungil.social.entity.Participate;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ParticipateRepository extends JpaRepository<Participate, Integer> {
-
+    Participate findBySocialNumAndUserNum(int socialNum, int userNum);
 }
