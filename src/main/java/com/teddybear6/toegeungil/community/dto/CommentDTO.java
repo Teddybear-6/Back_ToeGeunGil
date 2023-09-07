@@ -1,7 +1,6 @@
 package com.teddybear6.toegeungil.community.dto;
 
 import com.teddybear6.toegeungil.community.entity.Comment;
-import com.teddybear6.toegeungil.community.entity.Community;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,7 +9,7 @@ public class CommentDTO {
 
     private int commentNum; // 댓글 번호
     private int userNum; // 회원 번호
-    private Community communityNum; // 커뮤니티 번호
+    private int communityNum; // 커뮤니티 번호
     private String commentDetail; // 댓글 내용
     private Date commentWriteDate; // 댓글 작성 날짜
     private Date commentUpdateDate; // 댓글 수정 날짜
@@ -18,7 +17,7 @@ public class CommentDTO {
     public CommentDTO() {
     }
 
-    public CommentDTO(int commentNum, int userNum, Community communityNum, String commentDetail, Date commentWriteDate, Date commentUpdateDate) {
+    public CommentDTO(int commentNum, int userNum, int communityNum, String commentDetail, Date commentWriteDate, Date commentUpdateDate) {
         this.commentNum = commentNum;
         this.userNum = userNum;
         this.communityNum = communityNum;
@@ -28,7 +27,12 @@ public class CommentDTO {
     }
 
     public CommentDTO(Comment comment) {
-
+        this.commentNum = comment.getCommentNum();
+        this.userNum = comment.getUserNum();
+        this.communityNum = comment.getCommunityNum();
+        this.commentDetail = comment.getCommentDetail();
+        this.commentWriteDate = comment.getCommentWriteDate();
+        this.commentUpdateDate = comment.getCommentUpdateDate();
     }
 
     public int getCommentNum() {
@@ -47,11 +51,11 @@ public class CommentDTO {
         this.userNum = userNum;
     }
 
-    public Community getCommunityNum() {
+    public int getCommunityNum() {
         return communityNum;
     }
 
-    public void setCommunityNum(Community communityNum) {
+    public void setCommunityNum(int communityNum) {
         this.communityNum = communityNum;
     }
 

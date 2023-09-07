@@ -2,30 +2,76 @@ package com.teddybear6.toegeungil.community.service;
 
 import com.teddybear6.toegeungil.community.dto.CommentDTO;
 import com.teddybear6.toegeungil.community.entity.Comment;
+import com.teddybear6.toegeungil.community.entity.Community;
 import com.teddybear6.toegeungil.community.repository.CommentRepository;
+import com.teddybear6.toegeungil.community.repository.CommunityRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final CommunityRepository communityRepository;
 
-    public CommentService(CommentRepository commentRepository) {
+    public CommentService(CommentRepository commentRepository, CommunityRepository communityRepository) {
         this.commentRepository = commentRepository;
+        this.communityRepository = communityRepository;
     }
 
     public List<CommentDTO> CommentByCommunityNum(int communityNum) {
 
         List<Comment> comments = commentRepository.findByCommunityNum(communityNum);
 
-        List<CommentDTO> commentDTOList = new ArrayList<>();
+        List<CommentDTO> commentDTOList = comments.stream()
+                .map(m-> new CommentDTO(m)
+                ).collect(Collectors.toList());
 
         return commentDTOList;
     }
 
+    @Transactional
+    public int registCommentForCommunity(int communityNum, CommentDTO commentDTO) throws IOException{
+
+        Community community = communityRepository.findById(communityNum);
+
+        if(community == null){
+            return 0;
+        }
+
+        Comment comment = new Comment();
+        comment.setUserNum(commentDTO.getUserNum());
+        System.out.println(communityNum);
+        comment.setCommunityNum(communityNum);
+        comment.setCommentDetail(commentDTO.getCommentDetail());
+        comment.setCommentWriteDate(new Date());
+
+        Comment savedComment = commentRepository.save(comment);
+
+        if(savedComment != null){
+            return 1;
+        }else {
+            return 0;
+        }
+    }
+
+
+    @Transactional
+    public int deleteCommentByCommunity(int communityNum, int commentNum) {
+        Comment deleteComment = commentRepository.findByCommunityNumAndCommentNum(communityNum, commentNum);
+
+        if (deleteComment != null){
+            commentRepository.delete(deleteComment);
+            return 1;
+        }else {
+            return 0;
+        }
+    }
+        }
 }
 
 

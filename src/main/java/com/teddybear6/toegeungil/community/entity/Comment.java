@@ -1,5 +1,7 @@
 package com.teddybear6.toegeungil.community.entity;
 
+import com.teddybear6.toegeungil.community.dto.CommentDTO;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -43,6 +45,15 @@ public class Comment {
         this.commentDetail = commentDetail;
         this.commentWriteDate = commentWriteDate;
         this.commentUpdateDate = commentUpdateDate;
+    }
+
+    public Comment(int communityNum, CommentDTO commentDTO) {
+        this.commentNum = commentDTO.getCommentNum();
+        this.userNum = commentDTO.getUserNum();
+        this.communityNum = commentDTO.getCommunityNum();
+        this.commentDetail = commentDTO.getCommentDetail();
+        this.commentWriteDate = commentDTO.getCommentWriteDate();
+        this.commentUpdateDate = commentDTO.getCommentUpdateDate();
     }
 
     public int getCommentNum() {

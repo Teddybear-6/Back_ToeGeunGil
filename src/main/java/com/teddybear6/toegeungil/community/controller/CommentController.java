@@ -1,14 +1,12 @@
 package com.teddybear6.toegeungil.community.controller;
 
 import com.teddybear6.toegeungil.community.dto.CommentDTO;
-import com.teddybear6.toegeungil.community.entity.Community;
+import com.teddybear6.toegeungil.community.entity.Comment;
 import com.teddybear6.toegeungil.community.service.CommentService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +32,44 @@ public class CommentController {
 
         return ResponseEntity.ok().body(commentDTOList);
     }
+    @PostMapping("/community/{communityNum}")
+    public ResponseEntity<?> registCommentForCommunity(@PathVariable int communityNum, @RequestBody CommentDTO commentDTO){
+
+        int result = 0;
+
+        try {
+            result = commentService.registCommentForCommunity(communityNum, commentDTO);
+        }catch (IOException e){
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("댓글 등록에 실패하였습니다.");
+        }
+
+        if (result > 0) {
+            return ResponseEntity.ok().body("댓글 등록에 성공하였습니다.");
+        }else {
+            return ResponseEntity.status(500).body("댓글 등록에 실패하였습니다.");
+        }
+    }
+
+
+    @DeleteMapping("/community/{communityNum}/{commentNum}")
+    public ResponseEntity<?> deleteComment(@PathVariable int communityNum, @PathVariable int commentNum){
+
+        int result = commentService.deleteCommentByCommunity(communityNum, commentNum);
+
+        if(result == 1){
+            return ResponseEntity.ok().body("댓글 삭제에 성공하였습니다.");
+        } else if (result == 0) {
+            return ResponseEntity.status(404).body("댓글을 찾을 수 없습니다.");
+        } else {
+            return ResponseEntity.status(500).body("댓글 삭제에 실패하였습니다.");
+        }
+    }
 }
+
+
+
+
 
 
 
