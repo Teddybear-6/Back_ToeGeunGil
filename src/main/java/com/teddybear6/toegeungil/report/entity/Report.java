@@ -25,11 +25,8 @@ public class Report {
     @Column(name = "receive_member")
     private String receiveMember;       // 신고 받는 회원
 
-    @Column(name = "category_num")
-    private int categoryNum;            // 카테고리 번호
-
-    @Column(name = "category_content")
-    private String categoryContent;     // 카테고리 내용
+    @Column(name = "category_ontent")
+    private int categoryContent;        // 카테고리 내용
 
     @Column(name = "report_content")
     private String reportContent;       // 신고 내용
@@ -46,11 +43,10 @@ public class Report {
     public Report() {
     }
 
-    public Report(int reportNum, String reportMember, String receiveMember, int categoryNum, String categoryContent, String reportContent, Date reportDate, String reportStatus) {
+    public Report(int reportNum, String reportMember, String receiveMember, int categoryContent, String reportContent, Date reportDate, String reportStatus) {
         this.reportNum = reportNum;
         this.reportMember = reportMember;
         this.receiveMember = receiveMember;
-        this.categoryNum = categoryNum;
         this.categoryContent = categoryContent;
         this.reportContent = reportContent;
         this.reportDate = reportDate;
@@ -81,19 +77,11 @@ public class Report {
         this.receiveMember = receiveMember;
     }
 
-    public int getCategoryNum() {
-        return categoryNum;
-    }
-
-    public void setCategoryNum(int categoryNum) {
-        this.categoryNum = categoryNum;
-    }
-
-    public String getCategoryContent() {
+    public int getCategoryContent() {
         return categoryContent;
     }
 
-    public void setCategoryContent(String categoryContent) {
+    public void setCategoryContent(int categoryContent) {
         this.categoryContent = categoryContent;
     }
 
@@ -127,8 +115,7 @@ public class Report {
                 "reportNum=" + reportNum +
                 ", reportMember='" + reportMember + '\'' +
                 ", receiveMember='" + receiveMember + '\'' +
-                ", categoryNum=" + categoryNum +
-                ", categoryContent='" + categoryContent + '\'' +
+                ", categoryContent=" + categoryContent +
                 ", reportContent='" + reportContent + '\'' +
                 ", reportDate=" + reportDate +
                 ", reportStatus='" + reportStatus + '\'' +
