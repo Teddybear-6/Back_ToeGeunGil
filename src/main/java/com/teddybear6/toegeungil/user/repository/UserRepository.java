@@ -18,7 +18,7 @@ public class UserRepository {
 
         UserEntity findUser = null;
         if(email.equals("user@gmail.com")){
-            findUser =  new UserEntity("1", "user@gmail.com", passwordEncoder.encode("pass"), "퇴근길", UserRole.USER);
+            findUser =  new UserEntity("1", "user@gmail.com", passwordEncoder.encode("pass"), "퇴근길", UserRole.TUTOR);
         }
         System.out.println("레포지토리");
         return findUser;

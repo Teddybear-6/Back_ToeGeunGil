@@ -1,7 +1,7 @@
 package com.teddybear6.toegeungil.auth.vo;
 
 public enum UserRole {
-    ADMIN("ADMIN"), USER("USER");
+    ADMIN("ADMIN"), USER("USER"), TUTOR("TUTOR");
 
     private String value;
 
