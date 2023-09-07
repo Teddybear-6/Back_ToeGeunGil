@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
 
       #DDL자동 생성
       #create: 기존 DDl을 제거하고 새로 생성한다.

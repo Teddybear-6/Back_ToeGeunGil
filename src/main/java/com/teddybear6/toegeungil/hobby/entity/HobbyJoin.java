@@ -8,6 +8,7 @@ public class HobbyJoin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "join_num")
     private int joinNum;
 
 
