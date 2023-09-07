@@ -11,6 +11,7 @@ public class UserViewService {
     public UserViewService(UserRepository userRepository) {this.userRepository = userRepository;}
 
     public UserEntity findUserEmail(String userId){
+        System.out.println("findUser");
         UserEntity userEntity = userRepository.findUserEmail(userId);
         return  userEntity;
     }

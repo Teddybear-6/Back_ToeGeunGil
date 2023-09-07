@@ -6,6 +6,7 @@ import com.teddybear6.toegeungil.auth.dto.LoginDTO;
 import com.teddybear6.toegeungil.auth.dto.LoginReqDTO;
 import com.teddybear6.toegeungil.config.JwtConfig;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
+
     private final AuthenticationManager authenticationManager;
 
     private String key;
@@ -42,8 +45,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             // 사용자 입력 정보를 받아 토큰을 생성해준다.
             UsernamePasswordAuthenticationToken authenticationToken
                     = new UsernamePasswordAuthenticationToken(loginDto.getUserId(), loginDto.getUserPass());
+            System.out.println("여기까진 됨");
+
 
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
+            AuthUserDetail principalDetails = (AuthUserDetail) authentication.getPrincipal();
+            System.out.println(authentication.getPrincipal());
             return authentication;
 
         } catch (IOException e) {

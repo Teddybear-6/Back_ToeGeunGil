@@ -13,6 +13,7 @@ public class SecondFilter implements Filter {
         System.out.println("JWT filter 실행");
 
         if(req.getMethod().equals("POST")){
+            System.out.println("dd");
             String headerAuth = req.getHeader("Authorization");
             chain.doFilter(req,res);
         }else{

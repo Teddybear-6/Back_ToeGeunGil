@@ -9,6 +9,7 @@ import com.teddybear6.toegeungil.config.filter.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -21,7 +22,7 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 
     private final JwtConfig jwtConfig;
 
@@ -40,10 +41,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.AUTH_KEY=key;
         this.authenFailHandler =authenFailHandler;
 
+
     }
+
+
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){ return new BCryptPasswordEncoder();}
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -79,9 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new CorsFilter(source);
 
 
-
-
-
     }
+
 
 }

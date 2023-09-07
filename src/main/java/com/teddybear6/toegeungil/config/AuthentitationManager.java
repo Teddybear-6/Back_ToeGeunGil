@@ -8,6 +8,10 @@ public class AuthentitationManager implements AuthenticationManager {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        System.out.println("확인중1");
         return authentication;
+
     }
+
+
 }
