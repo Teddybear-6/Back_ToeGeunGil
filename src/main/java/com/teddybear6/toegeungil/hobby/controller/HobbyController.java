@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/hobbys")
 public class HobbyController {
@@ -260,6 +261,22 @@ public class HobbyController {
         }
     }
 
+    //참여자 리스트
+    @GetMapping("/joinuser/{hobbyCode}")
+    public ResponseEntity<List<?>> joinList(@PathVariable int hobbyCode){
+        List<HobbyJoin> hobbyJoins= hobbyService.findByJoin(hobbyCode);
+
+        if(hobbyJoins.size()==0){
+            return ResponseEntity.ok().body(null);
+        }else {
+            return ResponseEntity.ok().body(hobbyJoins);
+        }
+    }
+
+
+
+
+
     //마감하기
 
     @PutMapping("/close/{hobbyCode}")
@@ -282,6 +299,7 @@ public class HobbyController {
      *
      *
      * */
+
 
 
     //찜하기
@@ -372,6 +390,11 @@ public class HobbyController {
 
     }
 
+    // 후기의 답변
+
+
+
+
 
     //카테고리 별 취미 조회
 
@@ -387,4 +410,8 @@ public class HobbyController {
 
         return ResponseEntity.ok().body(hobbies);
     }
+
+
+
+
 }

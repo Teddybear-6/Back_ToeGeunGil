@@ -334,4 +334,10 @@ public class HobbyService {
         System.out.println(hobbyGetDTOS);
         return hobbyGetDTOS;
     }
+
+    public List<HobbyJoin> findByJoin(int hobbyCode) {
+        List<HobbyJoin> hobbyJoins = hobbyJoinRepository.findAllByHobbyCode(hobbyCode);
+
+        return hobbyJoins;
+    }
 }
