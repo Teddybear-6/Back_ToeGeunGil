@@ -50,7 +50,19 @@ public class CommentController {
             return ResponseEntity.status(500).body("댓글 등록에 실패하였습니다.");
         }
     }
+    @PutMapping("/community/{communityNum}/{commentNum}")
+    public ResponseEntity<?> updateComment(@PathVariable int communityNum, @PathVariable int commentNum, @RequestBody CommentDTO commentDTO){
 
+        int result = commentService.updateCommentByCommunity(communityNum, commentNum, commentDTO);
+
+        if(result == 1){
+            return ResponseEntity.ok().body("댓글 수정에 성공하였습니다.");
+        } else if (result == 0) {
+            return ResponseEntity.status(404).body("댓글을 찾을 수 없습니다.");
+        } else {
+            return ResponseEntity.status(500).body("댓글 삭제에 실패하였습니다.");
+        }
+    }
 
     @DeleteMapping("/community/{communityNum}/{commentNum}")
     public ResponseEntity<?> deleteComment(@PathVariable int communityNum, @PathVariable int commentNum){

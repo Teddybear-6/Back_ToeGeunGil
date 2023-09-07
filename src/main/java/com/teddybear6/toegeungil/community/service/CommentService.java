@@ -59,6 +59,26 @@ public class CommentService {
         }
     }
 
+    @Transactional
+    public int updateCommentByCommunity(int communityNum, int commentNum, CommentDTO commentDTO) {
+
+        Comment comment = commentRepository.findByCommunityNumAndCommentNum(communityNum, commentNum);
+
+        if(comment == null){
+            return 0;
+        }
+
+        comment.setCommentDetail(commentDTO.getCommentDetail());
+        comment.setCommentUpdateDate(new Date());
+
+        Comment updateComment = commentRepository.save(comment);
+
+        if (updateComment != null){
+            return 1;
+        }else {
+            return 0;
+        }
+    }
 
     @Transactional
     public int deleteCommentByCommunity(int communityNum, int commentNum) {
@@ -71,7 +91,7 @@ public class CommentService {
             return 0;
         }
     }
-        }
+
 }
 
 
