@@ -47,7 +47,6 @@ public class ReportController {
     /* <POST> /reports: 신고 등록 */
     @PostMapping
     private ResponseEntity<?> registReport(Report report){
-
         int result = reportService.registReport(report);
 
         if(result>0){
@@ -58,4 +57,20 @@ public class ReportController {
     }
 
     /* <DELETE> /reports/{reportID} : 신고 삭제 */
+    @DeleteMapping("/{reportNum}")
+    private ResponseEntity<?> deleteReport(@PathVariable int reportNum){
+        Report report = reportService.findReportByCode(reportNum);
+
+        if (Objects.isNull(report)){
+            return ResponseEntity.status(404).body("신고 내역이 존재하지 않습니다");
+        }
+
+        int result = reportService.deleteReport(reportNum);
+
+        if (result > 0){
+            return ResponseEntity.ok().body("신고내역 삭제 성공입니다");
+        }else {
+            return ResponseEntity.status(400).body("신고내역 삭제 실패입니다");
+        }
+    }
 }
