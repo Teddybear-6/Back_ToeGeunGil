@@ -182,9 +182,9 @@ public class socialController {
                 return ResponseEntity.ok().body("모임에 참여되었습니다.");
             }
         }
-
     }
 
 
-
+    /*
+    필터*/
 }
