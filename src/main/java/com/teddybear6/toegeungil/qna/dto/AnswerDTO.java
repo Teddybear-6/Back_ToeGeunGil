@@ -1,39 +1,31 @@
-package com.teddybear6.toegeungil.qna.entity;
-
-import javax.persistence.*;
+package com.teddybear6.toegeungil.qna.dto;
 import java.util.Date;
 
-@Entity
-@Table(name = "qna_answer")
-public class Answer {
-    //답변 엔티티
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  //기본키 1씩 증가
-    @Column(name = "ansNum")
+public class AnswerDTO {
+
     private int answerNum;                      //답변 번호
 
-    @Column(name = "ansTitle")
+
     private String answerTitle;                 //답변 제목
-    @Column(name = "ansContent")
+
     private String answerContent;               //답변 내용
 
-    @Column(name = "ansNick")
+
     private String answerNick;                  //답변자 닉네임
 
-    @Column(name = "ansDate")
-    @Temporal(TemporalType.TIMESTAMP)
+
     private Date answerDate;                    //답변 생성일
 
-    @Column(name = "ansDelete")
+
     private Date answerDelete;                  //답변 삭제일
 
-    @Column(name = "ansStatus")
+
     private String answerStatus;                //답변 상태
 
-    public Answer() {
+    public AnswerDTO() {
     }
 
-    public Answer(int answerNum, String answerTitle, String answerContent, String answerNick, Date answerDate, Date answerDelete, String answerStatus) {
+    public AnswerDTO(int answerNum, String answerTitle, String answerContent, String answerNick, Date answerDate, Date answerDelete, String answerStatus) {
         this.answerNum = answerNum;
         this.answerTitle = answerTitle;
         this.answerContent = answerContent;
@@ -100,8 +92,8 @@ public class Answer {
     }
 
     @Override
-    public String  toString() {
-        return "Answer{" +
+    public String toString() {
+        return "AnswerDTO{" +
                 "answerNum=" + answerNum +
                 ", answerTitle='" + answerTitle + '\'' +
                 ", answerContent='" + answerContent + '\'' +
