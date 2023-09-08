@@ -189,12 +189,12 @@ public class SocialService {
     }
 
     @Transactional
-    public int SocialParticipateDelete(ParticipateDTO participateDTO) {
-        Participate findParticipate = participateRepository.findBySocialNumAndUserNum(participateDTO.getSocialNum(),participateDTO.getUserNum());
+    public int SocialParticipateDelete(Participate findParticipate) {
+        //21_소셜 참여가 이미 되어있는 경우, 모임 참여 삭제
         participateRepository.delete(findParticipate);
-        Participate findParticipate2 = participateRepository.findBySocialNumAndUserNum(participateDTO.getSocialNum(),participateDTO.getUserNum());
 
-        if(Objects.isNull(findParticipate2)){
+        Participate participate = participateRepository.findBySocialNumAndUserNum(findParticipate.getSocialNum(),findParticipate.getUserNum());
+        if(Objects.isNull(participate)){
             return 1;
         }else {
             return 0;

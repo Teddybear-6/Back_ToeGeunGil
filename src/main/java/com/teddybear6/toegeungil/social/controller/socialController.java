@@ -167,13 +167,8 @@ public class socialController {
         Participate findSocialParticipateRegistration = socialService.findSocialParticipateRegistration(participateDTO.getSocialNum(), participateDTO.getUserNum());
         if (!Objects.isNull(findSocialParticipateRegistration)) {
             //영속성 컨텍스트에 존재할 경우, "이미 참여 신청 되어있음"
-            int result = socialService.SocialParticipateDelete(participateDTO);
-            System.out.println(result);
-
+            int result = socialService.SocialParticipateDelete(findSocialParticipateRegistration);
             return ResponseEntity.ok().body("모임 참여가 취소되었습니다.");
-
-//            //영속성 컨텍스트에 존재할 경우, "이미 참여 신청 되어있음"
-//            return ResponseEntity.status(404).body("이미 참여 신청되어있습미다.");
         } else {
             //참여가 등록되어있지 않을 경우, 참여 등록
             Participate participate = new Participate(participateDTO); //setter를 생성해주지 않으면 값이 안넘어옴...왜지?
