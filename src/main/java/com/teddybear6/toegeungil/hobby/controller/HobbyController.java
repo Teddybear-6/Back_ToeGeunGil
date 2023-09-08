@@ -388,6 +388,14 @@ public class HobbyController {
     }
 
     // 후기의 답변
+    /*
+    * 후기 조회 후기 번호를 물고 답변 작성? 1대1 작성하기, 보기 필요
+    * 후기답변 번호 , 후기번호 , 회원번호, 강사번호 , 내용, 상태
+    * 후기가 삭제 될 경우?
+    * 답변만 삭제 될 경우?
+    * 연관 관계는
+    *
+    * */
 
 
     //카테고리 별 취미 조회
@@ -419,6 +427,7 @@ public class HobbyController {
         }
         return ResponseEntity.ok().body(hobbyGetDTOS);
     }
+
 
 
     //지역별 카테고리 취미 조회
