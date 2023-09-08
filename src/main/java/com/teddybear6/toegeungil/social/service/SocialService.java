@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.social.service;
 
+import com.teddybear6.toegeungil.social.dto.ParticipateDTO;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import com.teddybear6.toegeungil.social.entity.Image;
 import com.teddybear6.toegeungil.social.entity.Participate;
@@ -117,6 +118,7 @@ public class SocialService {
         }
     }
 
+
     /*
     사진*/
     @Transactional
@@ -156,6 +158,23 @@ public class SocialService {
         return ImageUtils.decompressImage(imageData.getImageData());
     }
 
+
+    /*
+    참여하기*/
+    public List<Participate> readSocialParticipateUser(int socialNum) {
+        //20_소셜 참여 회원 조회(/participate/{게시글 번호})
+        List<Participate> participateList = participateRepository.findAllBySocialNum(socialNum);
+
+        return participateList;
+    }
+
+    public Participate findSocialParticipateRegistration(int socialNum, int userNum) {
+        //21_소셜 참여(/participate) -> 게시글번호 AND 회원번호의 정보가 있는지 확인하기. (참여하기 되어있는지 확인)
+        Participate participate = participateRepository.findBySocialNumAndUserNum(socialNum, userNum);
+
+        return participate;
+    }
+
     @Transactional
     public int SocialParticipateRegistration(Participate participate) {
         //21_소셜 참여(/participate)
@@ -169,13 +188,10 @@ public class SocialService {
         }
     }
 
-    public Participate findSocialParticipateRegistration(int socialNum, int userNum) {
-        //21_소셜 참여(/participate) -> 게시글번호 AND 회원번호의 정보가 있는지 확인하기. (참여하기 되어있는지 확인)
-        System.out.println("안녕 나 느는느느느느느느느 " + socialNum + ", " + userNum);
-        Participate participate = participateRepository.findBySocialNumAndUserNum(socialNum, userNum);
+    @Transactional
+    public int SocialParticipateDelete(ParticipateDTO participateDTO) {
+        Participate result = participateRepository.deleteAllBySocialNumAndUserNum(participateDTO.getSocialNum(), participateDTO.getUserNum());
 
-        System.out.println("ser : " + participate);
-        return participate;
+        return 1;
     }
-
 }
