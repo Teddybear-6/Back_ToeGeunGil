@@ -23,6 +23,7 @@ public class CommentService {
         this.communityRepository = communityRepository;
     }
 
+    // 커뮤니티 번호로 댓글 찾기
     public List<CommentDTO> CommentByCommunityNum(int communityNum) {
 
         List<Comment> comments = commentRepository.findByCommunityNum(communityNum);
@@ -34,6 +35,7 @@ public class CommentService {
         return commentDTOList;
     }
 
+    // 댓글 등록
     @Transactional
     public int registCommentForCommunity(int communityNum, CommentDTO commentDTO) throws IOException{
 
@@ -58,6 +60,7 @@ public class CommentService {
         }
     }
 
+    // 댓글 수정
     @Transactional
     public int updateCommentByCommunity(int communityNum, int commentNum, CommentDTO commentDTO) {
 
@@ -79,6 +82,7 @@ public class CommentService {
         }
     }
 
+    // 댓글 삭제
     @Transactional
     public int deleteCommentByCommunity(int communityNum, int commentNum) {
         Comment deleteComment = commentRepository.findByCommunityNumAndCommentNum(communityNum, commentNum);

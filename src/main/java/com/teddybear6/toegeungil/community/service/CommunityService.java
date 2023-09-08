@@ -20,7 +20,7 @@ public class CommunityService {
         this.communityRepository = communityRepository;
     }
 
-
+    // 커뮤니티 전체 조회하기
     public List<Community> findAllCommunity() {
 
         List<Community> communityList = communityRepository.findAll();
@@ -28,6 +28,7 @@ public class CommunityService {
         return communityList;
     }
 
+    // 커뮤니티 글 찾기 (커뮤니티 번호로)
     public Community findByCommunityCode(int communityNum) {
         Community community = communityRepository.findById(communityNum);
         return community;
@@ -47,6 +48,7 @@ public class CommunityService {
         }
     }
 
+    // 커뮤니티 글 수정하기
     @Transactional
     public int communityUpdate(Community findCommunity, CommunityDTO communityDTO) {
 
@@ -74,6 +76,7 @@ public class CommunityService {
         }
     }
 
+    // 커뮤니티 글 삭제하기
     @Transactional
     public int deleteCommunityId(int communityNum) {
 
@@ -87,6 +90,7 @@ public class CommunityService {
         return 1;
     }
 
+    //커뮤니티 검색 필터 (지역, 카테고리로 조회하기)
     public List<CommunityDTO> CommunityListFilters(Integer categoryNum, Integer locationNum) {
 
         List<CommunityDTO> communityList = new ArrayList<>();
