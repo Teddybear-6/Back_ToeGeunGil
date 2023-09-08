@@ -10,14 +10,11 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
-
       #DDL자동 생성
       #create: 기존 DDl을 제거하고 새로 생성한다.
       #update: 현재 DB DDL과 비교해서 변경사항만 수정한다.
       #none: 자동 생성 기능을 사용히지 않는다는 유효하지 않은 옵션 값.
-
-
+      ddl-auto: update
     properties:
       hibernate:
         #SQL보기(실행하는 SQL을 콘솔에 출력한다)
