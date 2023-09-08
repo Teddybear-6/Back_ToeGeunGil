@@ -102,6 +102,15 @@ public class CommunityController {
         }
     }
 
+    @GetMapping("/list")
+    public ResponseEntity<List<CommunityDTO>> CommunityList(@RequestParam(name = "categoryNum", required = false) Integer categoryNum,
+                                                            @RequestParam(name = "locationNum", required = false) Integer locationNum){
+
+        List<CommunityDTO> communityList = communityService.CommunityListFilters(categoryNum,locationNum);
+
+        return ResponseEntity.ok(communityList);
+    }
+
 
 }
 

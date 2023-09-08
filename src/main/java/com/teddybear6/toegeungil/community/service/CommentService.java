@@ -45,7 +45,6 @@ public class CommentService {
 
         Comment comment = new Comment();
         comment.setUserNum(commentDTO.getUserNum());
-        System.out.println(communityNum);
         comment.setCommunityNum(communityNum);
         comment.setCommentDetail(commentDTO.getCommentDetail());
         comment.setCommentWriteDate(new Date());

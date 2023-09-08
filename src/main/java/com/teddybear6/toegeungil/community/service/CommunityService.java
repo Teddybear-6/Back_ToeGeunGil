@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -86,4 +87,19 @@ public class CommunityService {
         return 1;
     }
 
+    public List<CommunityDTO> CommunityListFilters(Integer categoryNum, Integer locationNum) {
+
+        List<CommunityDTO> communityList = new ArrayList<>();
+
+        if (categoryNum != null && locationNum != null){
+            communityList = communityRepository.findByCategoryNumAndLocationNum(categoryNum, locationNum);
+        } else if (categoryNum != null) {
+            communityList = communityRepository.findByCategoryNum(categoryNum);
+        } else if(locationNum != null) {
+            communityList = communityRepository.findByLocationNum(locationNum);
+        }
+
+        return communityList;
+    }
+    // Integer -> null , int -> null x
 }
