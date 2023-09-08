@@ -190,7 +190,7 @@ public class SocialService {
 
     @Transactional
     public int SocialParticipateDelete(ParticipateDTO participateDTO) {
-        Participate result = participateRepository.deleteAllBySocialNumAndUserNum(participateDTO.getSocialNum(), participateDTO.getUserNum());
+        Participate result = participateRepository.deleteAllBySocialNumAndUserNum((Integer) participateDTO.getSocialNum(), (InparticipateDTO.getUserNum());
 
         return 1;
     }
