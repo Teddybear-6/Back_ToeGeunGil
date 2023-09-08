@@ -190,8 +190,20 @@ public class SocialService {
 
     @Transactional
     public int SocialParticipateDelete(ParticipateDTO participateDTO) {
+<<<<<<< HEAD
         Participate result = participateRepository.deleteAllBySocialNumAndUserNum((Integer) participateDTO.getSocialNum(), (InparticipateDTO.getUserNum());
+=======
+        Participate findParticipate = participateRepository.findBySocialNumAndUserNum(participateDTO.getSocialNum(),participateDTO.getUserNum());
+        System.out.println(findParticipate);
+        participateRepository.delete(findParticipate);
+        Participate findParticipate2 = participateRepository.findBySocialNumAndUserNum(participateDTO.getSocialNum(),participateDTO.getUserNum());
 
-        return 1;
+        if(Objects.isNull(findParticipate2)){
+            return 1;
+        }else {
+            return 0;
+        }
+>>>>>>> 94423616ee49e1d8b35c1a05312cd01d83c3b40b
+
     }
 }
