@@ -1,6 +1,8 @@
 package com.teddybear6.toegeungil.social.controller;
 
+import com.teddybear6.toegeungil.social.dto.ParticipateDTO;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
+import com.teddybear6.toegeungil.social.entity.Participate;
 import com.teddybear6.toegeungil.social.entity.Social;
 import com.teddybear6.toegeungil.social.service.SocialService;
 import org.springframework.http.MediaType;
@@ -132,17 +134,57 @@ public class socialController {
         }
     }
 
+
     /*
     사진 https://velog.io/@mooh2jj/SpringBoot-File-uploaddownload-%EA%B5%AC%ED%98%84*/
-    @PostMapping("/image") //사진 업로드
+    @PostMapping("/image") //10_사진 업로드
     public ResponseEntity<?> uploadSocialImage(@RequestParam(name = "image"/*key*/) MultipartFile image) throws IOException {
         String uploadImage = socialService.uploadSocialImage(image);
         return ResponseEntity.ok().body(uploadImage);
     }
 
-    @GetMapping("/image/{imageName}") //사진 다운로드
+    @GetMapping("/image/{imageName}") //11_사진 다운로드
     public ResponseEntity<?> downloadSocialImage(@PathVariable("imageName") String imageName) {
         byte[] downloadImage = socialService.downloadSocialImage(imageName);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(downloadImage);
     }
+
+
+    /*
+    참여하기*/
+    @GetMapping("/participate/{socialNum}") //20_소셜 참여 회원 조회(/participate/{게시글 번호})
+    public ResponseEntity<List<?>> readSocialParticipateUser(@PathVariable int socialNum) {
+        //소셜
+        List<Participate> participateList = socialService.readSocialParticipateUser(socialNum);
+        System.out.println(participateList);
+
+        return ResponseEntity.ok().body(participateList);
+    }
+
+    @PostMapping("/participate/{socialNum}") //21_소셜 참여(/participate)
+    public ResponseEntity<?> SocialParticipateRegistration(@PathVariable int socialNum, ParticipateDTO participateDTO) {
+        //참여하기(게시글번호 AND 회원번호)가 존재하는지 확인하기
+        Participate findSocialParticipateRegistration = socialService.findSocialParticipateRegistration(participateDTO.getSocialNum(), participateDTO.getUserNum());
+        if (!Objects.isNull(findSocialParticipateRegistration)) {
+            //영속성 컨텍스트에 존재할 경우, "이미 참여 신청 되어있음"
+            int result = socialService.SocialParticipateDelete(findSocialParticipateRegistration);
+            return ResponseEntity.ok().body("모임 참여가 취소되었습니다.");
+        } else {
+            //참여가 등록되어있지 않을 경우, 참여 등록
+            Participate participate = new Participate(participateDTO); //setter를 생성해주지 않으면 값이 안넘어옴...왜지?
+            participate.socialNum(socialNum).builder();
+
+            int result = socialService.SocialParticipateRegistration(participate);
+            if (result == 0) {
+                //socialService.SocialParticipateRegistration 반환받은 값이 0일 경우
+                return ResponseEntity.status(404).body("참여에 실패하였습니다.");
+            } else {
+                return ResponseEntity.ok().body("모임에 참여되었습니다.");
+            }
+        }
+    }
+
+
+    /*
+    필터*/
 }
