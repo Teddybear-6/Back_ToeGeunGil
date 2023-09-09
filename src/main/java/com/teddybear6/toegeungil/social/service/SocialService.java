@@ -1,6 +1,7 @@
 package com.teddybear6.toegeungil.social.service;
 
-import com.teddybear6.toegeungil.social.dto.ParticipateDTO;
+import com.teddybear6.toegeungil.category.entity.Category;
+import com.teddybear6.toegeungil.category.repository.CategoryRepository;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import com.teddybear6.toegeungil.social.entity.Image;
 import com.teddybear6.toegeungil.social.entity.Participate;
@@ -25,11 +26,13 @@ public class SocialService {
     private final SocialRepository socialRepository; //소셜
     private final ImageRepository imageRepository; //파일
     private final ParticipateRepository participateRepository; //소셜참여
+    private final CategoryRepository categoryRepository; //카테고리
 
-    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository) {
+    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository) {
         this.socialRepository = socialRepository;
         this.imageRepository = imageRepository;
         this.participateRepository = participateRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public List<Social> readAllSocial() {
@@ -199,5 +202,22 @@ public class SocialService {
         }else {
             return 0;
         }
+    }
+
+
+    /*
+    필터*/
+    public Category readSocialPostCategory(int categoryCode) {
+        //30_카테고리 코드 필터 (해당 카테고리 조회)
+        Category category = categoryRepository.findById(categoryCode);
+        return category;
+    }
+
+
+    public List<Social> readSocialPostWhereCategoryCode(int categoryCode) {
+        //30_카테고리 코드 필터 (받아온 카테고리 코드로 소셜 게시글 리스트로 조회)
+        List<Social> social = socialRepository.findByCategoryCode(categoryCode);
+
+        return social;
     }
 }

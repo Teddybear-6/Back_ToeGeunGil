@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.social.controller;
 
+import com.teddybear6.toegeungil.category.entity.Category;
 import com.teddybear6.toegeungil.social.dto.ParticipateDTO;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import com.teddybear6.toegeungil.social.entity.Participate;
@@ -187,4 +188,14 @@ public class socialController {
 
     /*
     필터*/
+    @GetMapping("/category/{categoryCode}") //30_카테고리 코드 필터
+    public ResponseEntity<List<?>> readSocialPostCategory(@PathVariable int categoryCode) {
+        //카테고리 코드 받아오기
+        Category category = socialService.readSocialPostCategory(categoryCode);
+        //받아온 카테고리 코드로 해당 게시글 리스트로 받아오기
+        List<Social> socialList = socialService.readSocialPostWhereCategoryCode(categoryCode);
+
+        return ResponseEntity.ok().body(socialList);
+    }
+
 }
