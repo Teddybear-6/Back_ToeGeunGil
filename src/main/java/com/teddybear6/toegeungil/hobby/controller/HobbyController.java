@@ -1,10 +1,7 @@
 package com.teddybear6.toegeungil.hobby.controller;
 
 import com.teddybear6.toegeungil.hobby.dto.*;
-import com.teddybear6.toegeungil.hobby.entity.Hobby;
-import com.teddybear6.toegeungil.hobby.entity.HobbyImage;
-import com.teddybear6.toegeungil.hobby.entity.HobbyJoin;
-import com.teddybear6.toegeungil.hobby.entity.HobbyReview;
+import com.teddybear6.toegeungil.hobby.entity.*;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
 
 
@@ -388,7 +385,58 @@ public class HobbyController {
     }
 
     // 후기의 답변
+    /*
+     * 후기 조회 후기 번호를 물고 답변 작성? 1대1 작성하기, 보기 필요
+     * 후기답변 번호 , 후기번호 , 회원번호, 강사번호 , 내용, 상태
+     * 후기가 삭제 될 경우?
+     * 답변만 삭제 될 경우?
+     * 연관 관계는
+     *
+     * */
+    @PostMapping("/review/answer/{reviewCode}")
+    public ResponseEntity<?> reviewAnswer(@PathVariable int reviewCode, @RequestBody ReviewAnswerDTO reviewAnswerDTO) {
+        HobbyReview hobbyReview = hobbyService.findByReviewCode(reviewCode);
 
+        if (Objects.isNull(hobbyReview)) {
+            return ResponseEntity.status(404).body("존재하지 않는 후기입니다.");
+        }
+        ReviewAnswer frindReviewAnswer = hobbyService.reviewAnswerFindByRevieCode(reviewCode);
+        if(!Objects.isNull(frindReviewAnswer)){
+            return  ResponseEntity.status(404).body("이미 작성된 후기입니다.");
+        }
+
+
+
+        reviewAnswerDTO.setReviewCode(reviewCode);
+
+
+
+        ReviewAnswer reviewAnswer = hobbyService.registReviewAnswer(reviewAnswerDTO);
+
+
+        if (!Objects.isNull(reviewAnswer)) {
+            return ResponseEntity.ok().body("답변 등록 성공했습니다.");
+        }
+        return ResponseEntity.status(500).body("답변 등록에 실패했습니다.");
+    }
+
+
+    //후기 답변 보기
+    @GetMapping("/review/answer/{reviewCode}")
+    public ResponseEntity<?> reviewAnswerFind(@PathVariable int reviewCode) {
+
+        ReviewAnswer reviewAnswer = hobbyService.reviewAnswerFindByRevieCode(reviewCode);
+        if (!Objects.isNull(reviewAnswer)) {
+            ReviewAnswerDTO newReviewAnswerDTO = new ReviewAnswerDTO()
+                    .reviewAnswerCode(reviewAnswer.getReviewAnswerCode())
+                    .reviewCode(reviewAnswer.getReviewCode()).tutorCode(reviewAnswer
+                            .getTutorCode()).content(reviewAnswer.getContent()).reviewAnswerCode(reviewAnswer.getReviewAnswerCode()).builder();
+
+            return ResponseEntity.ok().body(newReviewAnswerDTO);
+        }
+        return ResponseEntity.status(404).body(null);
+
+    }
 
     //카테고리 별 취미 조회
     //localhost:8001/hobbys/category/1?page=0&size=5
@@ -426,15 +474,15 @@ public class HobbyController {
     @GetMapping("/loacal/{localCode}/category/{categoryCode}")
     public ResponseEntity<List<?>> localAndCategoryFilter(@PathVariable int localCode, @PathVariable int categoryCode, final Pageable pageable) {
 
-        if(localCode==0){
+        if (localCode == 0) {
             List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCode(categoryCode, pageable);
         }
 
-        if (categoryCode==0){
+        if (categoryCode == 0) {
             List<HobbyGetDTO> hobbies = hobbyService.findByLocalCode(localCode, pageable);
         }
 
-        List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCodeAndLocalCode(categoryCode,localCode,pageable);
+        List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCodeAndLocalCode(categoryCode, localCode, pageable);
 
         if (hobbies.size() == 0) {
             List<String> error = new ArrayList<>();
