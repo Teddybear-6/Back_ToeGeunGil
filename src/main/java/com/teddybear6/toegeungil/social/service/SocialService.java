@@ -212,11 +212,16 @@ public class SocialService {
     /*
     필터*/
     public Category readSocialPostCategory(int categoryCode) {
-        //30_카테고리 코드 필터 (해당 카테고리 조회)
+        //카테고리 코드 조회
         Category category = categoryRepository.findById(categoryCode);
         return category;
     }
 
+    public Local readSocialPostLocal(int localCode) {
+        //지역 코드 조회
+        Local local = localRepository.findById(localCode);
+        return local;
+    }
 
     public List<Social> readSocialPostWhereCategoryCode(int categoryCode) {
         //30_카테고리 코드 필터 (받아온 카테고리 코드로 소셜 게시글 리스트로 조회)
@@ -225,15 +230,17 @@ public class SocialService {
         return social;
     }
 
-    public Local readSocialPostLocal(int localCode) {
-        //31_지역 코드 필터 (해당 지역 코드 조회)
-        Local local = localRepository.findById(localCode);
-        return local;
-    }
-
     public List<Social> readSocialPostWhereLocalCode(int localCode) {
         //31_지역 코드 필터 (받아온 지역 코드로 소셜 게시글 리스트로 조회)
         List<Social> socialList = socialRepository.findByLocalCode(localCode);
+        return socialList;
+    }
+
+    public List<Social> readSocialFilterCategoryAndLocal(Category category, Local local) {
+        //32_카테고리 AND 지역 필터
+        List<Social> socialList = socialRepository.findByCategoryCodeAndLocalCode(category.getCategoryCode(), local.getLocalCode());
+        System.out.println("service : " + socialList);
+
         return socialList;
     }
 }

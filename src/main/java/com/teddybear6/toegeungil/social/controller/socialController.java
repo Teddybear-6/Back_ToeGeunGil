@@ -206,4 +206,20 @@ public class socialController {
         return ResponseEntity.ok().body(socialList);
     }
 
+    @GetMapping("/category/{categoryCode}/local/{localCode}") //32_지역 AND 카테고리 필터
+    public ResponseEntity<List<?>> readSocialFilterCategoryAndLocal(@PathVariable int categoryCode, @PathVariable int localCode) {
+        //카테고리 코드 받아오기
+        Category category = socialService.readSocialPostCategory(categoryCode);
+        System.out.println("Category : " + category);
+        //지역 코드
+        Local local = socialService.readSocialPostLocal(localCode);
+        System.out.println("Local : " + local);
+
+        //카테고리 AND 지역
+        List<Social> social = socialService.readSocialFilterCategoryAndLocal(category, local);
+        System.out.println("controller : " + social);
+
+        return ResponseEntity.ok().body(social);
+    }
+
 }
