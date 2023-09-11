@@ -8,15 +8,18 @@ public class LoginReqDTO {
     private UserRole userRole;
     private String email;
 
+    private String nickName;
+
 
     public LoginReqDTO() {
     }
 
-    public LoginReqDTO(int userNo, String userName, UserRole userRole, String email) {
+    public LoginReqDTO(int userNo, String userName, UserRole userRole, String email, String nickName) {
         this.userNo = userNo;
         this.userName = userName;
         this.userRole = userRole;
         this.email = email;
+        this.nickName = nickName;
     }
 
     public int getUserNo() {
@@ -51,6 +54,14 @@ public class LoginReqDTO {
         this.email = email;
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
     @Override
     public String toString() {
         return "LoginReqDTO{" +
@@ -58,6 +69,7 @@ public class LoginReqDTO {
                 ", userName='" + userName + '\'' +
                 ", userRole=" + userRole +
                 ", email='" + email + '\'' +
+                ", nickName='" + nickName + '\'' +
                 '}';
     }
 }

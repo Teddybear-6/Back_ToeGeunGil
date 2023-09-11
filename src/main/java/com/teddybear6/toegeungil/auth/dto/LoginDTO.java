@@ -2,11 +2,12 @@ package com.teddybear6.toegeungil.auth.dto;
 
 public class LoginDTO {
 
-    private String userId;
+    private String  userId;
     private String userPass;
 
     public LoginDTO() {
     }
+
 
     public LoginDTO(String userId, String userPass) {
         this.userId = userId;

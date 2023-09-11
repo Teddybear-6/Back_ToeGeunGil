@@ -6,6 +6,7 @@ import com.teddybear6.toegeungil.auth.dto.LoginDTO;
 import com.teddybear6.toegeungil.auth.dto.LoginReqDTO;
 import com.teddybear6.toegeungil.config.JwtConfig;
 
+import com.teddybear6.toegeungil.user.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,7 +51,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             AuthUserDetail principalDetails = (AuthUserDetail) authentication.getPrincipal();
-            System.out.println(authentication.getPrincipal());
             return authentication;
 
         } catch (IOException e) {
@@ -69,7 +69,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             LoginReqDTO loginReqDTO = new LoginReqDTO();
             loginReqDTO.setUserRole(authUserDetail.getUserEntity().getRole());
-            loginReqDTO.setUserNo(Integer.parseInt(authUserDetail.getUserEntity().getUserNo()));
+            loginReqDTO.setUserNo(authUserDetail.getUserEntity().getUserNo());
             loginReqDTO.setEmail(authUserDetail.getUserEntity().getUserEmail());
             loginReqDTO.setUserName(authUserDetail.getUserEntity().getUserName());
 
