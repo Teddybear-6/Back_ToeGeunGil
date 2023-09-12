@@ -1,3 +1,6 @@
+Jwt:
+  key: DF9279CB6FSD1AD6B6A6184A31E6BE37DB3818CC36871E26235DD67DCFE4041492
+
 server:
   port: 8001
 #
@@ -8,6 +11,12 @@ server:
 #    active: dev
 #  config:
 #    import: optional:configserver:http://222.112.124.237:7777
+
+  error:
+    include-exception: true # 오류 응답에 exception의 내용을 포함할지
+    include-stacktrace: always # 오류 응답에 stacktrace 내용을 포함할 지 여부
+  port: 8081
+
 
 
 spring:
