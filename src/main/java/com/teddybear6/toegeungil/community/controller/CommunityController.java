@@ -13,6 +13,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/communitys")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CommunityController {
 
     private final CommunityService communityService;

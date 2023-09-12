@@ -5,7 +5,7 @@ server:
   error:
     include-exception: true # 오류 응답에 exception의 내용을 포함할지
     include-stacktrace: always # 오류 응답에 stacktrace 내용을 포함할 지 여부
-  port: 8081
+  port: 8001
 
 
 spring:
@@ -17,7 +17,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         show_sql: true
