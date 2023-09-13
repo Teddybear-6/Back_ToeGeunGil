@@ -181,6 +181,12 @@ public class HobbyController {
 
     }
 
+    @GetMapping("/size")
+    public ResponseEntity<?> hobbySize(){
+        List<Hobby> hobbyList = hobbyService.findByAll();
+        return ResponseEntity.ok().body(hobbyList.size());
+    }
+
 
     //디테일 사진보기
     @GetMapping("/image/{imageId}")

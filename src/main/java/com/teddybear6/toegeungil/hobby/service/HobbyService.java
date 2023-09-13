@@ -406,4 +406,10 @@ public class HobbyService {
         }
         return images;
     }
+
+    public List<Hobby> findByAll() {
+        List<Hobby> hobbyList = hobbyRepository.findAll();
+
+        return hobbyList;
+    }
 }
