@@ -165,6 +165,13 @@ public class SocialService {
         return ImageUtils.decompressImage(imageData.getImageData());
     }
 
+    public byte[] downloadSocialImgeId(Long imageId) {
+        //사진 번호로 이미지 다운로드!!
+        Image imageData = imageRepository.findByImageId(imageId)
+                .orElseThrow(RuntimeException::new);
+        return ImageUtils.decompressImage(imageData.getImageData());
+    }
+
 
     /*
     참여하기*/
@@ -243,4 +250,6 @@ public class SocialService {
 
         return socialList;
     }
+
+
 }

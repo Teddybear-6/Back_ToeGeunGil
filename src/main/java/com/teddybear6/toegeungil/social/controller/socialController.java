@@ -143,9 +143,16 @@ public class socialController {
         return ResponseEntity.ok().body(uploadImage);
     }
 
-    @GetMapping("/image/{imageName}") //11_사진 다운로드
-    public ResponseEntity<?> downloadSocialImage(@PathVariable("imageName") String imageName) {
-        byte[] downloadImage = socialService.downloadSocialImage(imageName);
+//    @GetMapping("/image/{imageName}") //11_사진 다운로드
+//    public ResponseEntity<?> downloadSocialImage(@PathVariable("imageName") String imageName) {
+//        byte[] downloadImage = socialService.downloadSocialImage(imageName);
+//        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(downloadImage);
+//    }
+
+    @GetMapping("/image/{imageId}")
+    public ResponseEntity<?> downloadSocialImgeId(@PathVariable("imageId") Long imageId) {
+        //사진 번호로 이미지 가져오기
+        byte[] downloadImage = socialService.downloadSocialImgeId(imageId);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(downloadImage);
     }
 
