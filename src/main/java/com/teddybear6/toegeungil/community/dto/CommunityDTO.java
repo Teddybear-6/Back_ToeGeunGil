@@ -7,6 +7,7 @@ import java.util.Date;
 public class CommunityDTO {
 
     private int communityNum; // 커뮤니티 번호
+    private int userNum; // 회원 번호(작성자)
     private String communityTitle; // 커뮤니티 제목
     private String communityIntro; // 커뮤니티 소개
     private int categoryNum; // 카테고리 번호
@@ -19,8 +20,9 @@ public class CommunityDTO {
     public CommunityDTO() {
     }
 
-    public CommunityDTO(int communityNum, String communityTitle, String communityIntro, int categoryNum, int keywordNum, int locationNum, String communityStatus, Date postWriteDate, Date postUpdateDate) {
+    public CommunityDTO(int communityNum, int userNum, String communityTitle, String communityIntro, int categoryNum, int keywordNum, int locationNum, String communityStatus, Date postWriteDate, Date postUpdateDate) {
         this.communityNum = communityNum;
+        this.userNum = userNum;
         this.communityTitle = communityTitle;
         this.communityIntro = communityIntro;
         this.categoryNum = categoryNum;
@@ -33,6 +35,7 @@ public class CommunityDTO {
 
     public CommunityDTO(Community community) {
         this.communityNum = community.getCommunityNum();
+        this.userNum = community.getUserNum();
         this.communityTitle = community.getCommunityTitle();
         this.communityIntro = community.getCommunityIntro();
         this.categoryNum = community.getCategoryNum();
@@ -49,6 +52,14 @@ public class CommunityDTO {
 
     public void setCommunityNum(int communityNum) {
         this.communityNum = communityNum;
+    }
+
+    public int getUserNum() {
+        return userNum;
+    }
+
+    public void setUserNum(int userNum) {
+        this.userNum = userNum;
     }
 
     public String getCommunityTitle() {
@@ -119,6 +130,7 @@ public class CommunityDTO {
     public String toString() {
         return "CommunityDTO{" +
                 "communityNum=" + communityNum +
+                ", userNum=" + userNum +
                 ", communityTitle='" + communityTitle + '\'' +
                 ", communityIntro='" + communityIntro + '\'' +
                 ", categoryNum=" + categoryNum +
