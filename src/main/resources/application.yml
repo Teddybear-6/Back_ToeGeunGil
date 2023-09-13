@@ -2,7 +2,7 @@ Jwt:
   key: DF9279CB6FSD1AD6B6A6184A31E6BE37DB3818CC36871E26235DD67DCFE4041492
 
 server:
-  port: 8081
+  port: 8001
 
   error:
     include-exception: true # 오류 응답에 exception의 내용을 포함할지
