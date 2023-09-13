@@ -3,6 +3,7 @@ package com.teddybear6.toegeungil.community.dto;
 import com.teddybear6.toegeungil.community.entity.Community;
 
 import java.util.Date;
+import java.util.List;
 
 public class CommunityDTO {
 
@@ -11,7 +12,7 @@ public class CommunityDTO {
     private String communityTitle; // 커뮤니티 제목
     private String communityIntro; // 커뮤니티 소개
     private int categoryNum; // 카테고리 번호
-    private int keywordNum;// 키워드 번호
+    private List<CommunityKeywordDTO> communityKeywordDTOList;// 키워드 번호
     private int locationNum; // 지역 번호
     private String communityStatus; // 커뮤니티 상태
     private Date postWriteDate; // 커뮤니티 작성일
@@ -20,13 +21,13 @@ public class CommunityDTO {
     public CommunityDTO() {
     }
 
-    public CommunityDTO(int communityNum, int userNum, String communityTitle, String communityIntro, int categoryNum, int keywordNum, int locationNum, String communityStatus, Date postWriteDate, Date postUpdateDate) {
+    public CommunityDTO(int communityNum, int userNum, String communityTitle, String communityIntro, int categoryNum, List<CommunityKeywordDTO> communityKeywordDTOList, int locationNum, String communityStatus, Date postWriteDate, Date postUpdateDate) {
         this.communityNum = communityNum;
         this.userNum = userNum;
         this.communityTitle = communityTitle;
         this.communityIntro = communityIntro;
         this.categoryNum = categoryNum;
-        this.keywordNum = keywordNum;
+        this.communityKeywordDTOList = communityKeywordDTOList;
         this.locationNum = locationNum;
         this.communityStatus = communityStatus;
         this.postWriteDate = postWriteDate;
@@ -39,7 +40,6 @@ public class CommunityDTO {
         this.communityTitle = community.getCommunityTitle();
         this.communityIntro = community.getCommunityIntro();
         this.categoryNum = community.getCategoryNum();
-        this.keywordNum = community.getKeywordNum();
         this.locationNum = community.getLocationNum();
         this.communityStatus = community.getCommunityStatus();
         this.postWriteDate = community.getPostWriteDate();
@@ -86,12 +86,12 @@ public class CommunityDTO {
         this.categoryNum = categoryNum;
     }
 
-    public int getKeywordNum() {
-        return keywordNum;
+    public List<CommunityKeywordDTO> getCommunityKeywordDTOList() {
+        return communityKeywordDTOList;
     }
 
-    public void setKeywordNum(int keywordNum) {
-        this.keywordNum = keywordNum;
+    public void setCommunityKeywordDTOList(List<CommunityKeywordDTO> communityKeywordDTOList) {
+        this.communityKeywordDTOList = communityKeywordDTOList;
     }
 
     public int getLocationNum() {
@@ -134,7 +134,7 @@ public class CommunityDTO {
                 ", communityTitle='" + communityTitle + '\'' +
                 ", communityIntro='" + communityIntro + '\'' +
                 ", categoryNum=" + categoryNum +
-                ", keywordNum=" + keywordNum +
+                ", communityKeywordDTOList=" + communityKeywordDTOList +
                 ", locationNum=" + locationNum +
                 ", communityStatus='" + communityStatus + '\'' +
                 ", postWriteDate=" + postWriteDate +

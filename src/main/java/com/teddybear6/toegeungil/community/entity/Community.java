@@ -1,9 +1,11 @@
 package com.teddybear6.toegeungil.community.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.teddybear6.toegeungil.community.dto.CommunityDTO;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "community")
@@ -21,8 +23,10 @@ public class Community {
     private String communityIntro;
     @Column(name = "category_num", nullable = false) // 카테고리 번호
     private int categoryNum;
-    @Column(name = "keyword_num", nullable = false) // 키워드 번호
-    private int keywordNum;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "community")
+    private List<CommunityKeyword> communityKeywordList;
+
     @Column(name = "location_num", nullable = false) // 지역 번호
     private int locationNum;
     @Column(name = "community_status") // 커뮤니티 상태
@@ -37,13 +41,13 @@ public class Community {
     public Community() {
     }
 
-    public Community(int communityNum, Integer userNum, String communityTitle, String communityIntro, int categoryNum, int keywordNum, int locationNum, String communityStatus, Date postWriteDate, Date postUpdateDate) {
+    public Community(int communityNum, Integer userNum, String communityTitle, String communityIntro, int categoryNum, List<CommunityKeyword> communityKeywordList, int locationNum, String communityStatus, Date postWriteDate, Date postUpdateDate) {
         this.communityNum = communityNum;
         this.userNum = userNum;
         this.communityTitle = communityTitle;
         this.communityIntro = communityIntro;
         this.categoryNum = categoryNum;
-        this.keywordNum = keywordNum;
+        this.communityKeywordList = communityKeywordList;
         this.locationNum = locationNum;
         this.communityStatus = communityStatus;
         this.postWriteDate = postWriteDate;
@@ -55,7 +59,6 @@ public class Community {
         this.communityTitle = communityDTO.getCommunityTitle();
         this.communityIntro = communityDTO.getCommunityIntro();
         this.categoryNum = communityDTO.getCategoryNum();
-        this.keywordNum = communityDTO.getKeywordNum();
         this.locationNum = communityDTO.getLocationNum();
         this.communityStatus = communityDTO.getCommunityStatus();
         this.postWriteDate = communityDTO.getPostWriteDate();
@@ -102,12 +105,12 @@ public class Community {
         this.categoryNum = categoryNum;
     }
 
-    public int getKeywordNum() {
-        return keywordNum;
+    public List<CommunityKeyword> getCommunityKeywordList() {
+        return communityKeywordList;
     }
 
-    public void setKeywordNum(int keywordNum) {
-        this.keywordNum = keywordNum;
+    public void setCommunityKeywordList(List<CommunityKeyword> communityKeywordList) {
+        this.communityKeywordList = communityKeywordList;
     }
 
     public int getLocationNum() {
@@ -150,7 +153,7 @@ public class Community {
                 ", communityTitle='" + communityTitle + '\'' +
                 ", communityIntro='" + communityIntro + '\'' +
                 ", categoryNum=" + categoryNum +
-                ", keywordNum=" + keywordNum +
+                ", communityKeywordList=" + communityKeywordList +
                 ", locationNum=" + locationNum +
                 ", communityStatus='" + communityStatus + '\'' +
                 ", postWriteDate=" + postWriteDate +

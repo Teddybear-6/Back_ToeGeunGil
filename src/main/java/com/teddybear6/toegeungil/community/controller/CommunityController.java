@@ -48,8 +48,8 @@ public class CommunityController {
     }
 
     @PostMapping // 커뮤니티 등록하기
-    public ResponseEntity<?> registCommunity(CommunityDTO communityDTO) {
-
+    public ResponseEntity<?> registCommunity(@RequestBody CommunityDTO communityDTO) {
+        System.out.println(communityDTO);
         int result = 0;
         try {
             result = communityService.registCommunity(communityDTO);

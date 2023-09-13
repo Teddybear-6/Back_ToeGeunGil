@@ -1,29 +1,16 @@
-package com.teddybear6.toegeungil.keyword.entity;
+package com.teddybear6.toegeungil.community.dto;
 
-import javax.persistence.*;
+public class CommunityKeywordDTO {
 
-@Entity(name = "keyword")
-@Table(name = "keyword")
-public class Keyword {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "keyword_code")
     private int keywordCode;
-
-    @Column(name = "keyword_name")
     private String keywordName;
 
-
-    public Keyword() {
+    public CommunityKeywordDTO() {
     }
 
-    public Keyword(int keywordCode, String keywordName) {
+    public CommunityKeywordDTO(int keywordCode, String keywordName) {
         this.keywordCode = keywordCode;
         this.keywordName = keywordName;
-    }
-
-    public Keyword(Integer keywordNum) {
     }
 
     public int getKeywordCode() {
@@ -44,8 +31,8 @@ public class Keyword {
 
     @Override
     public String toString() {
-        return "Keyword{" +
-                "keywordCode=" + keywordCode +
+        return "CommunityKeywordDTO{" +
+                "keywordNum=" + keywordCode +
                 ", keywordName='" + keywordName + '\'' +
                 '}';
     }
