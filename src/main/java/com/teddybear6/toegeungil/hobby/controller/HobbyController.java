@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 
-@CrossOrigin(origins = "http://localhost:3001")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/hobbys")
 public class HobbyController {
@@ -191,6 +191,13 @@ public class HobbyController {
     }
 
 
+
+//    @GetMapping("/image/{hobbyCode}")
+//    public ResponseEntity<?> detailImage(@PathVariable int hobbyCode)  throws IOException {
+//        List<String> encodedImages = hobbyService.findEncodedImages(hobbyCode);
+//
+//        return ResponseEntity.ok().body(encodedImages);
+//    }
     //참여하기
     /* 포스트?
      * api 어떻게 하지

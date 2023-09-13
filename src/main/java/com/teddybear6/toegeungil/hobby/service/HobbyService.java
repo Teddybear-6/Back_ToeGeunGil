@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -391,5 +392,18 @@ public class HobbyService {
         ReviewAnswer reviewAnswer  = reviewAnswerRepository.findAllByReviewCode(reviewCode);
 
         return reviewAnswer;
+    }
+
+    public List<String> findEncodedImages(int hobbyCode) throws IOException{
+        List<String> images = new ArrayList<>();
+
+        List<HobbyImage> hobbyImage = storageRepository.findByhobbyCode(hobbyCode);
+
+        for(int i =0 ; i<hobbyImage.size();i++){
+            byte[] fileContent = ImageUtils.decompressImage(hobbyImage.get(i).getImageDate()); // file을 byte로 변경
+            String encodedString = Base64.getEncoder().encodeToString(fileContent);  // byte를 base64로 encode
+            images.add(encodedString);
+        }
+        return images;
     }
 }

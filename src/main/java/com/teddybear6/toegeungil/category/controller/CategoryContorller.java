@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3001")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/category")
 public class CategoryContorller {
 
