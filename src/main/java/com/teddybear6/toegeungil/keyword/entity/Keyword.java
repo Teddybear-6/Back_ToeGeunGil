@@ -23,6 +23,9 @@ public class Keyword {
         this.keywordName = keywordName;
     }
 
+    public Keyword(Integer keywordNum) {
+    }
+
     public int getKeywordCode() {
         return keywordCode;
     }
