@@ -5,7 +5,7 @@ import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "social_category")
+@Table(name = "social_keyword")
 public class SocialKeyword {
 
     @EmbeddedId

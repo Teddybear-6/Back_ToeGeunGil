@@ -26,7 +26,7 @@ public class SocialDTO {
 
     private int categoryCode; //카테고리 번호(FK)
 
-    private int keywordCode; //키워드 번호(FK)
+//    private int keywordCode; //키워드 번호(FK)
 
     private int localCode; //지역 번호(FK)
 
@@ -58,7 +58,7 @@ public class SocialDTO {
         this.socialEndTime = social.getSocialEndTime();
         this.fileNum = social.getFileNum();
         this.categoryCode = social.getCategoryCode();
-        this.keywordCode = social.getKeywordCode();
+//        this.keywordCode = social.getKeywordCode();
         this.localCode = social.getLocalCode();
         this.localDetails = social.getLocalDetails();
         this.socialIntro = social.getSocialIntro();
@@ -69,7 +69,7 @@ public class SocialDTO {
     }
 
     public SocialDTO(int socialNum, int userNum, String socialName, Date socialDate, int socialFixedNum,
-                     Date socialStartTime, Date socialEndTime, int fileNum, int categoryCode, int keywordCode, int localCode,
+                     Date socialStartTime, Date socialEndTime, int fileNum, int categoryCode, int localCode,
                      String localDetails, String socialIntro, String socialOther, Date postRegDate, Date postModiDate, String socialState,
                      List<SocialKeywordDTO> keywordDTOList) {
         this.socialNum = socialNum;
@@ -81,7 +81,7 @@ public class SocialDTO {
         this.socialEndTime = socialEndTime;
         this.fileNum = fileNum;
         this.categoryCode = categoryCode;
-        this.keywordCode = keywordCode;
+//        this.keywordCode = keywordCode;
         this.localCode = localCode;
         this.localDetails = localDetails;
         this.socialIntro = socialIntro;
@@ -164,13 +164,13 @@ public class SocialDTO {
         this.categoryCode = categoryCode;
     }
 
-    public int getKeywordCode() {
-        return keywordCode;
-    }
+//    public int getKeywordCode() {
+//        return keywordCode;
+//    }
 
-    public void setKeywordCode(int keywordCode) {
-        this.keywordCode = keywordCode;
-    }
+//    public void setKeywordCode(int keywordCode) {
+//        this.keywordCode = keywordCode;
+//    }
 
     public int getLocalCode() {
         return localCode;
@@ -248,7 +248,7 @@ public class SocialDTO {
                 ", socialEndTime=" + socialEndTime +
                 ", fileNum=" + fileNum +
                 ", categoryCode=" + categoryCode +
-                ", keywordCode=" + keywordCode +
+//                ", keywordCode=" + keywordCode +
                 ", localCode=" + localCode +
                 ", localDetails='" + localDetails + '\'' +
                 ", socialIntro='" + socialIntro + '\'' +

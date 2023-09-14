@@ -101,16 +101,22 @@ public class socialController {
     }
 
     @PostMapping //03_소셜 등록(/social)
-    public ResponseEntity<?> SocialPostRegistration(SocialDTO socialDTO) {
-        Social social = new Social(socialDTO);
-        social.setPostRegDate(new Date()); //게시글 등록일
+    public ResponseEntity<?> SocialPostRegistration(@RequestBody SocialDTO socialDTO) { //@RequestBody -> Json으로 넘기기위해 필요한 친구
+        System.out.println(socialDTO);
+//        Social social = new Social(socialDTO);
+        socialDTO.setPostRegDate(new Date()); //게시글 등록일
 
-        social.setSocialDate(new Date()); //모임일
-        social.setSocialStartTime(new Date()); //모임시작시간
-        social.setSocialEndTime(new Date()); //모임종료시간
+        socialDTO.setSocialDate(new Date()); //모임일
+        socialDTO.setSocialStartTime(new Date()); //모임시작시간
+        socialDTO.setSocialEndTime(new Date()); //모임종료시간
 
+        int result = 0;
+        try {
+            result = socialService.SocialPostRegistration(socialDTO);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        int result = socialService.SocialPostRegistration(social);
         if (result == 0) {
             //socialService.SocialPostRegistration에서 반환받은 값이 0일 경우
             return ResponseEntity.status(404).body("게시글 등록에 실패하였습니다...");

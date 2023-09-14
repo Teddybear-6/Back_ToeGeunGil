@@ -2,14 +2,16 @@ package com.teddybear6.toegeungil.social.service;
 
 import com.teddybear6.toegeungil.category.entity.Category;
 import com.teddybear6.toegeungil.category.repository.CategoryRepository;
+import com.teddybear6.toegeungil.keyword.entity.Keyword;
+import com.teddybear6.toegeungil.keyword.repository.KeywordRepository;
 import com.teddybear6.toegeungil.local.entity.Local;
 import com.teddybear6.toegeungil.local.repository.LocalRepository;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
-import com.teddybear6.toegeungil.social.entity.Image;
-import com.teddybear6.toegeungil.social.entity.Participate;
-import com.teddybear6.toegeungil.social.entity.Social;
+import com.teddybear6.toegeungil.social.dto.SocialKeywordDTO;
+import com.teddybear6.toegeungil.social.entity.*;
 import com.teddybear6.toegeungil.social.repository.ImageRepository;
 import com.teddybear6.toegeungil.social.repository.ParticipateRepository;
+import com.teddybear6.toegeungil.social.repository.SocialKeywordRepository;
 import com.teddybear6.toegeungil.social.repository.SocialRepository;
 import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,13 +34,17 @@ public class SocialService {
     private final ParticipateRepository participateRepository; //소셜참여
     private final CategoryRepository categoryRepository; //카테고리
     private final LocalRepository localRepository; //지역
+    private final SocialKeywordRepository socialKeywordRepository;
+    private final KeywordRepository keywordRepository;
 
-    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository) {
+    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository, SocialKeywordRepository socialKeywordRepository, KeywordRepository keywordRepository) {
         this.socialRepository = socialRepository;
         this.imageRepository = imageRepository;
         this.participateRepository = participateRepository;
         this.categoryRepository = categoryRepository;
         this.localRepository = localRepository;
+        this.socialKeywordRepository = socialKeywordRepository;
+        this.keywordRepository = keywordRepository;
     }
 
     public List<Social> readAllSocial() {
@@ -58,8 +66,28 @@ public class SocialService {
     - 만약 예외가 발생할 경우, 트랜잭션을 롤백한다. (JPA p.503) */
 
     @Transactional
-    public int SocialPostRegistration(Social social) {
+    public int SocialPostRegistration(SocialDTO socialDTO) throws IOException {
         //03_소셜 등록(/social)
+        Social social = new Social(socialDTO);
+        System.out.println(socialDTO);
+        List<SocialKeywordDTO> keyword = socialDTO.getKeywordDTOList();
+        System.out.println(keyword+"키워드");
+        List<SocialKeyword> keywordList = new ArrayList<>(); //null
+
+
+        System.out.println("dd");
+        System.out.println(keyword.size());
+        for (int i = 0; i < keyword.size(); i++) {
+            System.out.println("나 실행");
+            //keywordRepository의 findById 사용하기
+            //엔티티에서 keywordNum 컬럼 삭제하기
+            Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
+            keywordList.add(new SocialKeyword(new SocialKeywordPK(social.getSocialNum(), findKeyword.getKeywordCode()), social, findKeyword));
+        }
+
+        System.out.println(keywordList);
+        social.setSocialKeywordList(keywordList);
+
         Social result = socialRepository.save(social);
         if (Objects.isNull(result)) {
             return 0; //result가 null일 경우 0 반환
@@ -95,9 +123,9 @@ public class SocialService {
         if (social.getCategoryCode() > 0) { //카테고리 번호
             findSocial.setCategoryCode(social.getCategoryCode());
         }
-        if (social.getKeywordCode() > 0) { //키워드 번호
-            findSocial.setKeywordCode(social.getKeywordCode());
-        }
+//        if (social.getKeywordCode() > 0) { //키워드 번호
+//            findSocial.setKeywordCode(social.getKeywordCode());
+//        }
         if (social.getLocalCode() > 0) { //지역 번호
             findSocial.setLocalCode(social.getLocalCode());
         }
@@ -111,7 +139,7 @@ public class SocialService {
             findSocial.setSocialOther(social.getSocialOther());
         }
         if (!Objects.isNull(social.getPostModiDate())) { //게시글 수정일
-            findSocial.setPostModiDate(social.getPostModiDate());
+            findSocial.setPostModiDate(new Date());
         }
         if (!Objects.isNull(social.getSocialState())) { //게시글 상태
             findSocial.setSocialState(social.getSocialState());
