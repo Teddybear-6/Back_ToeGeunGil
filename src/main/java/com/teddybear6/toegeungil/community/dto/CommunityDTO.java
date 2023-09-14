@@ -36,7 +36,7 @@ public class CommunityDTO {
 
     public CommunityDTO(Community community) {
         this.communityNum = community.getCommunityNum();
-        this.userNum = community.getUserNum();
+        this.userNum = community.getUserNum() == null? 0 : community.getUserNum();
         this.communityTitle = community.getCommunityTitle();
         this.communityIntro = community.getCommunityIntro();
         this.categoryNum = community.getCategoryNum();
