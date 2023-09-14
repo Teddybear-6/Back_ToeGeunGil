@@ -3,7 +3,6 @@ Jwt:
 
 server:
   port: 8001
-<<<<<<< HEAD
 #
 #spring:
 #  application:
@@ -12,18 +11,10 @@ server:
 #    active: dev
 #  config:
 #    import: optional:configserver:http://222.112.124.237:7777
-=======
->>>>>>> 191889954f1b52fe903c81bb7771274c96fc3669
 
   error:
     include-exception: true # 오류 응답에 exception의 내용을 포함할지
     include-stacktrace: always # 오류 응답에 stacktrace 내용을 포함할 지 여부
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 191889954f1b52fe903c81bb7771274c96fc3669
-
 
 spring:
   application:

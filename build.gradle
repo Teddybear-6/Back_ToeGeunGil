@@ -20,14 +20,11 @@ ext {
 }
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-<<<<<<< HEAD
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 //    implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-=======
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // https://mvnrepository.com/artifact/com.auth0/java-jwtm
     implementation group: 'com.auth0', name: 'java-jwt', version: '3.19.2'
@@ -42,7 +39,6 @@ dependencies {
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
->>>>>>> 191889954f1b52fe903c81bb7771274c96fc3669
 
     runtimeOnly 'com.mysql:mysql-connector-j'
 
@@ -51,20 +47,17 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
-<<<<<<< HEAD
 
 //dependencyManagement {
 //    imports {
 //        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 //    }
 //}
-=======
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
->>>>>>> 191889954f1b52fe903c81bb7771274c96fc3669
 
 tasks.named('test') {
     useJUnitPlatform()
