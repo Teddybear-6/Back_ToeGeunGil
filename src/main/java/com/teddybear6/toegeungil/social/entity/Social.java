@@ -1,13 +1,15 @@
 package com.teddybear6.toegeungil.social.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
-@Entity
+@Entity(name = "social")
 @DynamicInsert
 @Table(name = "social") //Entity와 매핑할 테이블 이름
 public class Social {
@@ -70,6 +72,10 @@ public class Social {
     @Column(name = "social_state", columnDefinition = "VARCHAR(1) default 'Y'") //NOT NULL, (columnDefinition = "자료형 default 원하는 값")
     private String socialState; //게시글 상태
 
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "social")
+    private List<SocialKeyword> socialKeywordList;
+
     public Social() {
     }
 
@@ -95,7 +101,7 @@ public class Social {
 
     public Social(int socialNum, int userNum, String socialName, Date socialDate, int socialFixedNum, Date socialStartTime, Date socialEndTime,
                   int fileNum, int categoryCode, int keywordCode, int localCode, String localDetails, String socialIntro, String socialOther,
-                  Date postRegDate, Date postModiDate, String socialState) {
+                  Date postRegDate, Date postModiDate, String socialState, List<SocialKeyword> socialKeywordList) {
         this.socialNum = socialNum;
         this.userNum = userNum;
         this.socialName = socialName;
@@ -113,6 +119,7 @@ public class Social {
         this.postRegDate = postRegDate;
         this.postModiDate = postModiDate;
         this.socialState = socialState;
+        this.socialKeywordList = socialKeywordList;
     }
 
     public int getSocialNum() {
@@ -251,6 +258,14 @@ public class Social {
         this.socialState = socialState;
     }
 
+    public List<SocialKeyword> getSocialKeywordList() {
+        return socialKeywordList;
+    }
+
+    public void setSocialKeywordList(List<SocialKeyword> socialKeywordList) {
+        this.socialKeywordList = socialKeywordList;
+    }
+
     @Override
     public String toString() {
         return "Social{" +
@@ -271,6 +286,7 @@ public class Social {
                 ", postRegDate=" + postRegDate +
                 ", postModiDate=" + postModiDate +
                 ", socialState='" + socialState + '\'' +
+                ", socialKeywordList=" + socialKeywordList +
                 '}';
     }
 }

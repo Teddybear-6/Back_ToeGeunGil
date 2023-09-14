@@ -1,6 +1,7 @@
 package com.teddybear6.toegeungil.social.controller;
 
 import com.teddybear6.toegeungil.category.entity.Category;
+import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.local.entity.Local;
 import com.teddybear6.toegeungil.social.dto.ParticipateDTO;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
@@ -87,6 +88,12 @@ public class socialController {
             return ResponseEntity.status(404).body("게시글 조회에 실패하였습니다...");
         } else {
             SocialDTO socialDTO = new SocialDTO(social);
+//            List<Keyword> keywordList = new ArrayList<>();
+//            for (int i = 0; i < social.get; i++) {
+//
+//            }
+
+
             return ResponseEntity.ok().body(socialDTO);
         }
     }

@@ -4,6 +4,7 @@ import com.teddybear6.toegeungil.social.entity.Social;
 
 import javax.persistence.Id;
 import java.util.Date;
+import java.util.List;
 
 public class SocialDTO {
 
@@ -41,6 +42,8 @@ public class SocialDTO {
 
     private String socialState; //게시글 상태
 
+    private List<SocialKeywordDTO> keywordDTOList;
+
     public SocialDTO() {
     }
 
@@ -67,7 +70,8 @@ public class SocialDTO {
 
     public SocialDTO(int socialNum, int userNum, String socialName, Date socialDate, int socialFixedNum,
                      Date socialStartTime, Date socialEndTime, int fileNum, int categoryCode, int keywordCode, int localCode,
-                     String localDetails, String socialIntro, String socialOther, Date postRegDate, Date postModiDate, String socialState) {
+                     String localDetails, String socialIntro, String socialOther, Date postRegDate, Date postModiDate, String socialState,
+                     List<SocialKeywordDTO> keywordDTOList) {
         this.socialNum = socialNum;
         this.userNum = userNum;
         this.socialName = socialName;
@@ -85,6 +89,7 @@ public class SocialDTO {
         this.postRegDate = postRegDate;
         this.postModiDate = postModiDate;
         this.socialState = socialState;
+        this.keywordDTOList = keywordDTOList;
     }
 
     public int getSocialNum() {
@@ -223,6 +228,14 @@ public class SocialDTO {
         this.socialState = socialState;
     }
 
+    public List<SocialKeywordDTO> getKeywordDTOList() {
+        return keywordDTOList;
+    }
+
+    public void setKeywordDTOList(List<SocialKeywordDTO> keywordDTOList) {
+        this.keywordDTOList = keywordDTOList;
+    }
+
     @Override
     public String toString() {
         return "SocialDTO{" +
@@ -243,6 +256,7 @@ public class SocialDTO {
                 ", postRegDate=" + postRegDate +
                 ", postModiDate=" + postModiDate +
                 ", socialState='" + socialState + '\'' +
+                ", keywordDTOList=" + keywordDTOList +
                 '}';
     }
 }
