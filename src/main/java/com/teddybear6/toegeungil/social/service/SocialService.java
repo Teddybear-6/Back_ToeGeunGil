@@ -1,6 +1,9 @@
 package com.teddybear6.toegeungil.social.service;
 
-import com.teddybear6.toegeungil.social.dto.ParticipateDTO;
+import com.teddybear6.toegeungil.category.entity.Category;
+import com.teddybear6.toegeungil.category.repository.CategoryRepository;
+import com.teddybear6.toegeungil.local.entity.Local;
+import com.teddybear6.toegeungil.local.repository.LocalRepository;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import com.teddybear6.toegeungil.social.entity.Image;
 import com.teddybear6.toegeungil.social.entity.Participate;
@@ -25,11 +28,15 @@ public class SocialService {
     private final SocialRepository socialRepository; //소셜
     private final ImageRepository imageRepository; //파일
     private final ParticipateRepository participateRepository; //소셜참여
+    private final CategoryRepository categoryRepository; //카테고리
+    private final LocalRepository localRepository; //지역
 
-    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository) {
+    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository) {
         this.socialRepository = socialRepository;
         this.imageRepository = imageRepository;
         this.participateRepository = participateRepository;
+        this.categoryRepository = categoryRepository;
+        this.localRepository = localRepository;
     }
 
     public List<Social> readAllSocial() {
@@ -199,5 +206,41 @@ public class SocialService {
         }else {
             return 0;
         }
+    }
+
+
+    /*
+    필터*/
+    public Category readSocialPostCategory(int categoryCode) {
+        //카테고리 코드 조회
+        Category category = categoryRepository.findById(categoryCode);
+        return category;
+    }
+
+    public Local readSocialPostLocal(int localCode) {
+        //지역 코드 조회
+        Local local = localRepository.findById(localCode);
+        return local;
+    }
+
+    public List<Social> readSocialPostWhereCategoryCode(int categoryCode) {
+        //30_카테고리 코드 필터 (받아온 카테고리 코드로 소셜 게시글 리스트로 조회)
+        List<Social> social = socialRepository.findByCategoryCode(categoryCode);
+
+        return social;
+    }
+
+    public List<Social> readSocialPostWhereLocalCode(int localCode) {
+        //31_지역 코드 필터 (받아온 지역 코드로 소셜 게시글 리스트로 조회)
+        List<Social> socialList = socialRepository.findByLocalCode(localCode);
+        return socialList;
+    }
+
+    public List<Social> readSocialFilterCategoryAndLocal(Category category, Local local) {
+        //32_카테고리 AND 지역 필터
+        List<Social> socialList = socialRepository.findByCategoryCodeAndLocalCode(category.getCategoryCode(), local.getLocalCode());
+        System.out.println("service : " + socialList);
+
+        return socialList;
     }
 }

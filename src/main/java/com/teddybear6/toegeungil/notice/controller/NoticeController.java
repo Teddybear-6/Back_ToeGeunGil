@@ -12,6 +12,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/notices") // 도메인을 의미
+@CrossOrigin(origins = "http://localhost:3000")
 public class NoticeController {
 
     private final NoticeService noticeService;

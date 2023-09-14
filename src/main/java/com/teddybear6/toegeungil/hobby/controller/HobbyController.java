@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.hobby.controller;
 
+import com.sun.tools.jconsole.JConsoleContext;
 import com.teddybear6.toegeungil.hobby.dto.*;
 import com.teddybear6.toegeungil.hobby.entity.*;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
@@ -7,20 +8,26 @@ import com.teddybear6.toegeungil.hobby.service.HobbyService;
 
 import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
+import com.teddybear6.toegeungil.user.entity.UserEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 
-@CrossOrigin(origins = "http://localhost:3000")
+
+
 @RestController
 @RequestMapping("/hobbys")
 public class HobbyController {
@@ -181,6 +188,12 @@ public class HobbyController {
 
     }
 
+    @GetMapping("/size")
+    public ResponseEntity<?> hobbySize(){
+        List<Hobby> hobbyList = hobbyService.findByAll();
+        return ResponseEntity.ok().body(hobbyList.size());
+    }
+
 
     //디테일 사진보기
     @GetMapping("/image/{imageId}")
@@ -191,6 +204,13 @@ public class HobbyController {
     }
 
 
+
+//    @GetMapping("/image/{hobbyCode}")
+//    public ResponseEntity<?> detailImage(@PathVariable int hobbyCode)  throws IOException {
+//        List<String> encodedImages = hobbyService.findEncodedImages(hobbyCode);
+//
+//        return ResponseEntity.ok().body(encodedImages);
+//    }
     //참여하기
     /* 포스트?
      * api 어떻게 하지
@@ -210,9 +230,9 @@ public class HobbyController {
      * */
 
     //참가하기
-    @PostMapping("/join/{hobbyCode}")
-    public ResponseEntity<?> joinHobby(@PathVariable int hobbyCode, int userNo) {
-        System.out.println(userNo);
+    @PostMapping("/join/{hobbyCode}/{userNo}")
+    public ResponseEntity<?> joinHobby(@PathVariable int hobbyCode , @PathVariable int userNo) {
+
         Hobby hobby = hobbyService.findById(hobbyCode);
         if (hobby.getClose().equals("Y")) {
             return ResponseEntity.ok().body("마감되었습니다.");
@@ -248,8 +268,8 @@ public class HobbyController {
     }
 
     //참가여부
-    @GetMapping("/join/{hobbyCode}")
-    public ResponseEntity<?> join(@PathVariable int hobbyCode, int userNo) {
+    @GetMapping("/join/{hobbyCode}/{userNo}")
+    public ResponseEntity<?> join(@PathVariable int hobbyCode, @PathVariable int userNo) {
         HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, userNo);
 
         if (Objects.isNull(hobbyJoin)) {
@@ -306,8 +326,11 @@ public class HobbyController {
 
     //후기등록
     @PostMapping("/review/{hobbyCode}")
-    public ResponseEntity<?> hobbyReview(@PathVariable int hobbyCode, @RequestBody HobbyReviewDTO hobbyReviewDTO) {
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<?> hobbyReview(@PathVariable int hobbyCode, @RequestBody HobbyReviewDTO hobbyReviewDTO, @AuthenticationPrincipal UserDetails userDetails)  {
+        System.out.println(hobbyCode);
         Hobby hobby = hobbyService.findById(hobbyCode);
+
         HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, hobbyReviewDTO.getUserNo());
         if (Objects.isNull(hobby) || hobby.getClose().equals("N") || Objects.isNull(hobbyJoin)) {
             return ResponseEntity.status(404).body("후기를 작성할 수 없습니다.");

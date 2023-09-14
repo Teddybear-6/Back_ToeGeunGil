@@ -1,5 +1,7 @@
 package com.teddybear6.toegeungil.social.controller;
 
+import com.teddybear6.toegeungil.category.entity.Category;
+import com.teddybear6.toegeungil.local.entity.Local;
 import com.teddybear6.toegeungil.social.dto.ParticipateDTO;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import com.teddybear6.toegeungil.social.entity.Participate;
@@ -11,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /*
@@ -34,6 +33,7 @@ import java.util.stream.Collectors;
 */
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/socials") //도메인
 public class socialController {
     
@@ -187,4 +187,40 @@ public class socialController {
 
     /*
     필터*/
+    @GetMapping("/category/{categoryCode}") //30_카테고리 코드 필터
+    public ResponseEntity<List<?>> readSocialPostCategory(@PathVariable int categoryCode) {
+        //카테고리 코드 받아오기
+        Category category = socialService.readSocialPostCategory(categoryCode);
+        //받아온 카테고리 코드로 해당 게시글 리스트로 받아오기
+        List<Social> socialList = socialService.readSocialPostWhereCategoryCode(categoryCode);
+
+        return ResponseEntity.ok().body(socialList);
+    }
+
+    @GetMapping("local/{localCode}") //31_지역 코드 필터
+    public ResponseEntity<List<?>> readSocialPostLocal(@PathVariable int localCode) {
+        //지역 코드
+        Local local = socialService.readSocialPostLocal(localCode);
+        //받아온 지역 코드로 해당 게시글 리스트로 받아오기
+        List<Social> socialList = socialService.readSocialPostWhereLocalCode(localCode);
+
+        return ResponseEntity.ok().body(socialList);
+    }
+
+    @GetMapping("/category/{categoryCode}/local/{localCode}") //32_지역 AND 카테고리 필터
+    public ResponseEntity<List<?>> readSocialFilterCategoryAndLocal(@PathVariable int categoryCode, @PathVariable int localCode) {
+        //카테고리 코드 받아오기
+        Category category = socialService.readSocialPostCategory(categoryCode);
+        System.out.println("Category : " + category);
+        //지역 코드
+        Local local = socialService.readSocialPostLocal(localCode);
+        System.out.println("Local : " + local);
+
+        //카테고리 AND 지역
+        List<Social> social = socialService.readSocialFilterCategoryAndLocal(category, local);
+        System.out.println("controller : " + social);
+
+        return ResponseEntity.ok().body(social);
+    }
+
 }
