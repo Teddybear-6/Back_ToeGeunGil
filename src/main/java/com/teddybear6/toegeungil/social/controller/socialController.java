@@ -5,6 +5,7 @@ import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.local.entity.Local;
 import com.teddybear6.toegeungil.social.dto.ParticipateDTO;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
+import com.teddybear6.toegeungil.social.dto.SocialKeywordDTO;
 import com.teddybear6.toegeungil.social.entity.Participate;
 import com.teddybear6.toegeungil.social.entity.Social;
 import com.teddybear6.toegeungil.social.service.SocialService;
@@ -88,11 +89,12 @@ public class socialController {
             return ResponseEntity.status(404).body("게시글 조회에 실패하였습니다...");
         } else {
             SocialDTO socialDTO = new SocialDTO(social);
-//            List<Keyword> keywordList = new ArrayList<>();
-//            for (int i = 0; i < social.get; i++) {
-//
-//            }
-
+            List<Keyword> keywordList = new ArrayList<>();
+            for (int i = 0; i < social.getSocialKeywordList().size(); i++) {
+                keywordList.add(social.getSocialKeywordList().get(i).getKeyword());
+            }
+            List<SocialKeywordDTO> socialKeywordDTOList = keywordList.stream().map(m -> new SocialKeywordDTO(m)).collect(Collectors.toList());
+            socialDTO.setKeywordDTOList(socialKeywordDTOList);
 
             return ResponseEntity.ok().body(socialDTO);
         }
