@@ -34,11 +34,15 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String jwtHeater = request.getHeader("Authorization");
+        System.out.println(jwtHeater);
         if(jwtHeater == null || !jwtHeater.startsWith("Bearer")){
             chain.doFilter(request,response);
             return;
         }
-        String jwtToken = request.getHeader("Authorization").replace("Bearer","");
+
+
+        String jwtToken = request.getHeader("Authorization").replace("Bearer ","");
+
         String userId = JWT.require(Algorithm.HMAC512(AUTH_KEY)).build().verify(jwtToken).getClaim("userId").asString();
 
         if(!userId.isEmpty()){
