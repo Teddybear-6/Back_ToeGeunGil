@@ -16,11 +16,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/hobbys")
 public class HobbyController {
@@ -223,9 +224,9 @@ public class HobbyController {
      * */
 
     //참가하기
-    @PostMapping("/join/{hobbyCode}")
-    public ResponseEntity<?> joinHobby(@PathVariable int hobbyCode, int userNo) {
-        System.out.println(userNo);
+    @PostMapping("/join/{hobbyCode}/{userNo}")
+    public ResponseEntity<?> joinHobby(@PathVariable int hobbyCode , @PathVariable int userNo) {
+
         Hobby hobby = hobbyService.findById(hobbyCode);
         if (hobby.getClose().equals("Y")) {
             return ResponseEntity.ok().body("마감되었습니다.");
@@ -261,8 +262,8 @@ public class HobbyController {
     }
 
     //참가여부
-    @GetMapping("/join/{hobbyCode}")
-    public ResponseEntity<?> join(@PathVariable int hobbyCode, int userNo) {
+    @GetMapping("/join/{hobbyCode}/{userNo}")
+    public ResponseEntity<?> join(@PathVariable int hobbyCode, @PathVariable int userNo) {
         HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, userNo);
 
         if (Objects.isNull(hobbyJoin)) {
