@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.hobby.service;
 
+import com.teddybear6.toegeungil.common.utils.ImageApi;
 import com.teddybear6.toegeungil.hobby.dto.*;
 import com.teddybear6.toegeungil.hobby.entity.*;
 import com.teddybear6.toegeungil.hobby.repository.*;
@@ -34,8 +35,10 @@ public class HobbyService {
 
     private final HobbyReviewRepository hobbyReviewRepository;
 
+    private final ImageApi imageApi;
 
-    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository, ReviewAnswerRepository reviewAnswerRepository, HobbyJoinRepository hobbyJoinRepository, HobbyReviewRepository hobbyReviewRepository) {
+
+    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository, ReviewAnswerRepository reviewAnswerRepository, HobbyJoinRepository hobbyJoinRepository, HobbyReviewRepository hobbyReviewRepository, ImageApi imageApi) {
         this.storageRepository = storageRepository;
         this.keywordRepository = keywordRepository;
         this.hobbyRepository = hobbyRepository;
@@ -43,6 +46,7 @@ public class HobbyService {
         this.reviewAnswerRepository = reviewAnswerRepository;
         this.hobbyJoinRepository = hobbyJoinRepository;
         this.hobbyReviewRepository = hobbyReviewRepository;
+        this.imageApi = imageApi;
     }
 
     public String uploadImage(MultipartFile file) throws IOException {

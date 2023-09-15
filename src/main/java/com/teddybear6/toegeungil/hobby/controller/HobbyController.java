@@ -1,6 +1,6 @@
 package com.teddybear6.toegeungil.hobby.controller;
 
-import com.sun.tools.jconsole.JConsoleContext;
+
 import com.teddybear6.toegeungil.hobby.dto.*;
 import com.teddybear6.toegeungil.hobby.entity.*;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
@@ -8,7 +8,7 @@ import com.teddybear6.toegeungil.hobby.service.HobbyService;
 
 import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
-import com.teddybear6.toegeungil.user.entity.UserEntity;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 import java.util.Objects;
 import java.util.stream.Collectors;
 
