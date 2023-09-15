@@ -1,9 +1,6 @@
 package com.teddybear6.toegeungil.qna.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -11,6 +8,7 @@ import java.util.Date;
 public class Answer {
     //답변 엔티티
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  //기본키 1씩 증가
     @Column(name = "ansNum")
     private int answerNum;                      //답변 번호
 
@@ -23,6 +21,7 @@ public class Answer {
     private String answerNick;                  //답변자 닉네임
 
     @Column(name = "ansDate")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date answerDate;                    //답변 생성일
 
     @Column(name = "ansDelete")

@@ -1,9 +1,15 @@
 package com.teddybear6.toegeungil.social.service;
 
+import com.teddybear6.toegeungil.category.entity.Category;
+import com.teddybear6.toegeungil.category.repository.CategoryRepository;
+import com.teddybear6.toegeungil.local.entity.Local;
+import com.teddybear6.toegeungil.local.repository.LocalRepository;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import com.teddybear6.toegeungil.social.entity.Image;
+import com.teddybear6.toegeungil.social.entity.Participate;
 import com.teddybear6.toegeungil.social.entity.Social;
 import com.teddybear6.toegeungil.social.repository.ImageRepository;
+import com.teddybear6.toegeungil.social.repository.ParticipateRepository;
 import com.teddybear6.toegeungil.social.repository.SocialRepository;
 import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import org.springframework.stereotype.Service;
@@ -21,10 +27,16 @@ public class SocialService {
 
     private final SocialRepository socialRepository; //소셜
     private final ImageRepository imageRepository; //파일
+    private final ParticipateRepository participateRepository; //소셜참여
+    private final CategoryRepository categoryRepository; //카테고리
+    private final LocalRepository localRepository; //지역
 
-    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository) {
+    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository) {
         this.socialRepository = socialRepository;
         this.imageRepository = imageRepository;
+        this.participateRepository = participateRepository;
+        this.categoryRepository = categoryRepository;
+        this.localRepository = localRepository;
     }
 
     public List<Social> readAllSocial() {
@@ -113,11 +125,12 @@ public class SocialService {
         }
     }
 
+
     /*
     사진*/
     @Transactional
     public String uploadSocialImage(MultipartFile image) throws IOException {
-        //사진 업로드
+        //10_사진 업로드
         //image_name을 새로 부여하기 위한 현재 시간 가져오기
         LocalDateTime now = LocalDateTime.now();
         int year = now.getYear();
@@ -146,9 +159,88 @@ public class SocialService {
     }
 
     public byte[] downloadSocialImage(String imageName) {
-        //사진 다운로드(보여주기)
+        //11_사진 다운로드(보여주기)
         Image imageData = imageRepository.findByImageName(imageName)
                 .orElseThrow(RuntimeException::new);
         return ImageUtils.decompressImage(imageData.getImageData());
+    }
+
+
+    /*
+    참여하기*/
+    public List<Participate> readSocialParticipateUser(int socialNum) {
+        //20_소셜 참여 회원 조회(/participate/{게시글 번호})
+        List<Participate> participateList = participateRepository.findAllBySocialNum(socialNum);
+
+        return participateList;
+    }
+
+    public Participate findSocialParticipateRegistration(int socialNum, int userNum) {
+        //21_소셜 참여(/participate) -> 게시글번호 AND 회원번호의 정보가 있는지 확인하기. (참여하기 되어있는지 확인)
+        Participate participate = participateRepository.findBySocialNumAndUserNum(socialNum, userNum);
+
+        return participate;
+    }
+
+    @Transactional
+    public int SocialParticipateRegistration(Participate participate) {
+        //21_소셜 참여(/participate)
+        Participate result = participateRepository.save(participate);
+
+        System.out.println(result);
+        if (Objects.isNull(result)) {
+            return 0; //result가 null일 경우 0 반환
+        } else {
+            return 1;
+        }
+    }
+
+    @Transactional
+    public int SocialParticipateDelete(Participate findParticipate) {
+        //21_소셜 참여가 이미 되어있는 경우, 모임 참여 삭제
+        participateRepository.delete(findParticipate);
+
+        Participate participate = participateRepository.findBySocialNumAndUserNum(findParticipate.getSocialNum(),findParticipate.getUserNum());
+        if(Objects.isNull(participate)){
+            return 1;
+        }else {
+            return 0;
+        }
+    }
+
+
+    /*
+    필터*/
+    public Category readSocialPostCategory(int categoryCode) {
+        //카테고리 코드 조회
+        Category category = categoryRepository.findById(categoryCode);
+        return category;
+    }
+
+    public Local readSocialPostLocal(int localCode) {
+        //지역 코드 조회
+        Local local = localRepository.findById(localCode);
+        return local;
+    }
+
+    public List<Social> readSocialPostWhereCategoryCode(int categoryCode) {
+        //30_카테고리 코드 필터 (받아온 카테고리 코드로 소셜 게시글 리스트로 조회)
+        List<Social> social = socialRepository.findByCategoryCode(categoryCode);
+
+        return social;
+    }
+
+    public List<Social> readSocialPostWhereLocalCode(int localCode) {
+        //31_지역 코드 필터 (받아온 지역 코드로 소셜 게시글 리스트로 조회)
+        List<Social> socialList = socialRepository.findByLocalCode(localCode);
+        return socialList;
+    }
+
+    public List<Social> readSocialFilterCategoryAndLocal(Category category, Local local) {
+        //32_카테고리 AND 지역 필터
+        List<Social> socialList = socialRepository.findByCategoryCodeAndLocalCode(category.getCategoryCode(), local.getLocalCode());
+        System.out.println("service : " + socialList);
+
+        return socialList;
     }
 }

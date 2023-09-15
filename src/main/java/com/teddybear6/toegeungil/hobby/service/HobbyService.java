@@ -1,9 +1,6 @@
 package com.teddybear6.toegeungil.hobby.service;
 
-import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
-import com.teddybear6.toegeungil.hobby.dto.HobbyGetDTO;
-import com.teddybear6.toegeungil.hobby.dto.HobbyKeywordDTO;
-import com.teddybear6.toegeungil.hobby.dto.HobbyReviewDTO;
+import com.teddybear6.toegeungil.hobby.dto.*;
 import com.teddybear6.toegeungil.hobby.entity.*;
 import com.teddybear6.toegeungil.hobby.repository.*;
 import com.teddybear6.toegeungil.common.utils.ImageUtils;
@@ -17,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -30,16 +28,19 @@ public class HobbyService {
 
     private final HobbyKeywordRepository hobbyKeywordRepository;
 
+    private  final ReviewAnswerRepository reviewAnswerRepository;
+
     private final HobbyJoinRepository hobbyJoinRepository;
 
     private final HobbyReviewRepository hobbyReviewRepository;
 
 
-    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository, HobbyJoinRepository hobbyJoinRepository, HobbyReviewRepository hobbyReviewRepository) {
+    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository, ReviewAnswerRepository reviewAnswerRepository, HobbyJoinRepository hobbyJoinRepository, HobbyReviewRepository hobbyReviewRepository) {
         this.storageRepository = storageRepository;
         this.keywordRepository = keywordRepository;
         this.hobbyRepository = hobbyRepository;
         this.hobbyKeywordRepository = hobbyKeywordRepository;
+        this.reviewAnswerRepository = reviewAnswerRepository;
         this.hobbyJoinRepository = hobbyJoinRepository;
         this.hobbyReviewRepository = hobbyReviewRepository;
     }
@@ -375,5 +376,40 @@ public class HobbyService {
 
         System.out.println(hobbyGetDTOS);
         return hobbyGetDTOS;
+    }
+
+    public ReviewAnswer registReviewAnswer(ReviewAnswerDTO reviewAnswerDTO) {
+        ReviewAnswer reviewAnswer = new ReviewAnswer().tutorCode(reviewAnswerDTO.getTutorCode()).reviewCode(reviewAnswerDTO.getReviewCode()).content(reviewAnswerDTO.getContent()).builder();
+
+
+        ReviewAnswer findReviewAnswer = reviewAnswerRepository.save(reviewAnswer);
+
+        return findReviewAnswer;
+
+    }
+
+    public ReviewAnswer reviewAnswerFindByRevieCode(int reviewCode) {
+        ReviewAnswer reviewAnswer  = reviewAnswerRepository.findAllByReviewCode(reviewCode);
+
+        return reviewAnswer;
+    }
+
+    public List<String> findEncodedImages(int hobbyCode) throws IOException{
+        List<String> images = new ArrayList<>();
+
+        List<HobbyImage> hobbyImage = storageRepository.findByhobbyCode(hobbyCode);
+
+        for(int i =0 ; i<hobbyImage.size();i++){
+            byte[] fileContent = ImageUtils.decompressImage(hobbyImage.get(i).getImageDate()); // file을 byte로 변경
+            String encodedString = Base64.getEncoder().encodeToString(fileContent);  // byte를 base64로 encode
+            images.add(encodedString);
+        }
+        return images;
+    }
+
+    public List<Hobby> findByAll() {
+        List<Hobby> hobbyList = hobbyRepository.findAll();
+
+        return hobbyList;
     }
 }

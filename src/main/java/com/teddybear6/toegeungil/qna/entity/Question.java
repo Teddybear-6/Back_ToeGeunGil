@@ -1,9 +1,6 @@
 package com.teddybear6.toegeungil.qna.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -12,6 +9,7 @@ public class Question {
     //질문 관련 엔티티
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  //기본키 1씩 증가
     @Column(name = "queNum")
     private int questionNum;                            //질문 번호
     @Column(name = "queTitle")
