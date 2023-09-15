@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -46,7 +47,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             // 사용자 입력 정보를 받아 토큰을 생성해준다.
             UsernamePasswordAuthenticationToken authenticationToken
                     = new UsernamePasswordAuthenticationToken(loginDto.getUserId(), loginDto.getUserPass());
-            System.out.println("여기까진 됨");
 
 
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
@@ -76,12 +76,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             ObjectMapper objectMapper = new ObjectMapper();
             String responseValue = objectMapper.writeValueAsString(loginReqDTO);
 
-
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.addHeader("Authorization", "Bearer " + jwtToken);
             response.getWriter().println(responseValue);
-
 
         }
     }
