@@ -22,6 +22,7 @@ spring:
 #    url: jdbc:mysql://localhost:3306/toegeungil
 #    username: teddy6
 #    password: teddy6223
+#
 #  jpa:
 #    hibernate:
 #      ddl-auto: update
