@@ -15,25 +15,22 @@ public class HobbyImage {
     private String name;
 
     @Column(name = "image_type")
-    private String type;
+    private String path;
 
     @Column(name = "hobby_code")
     private int hobbyCode;
 
-    @Lob
-    @Column(name="imagedata",length = 1000)
-    private byte[] imageDate;
 
     public HobbyImage() {
     }
 
-    public HobbyImage(int id, String name, String type, int hobbyCode, byte[] imageDate) {
+    public HobbyImage(int id, String name, String path, int hobbyCode) {
         this.id = id;
         this.name = name;
-        this.type = type;
+        this.path = path;
         this.hobbyCode = hobbyCode;
-        this.imageDate = imageDate;
     }
+
 
     public int getId() {
         return id;
@@ -51,12 +48,12 @@ public class HobbyImage {
         this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public String getPath() {
+        return path;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public int getHobbyCode() {
@@ -67,22 +64,13 @@ public class HobbyImage {
         this.hobbyCode = hobbyCode;
     }
 
-    public byte[] getImageDate() {
-        return imageDate;
-    }
-
-    public void setImageDate(byte[] imageDate) {
-        this.imageDate = imageDate;
-    }
-
     @Override
     public String toString() {
         return "HobbyImage{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
+                ", path='" + path + '\'' +
                 ", hobbyCode=" + hobbyCode +
-                ", imageDate=" + Arrays.toString(imageDate) +
                 '}';
     }
 }

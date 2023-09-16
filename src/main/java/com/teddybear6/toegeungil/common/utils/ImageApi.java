@@ -3,6 +3,7 @@ package com.teddybear6.toegeungil.common.utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ import java.util.List;
 public class ImageApi {
 
     //단일 파일 업로드
-    public ResponseEntity<?> singleImage(MultipartFile file) throws IOException{
+    public ResponseEntity<?> singleImage(MultipartFile file) throws IOException, ParseException {
         String host = "http://106.250.199.126:9000//upload";
 
         MultiValueMap<String , Object>  body = new LinkedMultiValueMap<>();
@@ -43,21 +44,21 @@ public class ImageApi {
         HttpEntity<MultiValueMap<String,Object>> request = new HttpEntity<>(body,httpHeaders);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity res = restTemplate.postForEntity(host,request,String.class);
-
-        JSONParser parser = new JSONParser();
-        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
-
-
-        JSONObject fileInfo =  (JSONObject)jsonObject.get("fileInfo");
-        String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
-        String originalname =  (String)fileInfo.get("originalname");
-
-
-
-
-
-        System.out.println(path);
-        System.out.println(originalname);
+//
+//        JSONParser parser = new JSONParser();
+//        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
+//
+//
+//        JSONObject fileInfo =  (JSONObject)jsonObject.get("fileInfo");
+//        String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
+//        String originalname =  (String)fileInfo.get("originalname");
+//
+//
+//
+//
+//
+//        System.out.println(path);
+//        System.out.println(originalname);
 
 
 
@@ -69,7 +70,7 @@ public class ImageApi {
     }
 
 
-    public  ResponseEntity<?> arrays(MultipartFile[] files) throws IOException{
+    public  ResponseEntity<?> multiImages(MultipartFile[] files) throws IOException, ParseException {
 
         String host = "http://106.250.199.126:9000//uploads";
         MultiValueMap<String , Object> body = new LinkedMultiValueMap<>();
@@ -99,19 +100,19 @@ public class ImageApi {
 
         ResponseEntity res = restTemplate.exchange(host, HttpMethod.POST,request,String.class);
 
-
-        JSONParser parser = new JSONParser();
-        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
-        JSONArray jsonArray1 = (JSONArray) jsonObject.get("fileInfo");
-
-        List<String> path  = new ArrayList<>();
-
-        for(int i = 0 ; i< jsonArray1.size();i++){
-            JSONObject obj = (JSONObject)  jsonArray1.get(i);
-            path.add(((String) obj.get("path")).replace("uploads\\",""));
-        }
-
-        System.out.println(path);
+//
+//        JSONParser parser = new JSONParser();
+//        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
+//        JSONArray jsonArray1 = (JSONArray) jsonObject.get("fileInfo");
+//
+//        List<String> path  = new ArrayList<>();
+//
+//        for(int i = 0 ; i< jsonArray1.size();i++){
+//            JSONObject obj = (JSONObject)  jsonArray1.get(i);
+//            path.add(((String) obj.get("path")).replace("uploads\\",""));
+//        }
+//
+//        System.out.println(path);
 
 
 

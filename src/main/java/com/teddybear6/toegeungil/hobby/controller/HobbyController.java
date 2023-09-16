@@ -9,6 +9,7 @@ import com.teddybear6.toegeungil.hobby.service.HobbyService;
 import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 
+import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -60,23 +61,6 @@ public class HobbyController {
     }
 
 
-    //이미지테스트 파일을 db에 저장
-    @PostMapping("/images")
-    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
-        String uploadImage = hobbyService.uploadImage(file);
-        return ResponseEntity.ok().body(uploadImage);
-    }
-
-    //이미지 다운로드
-    @GetMapping("/images/{fileName}")
-    public ResponseEntity<?> downloadImage(@PathVariable("fileName") String fileName) {
-        System.out.println(fileName);
-
-        byte[] downloadImage = hobbyService.downloadImage(fileName);
-        return ResponseEntity.ok().contentType(MediaType.valueOf("image/png"))
-                .body(downloadImage);
-    }
-
     //findall
     @GetMapping
     public ResponseEntity<List<?>> hobbyfindAll(final Pageable pageable) {
@@ -90,26 +74,28 @@ public class HobbyController {
     }
 
     //취미 메인사진 조사
-    @GetMapping("/mainimages/{hobbyCode}")
-    public ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode) {
-        List<HobbyImage> hobbyImages = hobbyService.findMainImage(hobbyCode);
-
-        if (hobbyImages.size() == 0) {
-            //나중에 기본이미지로 바꾸기 무조건 하나씩 넣기하면 필요없음
-            return ResponseEntity.status(404).body(null);
-        }
-
-        return ResponseEntity.ok().contentType(MediaType.valueOf(hobbyImages.get(0).getType())).body(ImageUtils.decompressImage(hobbyImages.get(0).getImageDate()));
-    }
+//    @GetMapping("/mainimages/{hobbyCode}")
+//    public ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode) {
+//        List<HobbyImage> hobbyImages = hobbyService.findMainImage(hobbyCode);
+//
+//        if (hobbyImages.size() == 0) {
+//            //나중에 기본이미지로 바꾸기 무조건 하나씩 넣기하면 필요없음
+//            return ResponseEntity.status(404).body(null);
+//        }
+//
+//        return ResponseEntity.ok().contentType(MediaType.valueOf(hobbyImages.get(0).getType())).body(ImageUtils.decompressImage(hobbyImages.get(0).getImageDate()));
+//    }
 
     //등록
     @PostMapping
-    public ResponseEntity<?> registHobby(@RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") List<MultipartFile> files) {
+    public ResponseEntity<?> registHobby(@RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") MultipartFile[] files) {
         int result = 0;
         try {
             result = hobbyService.registHobby(hobbyDTO, files);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
 
         if (result > 0) {
@@ -176,9 +162,9 @@ public class HobbyController {
         List<HobbyImage> hobbyImages = hobby.getHobbyImages();
         List<ImageIdDTO> imageIdDTOS = new ArrayList<>();
 
-        for (int i = 0; i < hobbyImages.size(); i++) {
-            imageIdDTOS.add(new ImageIdDTO(hobbyImages.get(i).getId()));
-        }
+//        for (int i = 0; i < hobbyImages.size(); i++) {
+//            imageIdDTOS.add(new ImageIdDTO(hobbyImages.get(i).getId()));
+//        }
 
         List<HobbyKeywordDTO> hobbyKeywordDTO = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
         hobbyDTO.setKeywordDTOList(hobbyKeywordDTO);
@@ -196,12 +182,12 @@ public class HobbyController {
 
 
     //디테일 사진보기
-    @GetMapping("/image/{imageId}")
-    public ResponseEntity<?> detailImage(@PathVariable int imageId) {
-
-        HobbyImage image = hobbyService.detailImage(imageId);
-        return ResponseEntity.ok().contentType(MediaType.valueOf(image.getType())).body(ImageUtils.decompressImage(image.getImageDate()));
-    }
+//    @GetMapping("/image/{imageId}")
+//    public ResponseEntity<?> detailImage(@PathVariable int imageId) {
+//
+//        HobbyImage image = hobbyService.detailImage(imageId);
+//        return ResponseEntity.ok().contentType(MediaType.valueOf(image.getType())).body(ImageUtils.decompressImage(image.getImageDate()));
+//    }
 
 
 

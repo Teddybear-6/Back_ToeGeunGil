@@ -8,7 +8,12 @@ import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.keyword.repository.KeywordRepository;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,31 +54,13 @@ public class HobbyService {
         this.imageApi = imageApi;
     }
 
-    public String uploadImage(MultipartFile file) throws IOException {
-
-        HobbyImage image = new HobbyImage();
-        image.setName(file.getOriginalFilename());
-        image.setType(file.getContentType());
-        image.setImageDate(ImageUtils.compressImage(file.getBytes()));
-
-        HobbyImage findImage = storageRepository.save(image);
-        if (findImage != null) {
-            return file.getOriginalFilename();
-        }
-        return null;
-
-    }
 
 
-    public byte[] downloadImage(String fileName) {
-        HobbyImage image = storageRepository.findByName(fileName)
-                .orElseThrow(RuntimeException::new);
 
-        return ImageUtils.decompressImage(image.getImageDate());
-    }
+
 
     @Transactional
-    public int registHobby(HobbyDTO hobbyDTO, List<MultipartFile> files) throws IOException {
+    public int registHobby(HobbyDTO hobbyDTO, MultipartFile[] files) throws IOException, ParseException {
         Hobby hobby = new Hobby(hobbyDTO);
         List<HobbyKeywordDTO> keyword = hobbyDTO.getKeywordDTOList();
         List<HobbyKeyword> hobbyKeywordList = new ArrayList<>();
@@ -86,12 +73,19 @@ public class HobbyService {
 
         hobby.setHobbyKeywordList(hobbyKeywordList);
         Hobby findHobby = hobbyRepository.save(hobby);
-        for (int i = 0; i < files.size(); i++) {
+        ResponseEntity  res =  imageApi.multiImages(files);
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
+        JSONArray jsonArray1 = (JSONArray) jsonObject.get("fileInfo");
+
+
+        for (int i = 0; i < jsonArray1.size(); i++) {
             HobbyImage image = new HobbyImage();
             image.setHobbyCode(findHobby.getHobbyCode());
-            image.setName(files.get(i).getOriginalFilename());
-            image.setType(files.get(i).getContentType());
-            image.setImageDate(ImageUtils.compressImage(files.get(i).getBytes()));
+            JSONObject obj = (JSONObject)  jsonArray1.get(i);
+
+            image.setName(((String) obj.get("originalname")));
+            image.setPath(((String) obj.get("path")).replace("uploads\\",""));
             hobbyImages.add(image);
         }
         List<HobbyImage> findImages = storageRepository.saveAll(hobbyImages);
