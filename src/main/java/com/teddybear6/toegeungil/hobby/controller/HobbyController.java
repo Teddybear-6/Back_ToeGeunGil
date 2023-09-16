@@ -109,10 +109,11 @@ public class HobbyController {
 
     //수정
     @PutMapping("/{hobbyCode}")
-    public ResponseEntity<?> updateHobby(@PathVariable int hobbyCode, @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") List<MultipartFile> files) {
+    public ResponseEntity<?> updateHobby(@PathVariable int hobbyCode, @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") MultipartFile[] files) {
 
 
         Hobby hobby = hobbyService.findById(hobbyCode);
+
         if (Objects.isNull(hobby)) {
             return ResponseEntity.status(404).body("존재하지 않는 취미입니다.");
         }
@@ -160,11 +161,14 @@ public class HobbyController {
             keyword.add(hobby.getHobbyKeywordList().get(i).getKeyword());
         }
         List<HobbyImage> hobbyImages = hobby.getHobbyImages();
+
         List<ImageIdDTO> imageIdDTOS = new ArrayList<>();
 
-//        for (int i = 0; i < hobbyImages.size(); i++) {
-//            imageIdDTOS.add(new ImageIdDTO(hobbyImages.get(i).getId()));
-//        }
+        for (int i = 0; i < hobbyImages.size(); i++) {
+
+            imageIdDTOS.add(new ImageIdDTO(hobbyImages.get(i).getId(),hobbyImages.get(i).getPath(),hobbyImages.get(i).getName(),hobbyImages.get(i).getHobbyCode()));
+
+        }
 
         List<HobbyKeywordDTO> hobbyKeywordDTO = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
         hobbyDTO.setKeywordDTOList(hobbyKeywordDTO);

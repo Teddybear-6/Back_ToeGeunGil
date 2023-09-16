@@ -1,5 +1,7 @@
 package com.teddybear6.toegeungil.hobby.entity;
 
+import com.teddybear6.toegeungil.hobby.dto.ImageIdDTO;
+
 import javax.persistence.*;
 import java.util.Arrays;
 
@@ -11,10 +13,10 @@ public class HobbyImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int  id;
 
-    @Column(name = "image_name")
+    @Column(name = "image_origin_name")
     private String name;
 
-    @Column(name = "image_type")
+    @Column(name = "image_path")
     private String path;
 
     @Column(name = "hobby_code")
@@ -29,6 +31,13 @@ public class HobbyImage {
         this.name = name;
         this.path = path;
         this.hobbyCode = hobbyCode;
+    }
+
+    public HobbyImage(ImageIdDTO imageIdDTO) {
+        this.id = imageIdDTO.getId();
+        this.name = imageIdDTO.getName();
+        this.path = imageIdDTO.getPath();
+
     }
 
 
