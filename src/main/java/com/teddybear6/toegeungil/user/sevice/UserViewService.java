@@ -37,12 +37,17 @@ public class UserViewService {
 
     public int registUser(InsertUserDTO insertUserDTO) {
 
+        System.out.println("나와라 ");
         UserEntity user = new UserEntity();
+        System.out.println("나와라 1");
         user.setUserEmail(insertUserDTO.getUserEmail());
+        System.out.println("나와라 2");
         user.setUserName(insertUserDTO.getUserName());
+        System.out.println("나와라 3");
         user.setRole(UserRole.valueOf(insertUserDTO.getRole()));
         user.setUserPassword(passwordEncoder.encode(insertUserDTO.getUserPassword()));
         user.setNickName(insertUserDTO.getNickName());
+        System.out.println("나와라 4");
         UserEntity findUser = userEntityRepository.save(user);
         if (Objects.isNull(findUser)) {
             return 0;
