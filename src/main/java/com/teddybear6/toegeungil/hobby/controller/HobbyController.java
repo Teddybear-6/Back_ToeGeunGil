@@ -74,18 +74,24 @@ public class HobbyController {
     }
 
     //취미 메인사진 조사
-//    @GetMapping("/mainimages/{hobbyCode}")
-//    public ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode) {
-//        List<HobbyImage> hobbyImages = hobbyService.findMainImage(hobbyCode);
-//
-//        if (hobbyImages.size() == 0) {
-//            //나중에 기본이미지로 바꾸기 무조건 하나씩 넣기하면 필요없음
-//            return ResponseEntity.status(404).body(null);
-//        }
-//
-//        return ResponseEntity.ok().contentType(MediaType.valueOf(hobbyImages.get(0).getType())).body(ImageUtils.decompressImage(hobbyImages.get(0).getImageDate()));
-//    }
+    @GetMapping("/mainimages/{hobbyCode}")
+    public ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode) {
+        List<HobbyImage> hobbyImages = hobbyService.findMainImage(hobbyCode);
 
+
+
+
+        if (hobbyImages.size() == 0) {
+            //나중에 기본이미지로 바꾸기 무조건 하나씩 넣기하면 필요없음
+            return ResponseEntity.status(404).body(null);
+        }
+        ImageIdDTO imageIdDTO = new ImageIdDTO();
+        imageIdDTO.setHobbyCode(hobbyCode);
+        imageIdDTO.setId(hobbyImages.get(0).getId());
+        imageIdDTO.setPath(hobbyImages.get(0).getPath());
+
+        return ResponseEntity.ok().body(imageIdDTO);
+    }
     //등록
     @PostMapping
     public ResponseEntity<?> registHobby(@RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") MultipartFile[] files) {

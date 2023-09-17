@@ -46,6 +46,8 @@ public class HobbyGetDTO {
 
     private int localCode;
 
+    private Date closingDate;
+
     public HobbyGetDTO() {
     }
 
@@ -89,6 +91,7 @@ public class HobbyGetDTO {
         this.hobbyStats= hobby.getHobbyStatus();
         this.localCode = hobby.getLocalCode();
         this.hobbyPlace =hobby.getHobbyPlace();
+        this.closingDate = hobby.getClosingDate();
 
     }
 
@@ -230,6 +233,22 @@ public class HobbyGetDTO {
         this.localCode = localCode;
     }
 
+    public String getHobbyPlace() {
+        return hobbyPlace;
+    }
+
+    public void setHobbyPlace(String hobbyPlace) {
+        this.hobbyPlace = hobbyPlace;
+    }
+
+    public Date getClosingDate() {
+        return closingDate;
+    }
+
+    public void setClosingDate(Date closingDate) {
+        this.closingDate = closingDate;
+    }
+
     @Override
     public String toString() {
         return "HobbyGetDTO{" +
@@ -240,6 +259,7 @@ public class HobbyGetDTO {
                 ", maxPersonnel=" + maxPersonnel +
                 ", hobbyPrice=" + hobbyPrice +
                 ", intro='" + intro + '\'' +
+                ", hobbyPlace='" + hobbyPlace + '\'' +
                 ", date=" + date +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
@@ -250,6 +270,7 @@ public class HobbyGetDTO {
                 ", updateDate=" + updateDate +
                 ", hobbyStats='" + hobbyStats + '\'' +
                 ", localCode=" + localCode +
+                ", closingDate=" + closingDate +
                 '}';
     }
 }
