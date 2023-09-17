@@ -71,6 +71,8 @@ public class Hobby {
     @ColumnDefault("'Y'")
     private String hobbyStatus;
 
+    @Column(name = "hobby_place")
+    private String hobbyPlace;
 
     @Column(name = "create_date")
     @CreatedDate
@@ -103,7 +105,7 @@ public class Hobby {
     public Hobby() {
     }
 
-    public Hobby(int hobbyCode, String hobbyTitle, int tutorCode, int maxPersonnel, int hobbyPrice, String intro, int localCode, Date date, Date startTime, Date endTime, int categoryCode, String tutorIntro, String close, String hobbyStatus, Date crateDate, Date updateDate, List<HobbyKeyword> hobbyKeywordList, List<HobbyImage> hobbyImages, List<HobbyReview> hobbyReviews) {
+    public Hobby(int hobbyCode, String hobbyTitle, int tutorCode, int maxPersonnel, int hobbyPrice, String intro, int localCode, Date date, Date startTime, Date endTime, int categoryCode, String tutorIntro, String close, String hobbyStatus, String hobbyPlace, Date crateDate, Date updateDate, List<HobbyKeyword> hobbyKeywordList, List<HobbyImage> hobbyImages, List<HobbyReview> hobbyReviews) {
         this.hobbyCode = hobbyCode;
         this.hobbyTitle = hobbyTitle;
         this.tutorCode = tutorCode;
@@ -118,6 +120,7 @@ public class Hobby {
         this.tutorIntro = tutorIntro;
         this.close = close;
         this.hobbyStatus = hobbyStatus;
+        this.hobbyPlace = hobbyPlace;
         this.crateDate = crateDate;
         this.updateDate = updateDate;
         this.hobbyKeywordList = hobbyKeywordList;
@@ -138,6 +141,7 @@ public class Hobby {
         this.tutorIntro = hobbyDTO.getTutorIntro();
         this.close = hobbyDTO.getClose();
         this.localCode= hobbyDTO.getLocalCode();
+        this.hobbyPlace =hobbyDTO.getHobbyPlace();
     }
 
     public int getHobbyCode() {
@@ -292,6 +296,14 @@ public class Hobby {
         this.hobbyReviews = hobbyReviews;
     }
 
+    public String getHobbyPlace() {
+        return hobbyPlace;
+    }
+
+    public void setHobbyPlace(String hobbyPlace) {
+        this.hobbyPlace = hobbyPlace;
+    }
+
     @Override
     public String toString() {
         return "Hobby{" +
@@ -309,6 +321,7 @@ public class Hobby {
                 ", tutorIntro='" + tutorIntro + '\'' +
                 ", close='" + close + '\'' +
                 ", hobbyStatus='" + hobbyStatus + '\'' +
+                ", hobbyPlace='" + hobbyPlace + '\'' +
                 ", crateDate=" + crateDate +
                 ", updateDate=" + updateDate +
                 ", hobbyKeywordList=" + hobbyKeywordList +

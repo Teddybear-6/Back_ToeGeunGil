@@ -23,7 +23,7 @@ public class HobbyGetDTO {
 
     private String intro; // 시작전 소개
 
-
+    private String hobbyPlace; // 장소
     private Date date; // 일정
 
     private Date startTime; //시간
@@ -50,7 +50,7 @@ public class HobbyGetDTO {
     }
 
 
-    public HobbyGetDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, Date date, Date startTime, Date endTime, int categoryCode, String close, List<HobbyKeywordDTO> keyword, Date crateDate, Date updateDate, String hobbyStats, int localCode) {
+    public HobbyGetDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, String hobbyPlace, Date date, Date startTime, Date endTime, int categoryCode, String close, List<HobbyKeywordDTO> keyword, Date crateDate, Date updateDate, String hobbyStats, int localCode) {
         this.hobbyCode = hobbyCode;
         this.hobbyTitle = hobbyTitle;
         this.tutorCode = tutorCode;
@@ -58,6 +58,7 @@ public class HobbyGetDTO {
         this.maxPersonnel = maxPersonnel;
         this.hobbyPrice = hobbyPrice;
         this.intro = intro;
+        this.hobbyPlace = hobbyPlace;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -87,6 +88,8 @@ public class HobbyGetDTO {
         this.updateDate = hobby.getUpdateDate();
         this.hobbyStats= hobby.getHobbyStatus();
         this.localCode = hobby.getLocalCode();
+        this.hobbyPlace =hobby.getHobbyPlace();
+
     }
 
 

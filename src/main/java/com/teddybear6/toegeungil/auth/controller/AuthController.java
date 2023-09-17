@@ -16,6 +16,7 @@ public class AuthController {
     public UserEntity findUserEmail(String userId){
         UserEntity user = userController.findUserEmail(userId);
 
+
         return user;
     }
 

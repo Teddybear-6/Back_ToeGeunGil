@@ -18,7 +18,9 @@ public class JwtConfig {
                 .withSubject("tokenName")
                 .withExpiresAt(new Date(System.currentTimeMillis()+ACCESS_TOKEN_ECPIRE_TIME))
                 .withClaim("no", authUserDetail.getUserEntity().getUserNo())
+                .withClaim("userId", authUserDetail.getUserEntity().getUserEmail())
                 .withClaim("name", authUserDetail.getUserEntity().getUserName())
+                .withClaim("nickName", authUserDetail.getUserEntity().getNickName())
                 .sign(Algorithm.HMAC512(key));
 
         return jwtToken;
