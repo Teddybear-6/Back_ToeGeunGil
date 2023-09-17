@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.hobby.service;
 
+import com.teddybear6.toegeungil.common.utils.ImageApi;
 import com.teddybear6.toegeungil.hobby.dto.*;
 import com.teddybear6.toegeungil.hobby.entity.*;
 import com.teddybear6.toegeungil.hobby.repository.*;
@@ -7,7 +8,12 @@ import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.keyword.repository.KeywordRepository;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,8 +40,10 @@ public class HobbyService {
 
     private final HobbyReviewRepository hobbyReviewRepository;
 
+    private final ImageApi imageApi;
 
-    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository, ReviewAnswerRepository reviewAnswerRepository, HobbyJoinRepository hobbyJoinRepository, HobbyReviewRepository hobbyReviewRepository) {
+
+    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository, ReviewAnswerRepository reviewAnswerRepository, HobbyJoinRepository hobbyJoinRepository, HobbyReviewRepository hobbyReviewRepository, ImageApi imageApi) {
         this.storageRepository = storageRepository;
         this.keywordRepository = keywordRepository;
         this.hobbyRepository = hobbyRepository;
@@ -43,33 +51,16 @@ public class HobbyService {
         this.reviewAnswerRepository = reviewAnswerRepository;
         this.hobbyJoinRepository = hobbyJoinRepository;
         this.hobbyReviewRepository = hobbyReviewRepository;
-    }
-
-    public String uploadImage(MultipartFile file) throws IOException {
-
-        HobbyImage image = new HobbyImage();
-        image.setName(file.getOriginalFilename());
-        image.setType(file.getContentType());
-        image.setImageDate(ImageUtils.compressImage(file.getBytes()));
-
-        HobbyImage findImage = storageRepository.save(image);
-        if (findImage != null) {
-            return file.getOriginalFilename();
-        }
-        return null;
-
+        this.imageApi = imageApi;
     }
 
 
-    public byte[] downloadImage(String fileName) {
-        HobbyImage image = storageRepository.findByName(fileName)
-                .orElseThrow(RuntimeException::new);
 
-        return ImageUtils.decompressImage(image.getImageDate());
-    }
+
+
 
     @Transactional
-    public int registHobby(HobbyDTO hobbyDTO, List<MultipartFile> files) throws IOException {
+    public int registHobby(HobbyDTO hobbyDTO, MultipartFile[] files) throws IOException, ParseException {
         Hobby hobby = new Hobby(hobbyDTO);
         List<HobbyKeywordDTO> keyword = hobbyDTO.getKeywordDTOList();
         List<HobbyKeyword> hobbyKeywordList = new ArrayList<>();
@@ -82,12 +73,19 @@ public class HobbyService {
 
         hobby.setHobbyKeywordList(hobbyKeywordList);
         Hobby findHobby = hobbyRepository.save(hobby);
-        for (int i = 0; i < files.size(); i++) {
+        ResponseEntity  res =  imageApi.multiImages(files);
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
+        JSONArray jsonArray1 = (JSONArray) jsonObject.get("fileInfo");
+
+
+        for (int i = 0; i < jsonArray1.size(); i++) {
             HobbyImage image = new HobbyImage();
             image.setHobbyCode(findHobby.getHobbyCode());
-            image.setName(files.get(i).getOriginalFilename());
-            image.setType(files.get(i).getContentType());
-            image.setImageDate(ImageUtils.compressImage(files.get(i).getBytes()));
+            JSONObject obj = (JSONObject)  jsonArray1.get(i);
+
+            image.setName(((String) obj.get("originalname")));
+            image.setPath(((String) obj.get("path")).replace("uploads\\",""));
             hobbyImages.add(image);
         }
         List<HobbyImage> findImages = storageRepository.saveAll(hobbyImages);
@@ -154,7 +152,7 @@ public class HobbyService {
     }
 
     @Transactional
-    public int updateHobby(Hobby hobby, HobbyDTO hobbyDTO, List<MultipartFile> files) {
+    public int updateHobby(Hobby hobby, HobbyDTO hobbyDTO, MultipartFile[]  files) {
 
         List<HobbyKeywordDTO> keyword = hobbyDTO.getKeywordDTOList();
         List<HobbyKeyword> hobbyKeywordList = new ArrayList<>();
@@ -163,7 +161,7 @@ public class HobbyService {
         hobby.setHobbyTitle(hobbyDTO.getHobbyTitle());     //제목
         hobby.setHobbyPrice(hobbyDTO.getHobbyPrice());     //가격
         hobby.setClose(hobbyDTO.getClose());               //마감여부
-        System.out.println(hobbyDTO.getClose());
+
         hobby.setCategoryCode(hobbyDTO.getCategoryCode()); //카테고리
         hobby.setLocalCode(hobbyDTO.getLocalCode());       //지역
         hobby.setIntro(hobbyDTO.getIntro());               //소개
@@ -182,25 +180,49 @@ public class HobbyService {
         //따로 지워줄 경우 에러가 나지만 clear 후 set 해주면 된다
         hobby.getHobbyKeywordList().clear();
         hobby.setHobbyKeywordList(hobbyKeywordList);
-        hobby.getHobbyImages().clear();
-        System.out.println(hobby.getHobbyKeywordList());
+
+
+
 
 
         try {
-            for (int i = 0; i < files.size(); i++) {
-                HobbyImage updateImage = new HobbyImage();
-                updateImage.setHobbyCode(hobby.getHobbyCode());
-                updateImage.setName(files.get(i).getOriginalFilename());
-                updateImage.setType(files.get(i).getContentType());
-                updateImage.setImageDate(ImageUtils.compressImage(files.get(i).getBytes()));
-                hobbyImages.add(updateImage);
+
+            if(files.length!=0 && !Objects.isNull(hobbyDTO.getImageId())){
+                ResponseEntity  res =  imageApi.multiImages(files);
+                JSONParser parser = new JSONParser();
+                JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
+                JSONArray jsonArray1 = (JSONArray) jsonObject.get("fileInfo");
+                hobby.getHobbyKeywordList().clear();
+                System.out.println(hobbyDTO.getImageId());
+                for(int i = 0 ; i < hobbyDTO.getImageId().size();i++){
+                    HobbyImage image = new HobbyImage();
+                    image.setHobbyCode(hobby.getHobbyCode());
+                    image.setPath(hobbyDTO.getImageId().get(i).getPath());
+                    image.setName(hobbyDTO.getImageId().get(i).getName());
+                    hobbyImages.add(image);
+
+                }
+                for (int i = 0; i < jsonArray1.size(); i++) {
+                    HobbyImage image = new HobbyImage();
+                    image.setHobbyCode(hobby.getHobbyCode());
+                    JSONObject obj = (JSONObject)  jsonArray1.get(i);
+
+                    image.setName(((String) obj.get("originalname")));
+                    image.setPath(((String) obj.get("path")).replace("uploads\\",""));
+                    hobbyImages.add(image);
+                }
+
+
+                hobby.setHobbyImages(hobbyImages);
             }
         } catch (IOException e) {
             return 0;
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
 
 
-        hobby.setHobbyImages(hobbyImages);
+
         Hobby findHobby = hobbyRepository.save(hobby);
 
         return 1;
@@ -394,18 +416,18 @@ public class HobbyService {
         return reviewAnswer;
     }
 
-    public List<String> findEncodedImages(int hobbyCode) throws IOException{
-        List<String> images = new ArrayList<>();
-
-        List<HobbyImage> hobbyImage = storageRepository.findByhobbyCode(hobbyCode);
-
-        for(int i =0 ; i<hobbyImage.size();i++){
-            byte[] fileContent = ImageUtils.decompressImage(hobbyImage.get(i).getImageDate()); // file을 byte로 변경
-            String encodedString = Base64.getEncoder().encodeToString(fileContent);  // byte를 base64로 encode
-            images.add(encodedString);
-        }
-        return images;
-    }
+//    public List<String> findEncodedImages(int hobbyCode) throws IOException{
+//        List<String> images = new ArrayList<>();
+//
+//        List<HobbyImage> hobbyImage = storageRepository.findByhobbyCode(hobbyCode);
+//
+//        for(int i =0 ; i<hobbyImage.size();i++){
+//            byte[] fileContent = ImageUtils.decompressImage(hobbyImage.get(i).getImageDate()); // file을 byte로 변경
+//            String encodedString = Base64.getEncoder().encodeToString(fileContent);  // byte를 base64로 encode
+//            images.add(encodedString);
+//        }
+//        return images;
+//    }
 
     public List<Hobby> findByAll() {
         List<Hobby> hobbyList = hobbyRepository.findAll();
