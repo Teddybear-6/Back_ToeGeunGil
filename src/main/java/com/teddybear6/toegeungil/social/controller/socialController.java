@@ -153,24 +153,24 @@ public class socialController {
 
     /*
     이미지 (수정) 2023.09.18*/
-//    @PostMapping("/img")
-//    public ResponseEntity<?> uploadImage(@RequestPart("socialImage") MultipartFile file, SocialImageDTO socialImageDTO) {
-//        int result = 0;
-//        try {
-//            result = socialService.uploadImage(file);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (ParseException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        if (result == 0) {
-//            //socialService.SocialPostRegistration에서 반환받은 값이 0일 경우
-//            return ResponseEntity.status(404).body("이미지 등록에 실패하였습니다..." + file);
-//        } else {
-//            return ResponseEntity.ok().body("이미지가 등록되었습니다" + file);
-//        }
-//    }
+    @PostMapping("/img")
+    public ResponseEntity<?> uploadImage(@RequestPart("img") MultipartFile file, SocialImageDTO socialImageDTO) {
+        int result = 0;
+        try {
+            result = socialService.uploadImage(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (result == 0) {
+            //socialService.SocialPostRegistration에서 반환받은 값이 0일 경우
+            return ResponseEntity.status(404).body("이미지 등록에 실패하였습니다...");
+        } else {
+            return ResponseEntity.ok().body("이미지가 등록되었습니다");
+        }
+    }
 
     /*
     사진 https://velog.io/@mooh2jj/SpringBoot-File-uploaddownload-%EA%B5%AC%ED%98%84*/

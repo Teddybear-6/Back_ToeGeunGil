@@ -16,7 +16,6 @@ import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -54,6 +53,7 @@ public class SocialService {
         this.socialImageRepository = socialImageRepository;
     }
 
+
     public List<Social> readAllSocial() {
         //01_소셜 전체 조회(/social)
         List<Social> socialList = socialRepository.findAll();
@@ -87,9 +87,29 @@ public class SocialService {
         }
 
         social.setSocialKeywordList(keywordList);
+        Social findSocial = socialRepository.save(social);
 
-        Social result = socialRepository.save(social);
-        if (Objects.isNull(result)) {
+
+        //이미지
+//        ResponseEntity res = imageApi.singleImage(file);
+//        JSONParser parser = new JSONParser();
+//        JSONObject jsonObject = (JSONObject) parser.parse(res.getBody().toString());
+//        JSONObject fileInfo =  (JSONObject) jsonObject.get("fileInfo");
+//
+//        SocialImage image = new SocialImage();
+//        image.setSocialNum(findSocial.getSocialNum());
+//
+//        String originalname =  (String)fileInfo.get("originalname");
+//        String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
+//
+//        image.setName(originalname);
+//        image.setPath(path);
+//
+//        SocialImage findImage = socialImageRepository.save(image);
+//        System.out.println(image);
+//        System.out.println(findImage);
+
+        if (Objects.isNull(findSocial)) {
             return 0; //result가 null일 경우 0 반환
         } else {
             return 1;
@@ -281,27 +301,33 @@ public class SocialService {
         return socialList;
     }
 
-//    @Transactional //이미지 업로드 수정 2023.09.18
-//    public int uploadImage(MultipartFile file) throws IOException, ParseException {
-//        ResponseEntity res = imageApi.singleImage(file);
-//
-//        JSONParser  parser = new JSONParser();
-//        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
-//
-//        SocialImage image = new SocialImage();
-//
-//        image.setName(((String) jsonObject.get("originalname")));
-//        image.setPath(((String) jsonObject.get("path")).replace("uploads\\",""));
-//
-//
-//        SocialImage findImages = socialImageRepository.save(image);
-//        System.out.println(findImages);
-//
-//        if (Objects.isNull(findImages)) {
-//            return 0;
-//        } else {
-//            return 1;
-//        }
-//
-//    }
+    @Transactional //이미지 업로드 수정 2023.09.18
+    public int uploadImage(MultipartFile file) throws IOException, ParseException {
+        ResponseEntity res = imageApi.singleImage(file);
+        System.out.println(res.getBody().toString());
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
+        System.out.println(jsonObject);
+        JSONObject fileInfo =  (JSONObject) jsonObject.get("fileInfo");
+
+        SocialImage image = new SocialImage();
+//        image.setSocialNum(findSocial.getSocialNum());
+
+        String originalname =  (String)fileInfo.get("originalname");
+        String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
+
+        image.setName(originalname);
+        image.setPath(path);
+
+        SocialImage findImage = socialImageRepository.save(image);
+        System.out.println(image);
+        System.out.println(findImage);
+
+        if (Objects.isNull(findImage)) {
+            return 0; //result가 null일 경우 0 반환
+        } else {
+            return 1;
+        }
+
+    }
 }

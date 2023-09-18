@@ -44,28 +44,8 @@ public class ImageApi {
         HttpEntity<MultiValueMap<String,Object>> request = new HttpEntity<>(body,httpHeaders);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity res = restTemplate.postForEntity(host,request,String.class);
-//
-//        JSONParser parser = new JSONParser();
-//        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
-//
-//
-//        JSONObject fileInfo =  (JSONObject)jsonObject.get("fileInfo");
-//        String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
-//        String originalname =  (String)fileInfo.get("originalname");
-//
-//
-//
-//
-//
-//        System.out.println(path);
-//        System.out.println(originalname);
 
-
-
-
-
-
-        return ResponseEntity.ok("성공");
+        return res;
 
     }
 
