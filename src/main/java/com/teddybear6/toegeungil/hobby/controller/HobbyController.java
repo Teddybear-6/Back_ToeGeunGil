@@ -95,7 +95,11 @@ public class HobbyController {
     }
     //등록
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
     public ResponseEntity<?> registHobby(@RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") MultipartFile[] files) {
+        System.out.println(files);
+
+
         int result = 0;
         try {
             result = hobbyService.registHobby(hobbyDTO, files);
@@ -323,7 +327,7 @@ public class HobbyController {
 
     //후기등록
     @PostMapping("/review/{hobbyCode}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     public ResponseEntity<?> hobbyReview(@PathVariable int hobbyCode, @RequestBody HobbyReviewDTO hobbyReviewDTO, @AuthenticationPrincipal AuthUserDetail userDetails)  {
         System.out.println(hobbyReviewDTO);
         Hobby hobby = hobbyService.findById(hobbyCode);

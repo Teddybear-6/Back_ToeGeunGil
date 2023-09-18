@@ -26,7 +26,6 @@ public class UserRepository {
     public UserEntity findUserEmail(String email){
         /*엔티티 레파지토리 호출해서 아이디 조회해주기*/
         UserEntity userEntity = userEntityRepository.findByUserEmail(email);
-        System.out.println("레포지토리");
         return userEntity;
     }
 
