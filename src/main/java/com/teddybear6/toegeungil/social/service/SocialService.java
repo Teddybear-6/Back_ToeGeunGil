@@ -2,6 +2,7 @@ package com.teddybear6.toegeungil.social.service;
 
 import com.teddybear6.toegeungil.category.entity.Category;
 import com.teddybear6.toegeungil.category.repository.CategoryRepository;
+import com.teddybear6.toegeungil.common.utils.ImageApi;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.keyword.repository.KeywordRepository;
 import com.teddybear6.toegeungil.local.entity.Local;
@@ -36,8 +37,9 @@ public class SocialService {
     private final LocalRepository localRepository; //지역
     private final SocialKeywordRepository socialKeywordRepository;
     private final KeywordRepository keywordRepository;
+    private final ImageApi imageApi; //이미지API
 
-    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository, SocialKeywordRepository socialKeywordRepository, KeywordRepository keywordRepository) {
+    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository, SocialKeywordRepository socialKeywordRepository, KeywordRepository keywordRepository, ImageApi imageApi) {
         this.socialRepository = socialRepository;
         this.imageRepository = imageRepository;
         this.participateRepository = participateRepository;
@@ -45,6 +47,7 @@ public class SocialService {
         this.localRepository = localRepository;
         this.socialKeywordRepository = socialKeywordRepository;
         this.keywordRepository = keywordRepository;
+        this.imageApi = imageApi;
     }
 
     public List<Social> readAllSocial() {

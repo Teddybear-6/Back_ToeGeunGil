@@ -3,7 +3,13 @@ Jwt:
 
 server:
   port: 8001
-#
+
+  error:
+    include-exception: true # 오류 응답에 exception의 내용을 포함할지
+    include-stacktrace: always # 오류 응답에 stacktrace 내용을 포함할 지 여부
+
+
+
 #spring:
 #  application:
 #    name: application
@@ -11,10 +17,8 @@ server:
 #    active: dev
 #  config:
 #    import: optional:configserver:http://222.112.124.237:7777
-
-  error:
-    include-exception: true # 오류 응답에 exception의 내용을 포함할지
-    include-stacktrace: always # 오류 응답에 stacktrace 내용을 포함할 지 여부
+#
+#
 
 spring:
   datasource:
