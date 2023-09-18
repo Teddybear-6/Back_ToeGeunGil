@@ -310,4 +310,10 @@ public class SocialService {
         }
 
     }
+
+    public SocialImage downloadImage(int socialNum) {
+        SocialImage socialImage = socialImageRepository.findBySocialNum(socialNum);
+        return socialImage;
+    }
+
 }

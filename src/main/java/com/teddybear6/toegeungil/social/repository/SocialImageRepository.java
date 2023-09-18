@@ -4,4 +4,5 @@ import com.teddybear6.toegeungil.social.entity.SocialImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SocialImageRepository extends JpaRepository<SocialImage, Integer> {
+    SocialImage findBySocialNum(int socialNum);
 }

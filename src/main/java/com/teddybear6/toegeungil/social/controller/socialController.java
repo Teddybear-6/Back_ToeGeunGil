@@ -9,6 +9,7 @@ import com.teddybear6.toegeungil.social.dto.SocialImageDTO;
 import com.teddybear6.toegeungil.social.dto.SocialKeywordDTO;
 import com.teddybear6.toegeungil.social.entity.Participate;
 import com.teddybear6.toegeungil.social.entity.Social;
+import com.teddybear6.toegeungil.social.entity.SocialImage;
 import com.teddybear6.toegeungil.social.service.SocialService;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.MediaType;
@@ -172,8 +173,17 @@ public class socialController {
         }
     }
 
-//    @GetMapping("/img/{socialNum}")
-//    public ResponseEntity<?> downloadImage()
+    @GetMapping("/img/{socialNum}")
+    public ResponseEntity<?> downloadImage(@PathVariable int socialNum) {
+        SocialImage socialImage = socialService.downloadImage(socialNum);
+
+        if (Objects.isNull(socialImage)) {
+            return ResponseEntity.status(404).body("이미지 조회에 실패하였습니다...");
+        } else {
+            SocialImageDTO socialImageDTO = new SocialImageDTO(socialImage);
+            return ResponseEntity.ok().body(socialImageDTO);
+        }
+    }
 
 
     /*
