@@ -21,6 +21,7 @@ public class JwtConfig {
                 .withClaim("userId", authUserDetail.getUserEntity().getUserEmail())
                 .withClaim("name", authUserDetail.getUserEntity().getUserName())
                 .withClaim("nickName", authUserDetail.getUserEntity().getNickName())
+                .withClaim("auth", authUserDetail.getUserEntity().getRoleList())
                 .sign(Algorithm.HMAC512(key));
 
         return jwtToken;

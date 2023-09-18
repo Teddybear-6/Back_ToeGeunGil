@@ -1,21 +1,22 @@
 package com.teddybear6.toegeungil.hobby.controller;
 
 
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
+
 import com.teddybear6.toegeungil.hobby.dto.*;
 import com.teddybear6.toegeungil.hobby.entity.*;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
 
 
-import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 
 import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -74,18 +75,24 @@ public class HobbyController {
     }
 
     //취미 메인사진 조사
-//    @GetMapping("/mainimages/{hobbyCode}")
-//    public ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode) {
-//        List<HobbyImage> hobbyImages = hobbyService.findMainImage(hobbyCode);
-//
-//        if (hobbyImages.size() == 0) {
-//            //나중에 기본이미지로 바꾸기 무조건 하나씩 넣기하면 필요없음
-//            return ResponseEntity.status(404).body(null);
-//        }
-//
-//        return ResponseEntity.ok().contentType(MediaType.valueOf(hobbyImages.get(0).getType())).body(ImageUtils.decompressImage(hobbyImages.get(0).getImageDate()));
-//    }
+    @GetMapping("/mainimages/{hobbyCode}")
+    public ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode) {
+        List<HobbyImage> hobbyImages = hobbyService.findMainImage(hobbyCode);
 
+
+
+
+        if (hobbyImages.size() == 0) {
+            //나중에 기본이미지로 바꾸기 무조건 하나씩 넣기하면 필요없음
+            return ResponseEntity.status(404).body(null);
+        }
+        ImageIdDTO imageIdDTO = new ImageIdDTO();
+        imageIdDTO.setHobbyCode(hobbyCode);
+        imageIdDTO.setId(hobbyImages.get(0).getId());
+        imageIdDTO.setPath(hobbyImages.get(0).getPath());
+
+        return ResponseEntity.ok().body(imageIdDTO);
+    }
     //등록
     @PostMapping
     public ResponseEntity<?> registHobby(@RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") MultipartFile[] files) {
@@ -317,16 +324,18 @@ public class HobbyController {
     //후기등록
     @PostMapping("/review/{hobbyCode}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<?> hobbyReview(@PathVariable int hobbyCode, @RequestBody HobbyReviewDTO hobbyReviewDTO, @AuthenticationPrincipal UserDetails userDetails)  {
-        System.out.println(hobbyCode);
+    public ResponseEntity<?> hobbyReview(@PathVariable int hobbyCode, @RequestBody HobbyReviewDTO hobbyReviewDTO, @AuthenticationPrincipal AuthUserDetail userDetails)  {
+        System.out.println(hobbyReviewDTO);
         Hobby hobby = hobbyService.findById(hobbyCode);
-
+        hobbyReviewDTO.setUserNo(userDetails.getUserEntity().getUserNo());
         HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, hobbyReviewDTO.getUserNo());
         if (Objects.isNull(hobby) || hobby.getClose().equals("N") || Objects.isNull(hobbyJoin)) {
-            return ResponseEntity.status(404).body("후기를 작성할 수 없습니다.");
+            return ResponseEntity.status(500).body("후기를 작성할 수 없습니다.");
         }
         HobbyReview findHobbyReview = hobbyService.findByIdReview(hobbyCode, hobbyReviewDTO.getUserNo());
-        if (!Objects.isNull(findHobbyReview) && !findHobbyReview.getReviewStatus().equals("Y")) {
+
+        if (!Objects.isNull(findHobbyReview) && findHobbyReview.getReviewStatus().equals("Y")) {
+
             return ResponseEntity.status(404).body("이미 작성하셨습니다.");
         }
         hobbyReviewDTO.setHobbyCode(hobbyCode);
