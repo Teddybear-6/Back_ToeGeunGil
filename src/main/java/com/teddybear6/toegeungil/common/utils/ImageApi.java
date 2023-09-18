@@ -1,9 +1,7 @@
 package com.teddybear6.toegeungil.common.utils;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -18,15 +16,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Component
 public class ImageApi {
 
+    public static final String image = "http://106.250.199.126:9000/";
+
+
     //단일 파일 업로드
-    public ResponseEntity<?> singleImage(MultipartFile file) throws IOException, ParseException {
-        String host = "http://106.250.199.126:9000//upload";
+    public static ResponseEntity<?> singleImage(MultipartFile file) throws IOException, ParseException {
+        String host = image+"/upload";
 
         MultiValueMap<String , Object>  body = new LinkedMultiValueMap<>();
-
+        System.out.println("================");
+        System.out.println(host);
+        System.out.println("=================");
         ByteArrayResource contentsAsResource = new ByteArrayResource(file.getBytes()){
             @Override
             public String getFilename() {
@@ -50,9 +52,9 @@ public class ImageApi {
     }
 
 
-    public  ResponseEntity<?> multiImages(MultipartFile[] files) throws IOException, ParseException {
+    public static ResponseEntity<?> multiImages(MultipartFile[] files) throws IOException, ParseException {
 
-        String host = "http://106.250.199.126:9000//uploads";
+        String host = image+"/uploads";
         MultiValueMap<String , Object> body = new LinkedMultiValueMap<>();
 
         Arrays.stream(files).forEach(file->{

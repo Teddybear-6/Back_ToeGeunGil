@@ -40,10 +40,9 @@ public class HobbyService {
 
     private final HobbyReviewRepository hobbyReviewRepository;
 
-    private final ImageApi imageApi;
 
 
-    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository, ReviewAnswerRepository reviewAnswerRepository, HobbyJoinRepository hobbyJoinRepository, HobbyReviewRepository hobbyReviewRepository, ImageApi imageApi) {
+    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository, ReviewAnswerRepository reviewAnswerRepository, HobbyJoinRepository hobbyJoinRepository, HobbyReviewRepository hobbyReviewRepository) {
         this.storageRepository = storageRepository;
         this.keywordRepository = keywordRepository;
         this.hobbyRepository = hobbyRepository;
@@ -51,7 +50,6 @@ public class HobbyService {
         this.reviewAnswerRepository = reviewAnswerRepository;
         this.hobbyJoinRepository = hobbyJoinRepository;
         this.hobbyReviewRepository = hobbyReviewRepository;
-        this.imageApi = imageApi;
     }
 
 
@@ -73,7 +71,7 @@ public class HobbyService {
 
         hobby.setHobbyKeywordList(hobbyKeywordList);
         Hobby findHobby = hobbyRepository.save(hobby);
-        ResponseEntity  res =  imageApi.multiImages(files);
+        ResponseEntity  res =  ImageApi.multiImages(files);
         JSONParser parser = new JSONParser();
         JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
         JSONArray jsonArray1 = (JSONArray) jsonObject.get("fileInfo");
@@ -188,7 +186,7 @@ public class HobbyService {
         try {
 
             if(files.length!=0 && !Objects.isNull(hobbyDTO.getImageId())){
-                ResponseEntity  res =  imageApi.multiImages(files);
+                ResponseEntity  res =  ImageApi.multiImages(files);
                 JSONParser parser = new JSONParser();
                 JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
                 JSONArray jsonArray1 = (JSONArray) jsonObject.get("fileInfo");

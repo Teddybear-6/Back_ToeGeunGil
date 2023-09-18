@@ -38,10 +38,9 @@ public class SocialService {
     private final LocalRepository localRepository; //지역
     private final SocialKeywordRepository socialKeywordRepository;
     private final KeywordRepository keywordRepository;
-    private final ImageApi imageApi; //이미지API
     private final SocialImageRepository socialImageRepository;
 
-    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository, SocialKeywordRepository socialKeywordRepository, KeywordRepository keywordRepository, ImageApi imageApi, SocialImageRepository socialImageRepository) {
+    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository, SocialKeywordRepository socialKeywordRepository, KeywordRepository keywordRepository, SocialImageRepository socialImageRepository) {
         this.socialRepository = socialRepository;
         this.imageRepository = imageRepository;
         this.participateRepository = participateRepository;
@@ -49,7 +48,6 @@ public class SocialService {
         this.localRepository = localRepository;
         this.socialKeywordRepository = socialKeywordRepository;
         this.keywordRepository = keywordRepository;
-        this.imageApi = imageApi;
         this.socialImageRepository = socialImageRepository;
     }
 
@@ -73,7 +71,7 @@ public class SocialService {
     - 만약 예외가 발생할 경우, 트랜잭션을 롤백한다. (JPA p.503) */
 
     @Transactional
-    public int SocialPostRegistration(SocialDTO socialDTO) throws IOException {
+    public int SocialPostRegistration(SocialDTO socialDTO, MultipartFile file) throws IOException, ParseException {
         //03_소셜 등록(/social)
         Social social = new Social(socialDTO);
         List<SocialKeywordDTO> keyword = socialDTO.getKeywordDTOList();
@@ -87,9 +85,30 @@ public class SocialService {
         }
 
         social.setSocialKeywordList(keywordList);
-        Social result = socialRepository.save(social);
+        Social findSocial = socialRepository.save(social);
 
-        if (Objects.isNull(result)) {
+        //이미지 로직
+        ResponseEntity res = ImageApi.singleImage(file);
+        System.out.println(res.getBody().toString());
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
+        System.out.println(jsonObject);
+        JSONObject fileInfo =  (JSONObject) jsonObject.get("fileInfo");
+
+        SocialImage image = new SocialImage();
+        image.setSocialNum(findSocial.getSocialNum());
+
+        String originalname =  (String)fileInfo.get("originalname");
+        String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
+
+        image.setName(originalname);
+        image.setPath(path);
+
+        SocialImage findImage = socialImageRepository.save(image);
+        System.out.println(image);
+        System.out.println(findImage);
+
+        if (Objects.isNull(findSocial)) {
             return 0; //result가 null일 경우 0 반환
         } else {
             return 1;
@@ -281,35 +300,35 @@ public class SocialService {
         return socialList;
     }
 
-    @Transactional //이미지 업로드 수정 2023.09.18
-    public int uploadImage(MultipartFile file) throws IOException, ParseException {
-        ResponseEntity res = imageApi.singleImage(file);
-        System.out.println(res.getBody().toString());
-        JSONParser parser = new JSONParser();
-        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
-        System.out.println(jsonObject);
-        JSONObject fileInfo =  (JSONObject) jsonObject.get("fileInfo");
-
-        SocialImage image = new SocialImage();
-//        image.setSocialNum(findSocial.getSocialNum());
-
-        String originalname =  (String)fileInfo.get("originalname");
-        String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
-
-        image.setName(originalname);
-        image.setPath(path);
-
-        SocialImage findImage = socialImageRepository.save(image);
-        System.out.println(image);
-        System.out.println(findImage);
-
-        if (Objects.isNull(findImage)) {
-            return 0; //result가 null일 경우 0 반환
-        } else {
-            return 1;
-        }
-
-    }
+//    @Transactional //이미지 업로드 수정 2023.09.18 (소셜 게시글 등록과 합침)
+//    public int uploadImage(MultipartFile file) throws IOException, ParseException {
+//        ResponseEntity res = imageApi.singleImage(file);
+//        System.out.println(res.getBody().toString());
+//        JSONParser parser = new JSONParser();
+//        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
+//        System.out.println(jsonObject);
+//        JSONObject fileInfo =  (JSONObject) jsonObject.get("fileInfo");
+//
+//        SocialImage image = new SocialImage();
+////        image.setSocialNum(findSocial.getSocialNum());
+//
+//        String originalname =  (String)fileInfo.get("originalname");
+//        String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
+//
+//        image.setName(originalname);
+//        image.setPath(path);
+//
+//        SocialImage findImage = socialImageRepository.save(image);
+//        System.out.println(image);
+//        System.out.println(findImage);
+//
+//        if (Objects.isNull(findImage)) {
+//            return 0; //result가 null일 경우 0 반환
+//        } else {
+//            return 1;
+//        }
+//
+//    }
 
     public SocialImage downloadImage(int socialNum) {
         SocialImage socialImage = socialImageRepository.findBySocialNum(socialNum);
