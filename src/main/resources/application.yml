@@ -18,8 +18,6 @@ server:
 #  config:
 #    import: optional:configserver:http://222.112.124.237:7777
 
-
-
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

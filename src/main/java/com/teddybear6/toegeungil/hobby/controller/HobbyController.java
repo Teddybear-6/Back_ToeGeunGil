@@ -1,28 +1,29 @@
 package com.teddybear6.toegeungil.hobby.controller;
 
-import com.sun.tools.jconsole.JConsoleContext;
+
 import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
+
 import com.teddybear6.toegeungil.hobby.dto.*;
 import com.teddybear6.toegeungil.hobby.entity.*;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
 
 
-import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
-import com.teddybear6.toegeungil.user.entity.UserEntity;
+
+import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -61,23 +62,6 @@ public class HobbyController {
     }
 
 
-    //이미지테스트 파일을 db에 저장
-    @PostMapping("/images")
-    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
-        String uploadImage = hobbyService.uploadImage(file);
-        return ResponseEntity.ok().body(uploadImage);
-    }
-
-    //이미지 다운로드
-    @GetMapping("/images/{fileName}")
-    public ResponseEntity<?> downloadImage(@PathVariable("fileName") String fileName) {
-        System.out.println(fileName);
-
-        byte[] downloadImage = hobbyService.downloadImage(fileName);
-        return ResponseEntity.ok().contentType(MediaType.valueOf("image/png"))
-                .body(downloadImage);
-    }
-
     //findall
     @GetMapping
     public ResponseEntity<List<?>> hobbyfindAll(final Pageable pageable) {
@@ -95,22 +79,30 @@ public class HobbyController {
     public ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode) {
         List<HobbyImage> hobbyImages = hobbyService.findMainImage(hobbyCode);
 
+
+
+
         if (hobbyImages.size() == 0) {
             //나중에 기본이미지로 바꾸기 무조건 하나씩 넣기하면 필요없음
             return ResponseEntity.status(404).body(null);
         }
+        ImageIdDTO imageIdDTO = new ImageIdDTO();
+        imageIdDTO.setHobbyCode(hobbyCode);
+        imageIdDTO.setId(hobbyImages.get(0).getId());
+        imageIdDTO.setPath(hobbyImages.get(0).getPath());
 
-        return ResponseEntity.ok().contentType(MediaType.valueOf(hobbyImages.get(0).getType())).body(ImageUtils.decompressImage(hobbyImages.get(0).getImageDate()));
+        return ResponseEntity.ok().body(imageIdDTO);
     }
-
     //등록
     @PostMapping
-    public ResponseEntity<?> registHobby(@RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") List<MultipartFile> files) {
+    public ResponseEntity<?> registHobby(@RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") MultipartFile[] files) {
         int result = 0;
         try {
             result = hobbyService.registHobby(hobbyDTO, files);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
 
         if (result > 0) {
@@ -124,10 +116,11 @@ public class HobbyController {
 
     //수정
     @PutMapping("/{hobbyCode}")
-    public ResponseEntity<?> updateHobby(@PathVariable int hobbyCode, @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") List<MultipartFile> files) {
+    public ResponseEntity<?> updateHobby(@PathVariable int hobbyCode, @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") MultipartFile[] files) {
 
 
         Hobby hobby = hobbyService.findById(hobbyCode);
+
         if (Objects.isNull(hobby)) {
             return ResponseEntity.status(404).body("존재하지 않는 취미입니다.");
         }
@@ -175,10 +168,13 @@ public class HobbyController {
             keyword.add(hobby.getHobbyKeywordList().get(i).getKeyword());
         }
         List<HobbyImage> hobbyImages = hobby.getHobbyImages();
+
         List<ImageIdDTO> imageIdDTOS = new ArrayList<>();
 
         for (int i = 0; i < hobbyImages.size(); i++) {
-            imageIdDTOS.add(new ImageIdDTO(hobbyImages.get(i).getId()));
+
+            imageIdDTOS.add(new ImageIdDTO(hobbyImages.get(i).getId(),hobbyImages.get(i).getPath(),hobbyImages.get(i).getName(),hobbyImages.get(i).getHobbyCode()));
+
         }
 
         List<HobbyKeywordDTO> hobbyKeywordDTO = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
@@ -197,12 +193,12 @@ public class HobbyController {
 
 
     //디테일 사진보기
-    @GetMapping("/image/{imageId}")
-    public ResponseEntity<?> detailImage(@PathVariable int imageId) {
-
-        HobbyImage image = hobbyService.detailImage(imageId);
-        return ResponseEntity.ok().contentType(MediaType.valueOf(image.getType())).body(ImageUtils.decompressImage(image.getImageDate()));
-    }
+//    @GetMapping("/image/{imageId}")
+//    public ResponseEntity<?> detailImage(@PathVariable int imageId) {
+//
+//        HobbyImage image = hobbyService.detailImage(imageId);
+//        return ResponseEntity.ok().contentType(MediaType.valueOf(image.getType())).body(ImageUtils.decompressImage(image.getImageDate()));
+//    }
 
 
 
