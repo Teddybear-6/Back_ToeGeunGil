@@ -10,27 +10,27 @@ server:
 
 
 
-spring:
-  application:
-    name: application
-  profiles:
-    active: dev
-  config:
-    import: optional:configserver:http://222.112.124.237:7777
-
-
-
 #spring:
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/toegeungil
-#    username: teddy6
-#    password: teddy6223
-#
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    properties:
-#      hibernate:
-#        show_sql: true
-#        format_sql: true
+#  application:
+#    name: application
+#  profiles:
+#    active: dev
+#  config:
+#    import: optional:configserver:http://222.112.124.237:7777
+
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/toegeungil
+    username: teddy6
+    password: teddy6223
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true

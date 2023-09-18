@@ -66,7 +66,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             AuthUserDetail authUserDetail = (AuthUserDetail) authResult.getPrincipal();
             String jwtToken = jwtConfig.createToken(authUserDetail, key);
-
+            System.out.println(jwtToken);
             LoginReqDTO loginReqDTO = new LoginReqDTO();
             loginReqDTO.setUserRole(authUserDetail.getUserEntity().getRole());
             loginReqDTO.setUserNo(authUserDetail.getUserEntity().getUserNo());
@@ -79,6 +79,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.addHeader("Authorization", "Bearer " + jwtToken);
+
             response.getWriter().println(responseValue);
 
         }

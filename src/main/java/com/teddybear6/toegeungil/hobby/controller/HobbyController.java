@@ -1,6 +1,7 @@
 package com.teddybear6.toegeungil.hobby.controller;
 
 import com.sun.tools.jconsole.JConsoleContext;
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
 import com.teddybear6.toegeungil.hobby.dto.*;
 import com.teddybear6.toegeungil.hobby.entity.*;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
@@ -327,16 +328,18 @@ public class HobbyController {
     //후기등록
     @PostMapping("/review/{hobbyCode}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<?> hobbyReview(@PathVariable int hobbyCode, @RequestBody HobbyReviewDTO hobbyReviewDTO, @AuthenticationPrincipal UserDetails userDetails)  {
-        System.out.println(hobbyCode);
+    public ResponseEntity<?> hobbyReview(@PathVariable int hobbyCode, @RequestBody HobbyReviewDTO hobbyReviewDTO, @AuthenticationPrincipal AuthUserDetail userDetails)  {
+        System.out.println(hobbyReviewDTO);
         Hobby hobby = hobbyService.findById(hobbyCode);
-
+        hobbyReviewDTO.setUserNo(userDetails.getUserEntity().getUserNo());
         HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, hobbyReviewDTO.getUserNo());
         if (Objects.isNull(hobby) || hobby.getClose().equals("N") || Objects.isNull(hobbyJoin)) {
-            return ResponseEntity.status(404).body("후기를 작성할 수 없습니다.");
+            return ResponseEntity.status(500).body("후기를 작성할 수 없습니다.");
         }
         HobbyReview findHobbyReview = hobbyService.findByIdReview(hobbyCode, hobbyReviewDTO.getUserNo());
-        if (!Objects.isNull(findHobbyReview) && !findHobbyReview.getReviewStatus().equals("Y")) {
+
+        if (!Objects.isNull(findHobbyReview) && findHobbyReview.getReviewStatus().equals("Y")) {
+
             return ResponseEntity.status(404).body("이미 작성하셨습니다.");
         }
         hobbyReviewDTO.setHobbyCode(hobbyCode);
