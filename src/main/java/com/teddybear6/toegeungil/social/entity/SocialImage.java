@@ -19,7 +19,7 @@ public class SocialImage {
     private String path;
 
     @Column(name = "social_num")
-    private Long imageId; //파일 번호(PK)
+    private int socialNum;
 
     public SocialImage() {
     }
@@ -28,14 +28,14 @@ public class SocialImage {
         this.id = socialImageDTO.getId();
         this.name = socialImageDTO.getName();
         this.path = socialImageDTO.getPath();
-        this.imageId = socialImageDTO.getImageId();
+        this.socialNum = socialImageDTO.getSocialNum();
     }
 
-    public SocialImage(int id, String name, String path, Long imageId) {
+    public SocialImage(int id, String name, String path, int socialNum) {
         this.id = id;
         this.name = name;
         this.path = path;
-        this.imageId = imageId;
+        this.socialNum = socialNum;
     }
 
     public int getId() {
@@ -62,12 +62,12 @@ public class SocialImage {
         this.path = path;
     }
 
-    public Long getImageId() {
-        return imageId;
+    public int getSocialNum() {
+        return socialNum;
     }
 
-    public void setImageId(Long imageId) {
-        this.imageId = imageId;
+    public void setSocialNum(int socialNum) {
+        this.socialNum = socialNum;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class SocialImage {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", path='" + path + '\'' +
-                ", imageId=" + imageId +
+                ", socialNum=" + socialNum +
                 '}';
     }
 }

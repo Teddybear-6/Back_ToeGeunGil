@@ -15,8 +15,14 @@ import com.teddybear6.toegeungil.social.repository.ParticipateRepository;
 import com.teddybear6.toegeungil.social.repository.SocialKeywordRepository;
 import com.teddybear6.toegeungil.social.repository.SocialRepository;
 import com.teddybear6.toegeungil.common.utils.ImageUtils;
+import org.json.simple.parser.ParseException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -72,23 +78,16 @@ public class SocialService {
     public int SocialPostRegistration(SocialDTO socialDTO) throws IOException {
         //03_소셜 등록(/social)
         Social social = new Social(socialDTO);
-        System.out.println(socialDTO);
         List<SocialKeywordDTO> keyword = socialDTO.getKeywordDTOList();
-        System.out.println(keyword+"키워드");
         List<SocialKeyword> keywordList = new ArrayList<>(); //null
 
-
-        System.out.println("dd");
-        System.out.println(keyword.size());
         for (int i = 0; i < keyword.size(); i++) {
-            System.out.println("나 실행");
             //keywordRepository의 findById 사용하기
             //엔티티에서 keywordNum 컬럼 삭제하기
             Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
             keywordList.add(new SocialKeyword(new SocialKeywordPK(social.getSocialNum(), findKeyword.getKeywordCode()), social, findKeyword));
         }
 
-        System.out.println(keywordList);
         social.setSocialKeywordList(keywordList);
 
         Social result = socialRepository.save(social);
@@ -189,6 +188,8 @@ public class SocialService {
         return null;
     }
 
+    
+
     public byte[] downloadSocialImage(String imageName) {
         //11_사진 다운로드(보여주기)
         Image imageData = imageRepository.findByImageName(imageName)
@@ -282,5 +283,14 @@ public class SocialService {
         return socialList;
     }
 
-
+//    public int uploadImage(MultipartFile file) throws IOException, ParseException {
+//        ResponseEntity res = imageApi.singleImage(file);
+//
+//        JSONParser  parser = new JSONParser();
+//        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
+//        JSONArray jsonArray1 = (JSONArray) jsonObject.get("fileInfo");
+//
+//        SocialImage image = new SocialImage();
+//        image.setSocialNum();
+//    }
 }

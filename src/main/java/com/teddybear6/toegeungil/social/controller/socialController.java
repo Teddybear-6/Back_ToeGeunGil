@@ -5,10 +5,12 @@ import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.local.entity.Local;
 import com.teddybear6.toegeungil.social.dto.ParticipateDTO;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
+import com.teddybear6.toegeungil.social.dto.SocialImageDTO;
 import com.teddybear6.toegeungil.social.dto.SocialKeywordDTO;
 import com.teddybear6.toegeungil.social.entity.Participate;
 import com.teddybear6.toegeungil.social.entity.Social;
 import com.teddybear6.toegeungil.social.service.SocialService;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -149,6 +151,26 @@ public class socialController {
         }
     }
 
+    /*
+    이미지 (수정) 2023.09.18*/
+//    @PostMapping
+//    public ResponseEntity<?> uploadImage(@RequestPart("socialImage") MultipartFile file, SocialImageDTO socialImageDTO) {
+//        int result = 0;
+//        try {
+//            result = socialService.uploadImage(file);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (ParseException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        if (result == 0) {
+//            //socialService.SocialPostRegistration에서 반환받은 값이 0일 경우
+//            return ResponseEntity.status(404).body("이미지 등록에 실패하였습니다..." + file);
+//        } else {
+//            return ResponseEntity.ok().body("이미지가 등록되었습니다" + file);
+//        }
+//    }
 
     /*
     사진 https://velog.io/@mooh2jj/SpringBoot-File-uploaddownload-%EA%B5%AC%ED%98%84*/
