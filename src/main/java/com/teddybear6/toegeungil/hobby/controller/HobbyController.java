@@ -13,6 +13,7 @@ import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Pageable;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -94,10 +95,10 @@ public class HobbyController {
         return ResponseEntity.ok().body(imageIdDTO);
     }
     //등록
-    @PostMapping
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
     @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
-    public ResponseEntity<?> registHobby(@RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") MultipartFile[] files) {
-        System.out.println(files);
+    public ResponseEntity<?> registHobby(@RequestPart(value = "hobby") HobbyDTO hobbyDTO, @RequestPart(value = "hobbyImage",required=false)  MultipartFile[] files,@AuthenticationPrincipal AuthUserDetail userDetails) {
+        System.out.println(userDetails);
 
 
         int result = 0;
