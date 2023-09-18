@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class SocialService {
@@ -52,10 +53,22 @@ public class SocialService {
     }
 
 
-    public List<Social> readAllSocial() {
+    public List<SocialDTO> readAllSocial() {
         //01_소셜 전체 조회(/social)
         List<Social> socialList = socialRepository.findAll();
-        return socialList;
+        List<SocialDTO> socialDTOList = socialList.stream().map(m -> new SocialDTO(m)).collect(Collectors.toList());
+
+        for (int i = 0; i < socialList.size(); i++) {
+            List<Keyword> keywordList = new ArrayList<>();
+            List<SocialKeywordDTO> keywordDTOList = new ArrayList<>();
+            for (int j = 0; j < socialList.get(i).getSocialKeywordList().size(); j++) {
+                keywordList.add(socialList.get(i).getSocialKeywordList().get(j).getKeyword());
+                keywordDTOList = keywordList.stream().map(m-> new SocialKeywordDTO(m)).collect(Collectors.toList());
+            }
+            socialDTOList.get(i).setKeywordDTOList(keywordDTOList);
+        }
+        System.out.println(socialDTOList);
+        return socialDTOList;
     }
 
     public Social readSocialPostNum(int socialNum) {

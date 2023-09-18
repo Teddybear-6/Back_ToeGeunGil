@@ -73,14 +73,14 @@ public class socialController {
 
     @GetMapping //01_소셜 전체 조회(/social)
     public ResponseEntity<List<?>> readAllSocial() {
-        List<Social> socialList = socialService.readAllSocial();
+        List<SocialDTO> socialList = socialService.readAllSocial();
 
         if (socialList.size() <= 0) {
             return ResponseEntity.status(404).body((Collections.singletonList("error")));
         } else {
             //객체의 getter로 List를 만든다.
-            List<SocialDTO> socialDTOList = socialList.stream().map(social -> new SocialDTO(social)).collect(Collectors.toList());
-            return ResponseEntity.ok().body(socialDTOList);
+//            List<SocialDTO> socialDTOList = socialList.stream().map(social -> new SocialDTO(social)).collect(Collectors.toList());
+            return ResponseEntity.ok().body(socialList);
         }
     }
 
