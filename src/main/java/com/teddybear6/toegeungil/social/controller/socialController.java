@@ -153,7 +153,7 @@ public class socialController {
 
     /*
     이미지 (수정) 2023.09.18*/
-//    @PostMapping
+//    @PostMapping("/img")
 //    public ResponseEntity<?> uploadImage(@RequestPart("socialImage") MultipartFile file, SocialImageDTO socialImageDTO) {
 //        int result = 0;
 //        try {

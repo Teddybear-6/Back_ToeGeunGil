@@ -10,10 +10,7 @@ import com.teddybear6.toegeungil.local.repository.LocalRepository;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import com.teddybear6.toegeungil.social.dto.SocialKeywordDTO;
 import com.teddybear6.toegeungil.social.entity.*;
-import com.teddybear6.toegeungil.social.repository.ImageRepository;
-import com.teddybear6.toegeungil.social.repository.ParticipateRepository;
-import com.teddybear6.toegeungil.social.repository.SocialKeywordRepository;
-import com.teddybear6.toegeungil.social.repository.SocialRepository;
+import com.teddybear6.toegeungil.social.repository.*;
 import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -44,8 +40,9 @@ public class SocialService {
     private final SocialKeywordRepository socialKeywordRepository;
     private final KeywordRepository keywordRepository;
     private final ImageApi imageApi; //이미지API
+    private final SocialImageRepository socialImageRepository;
 
-    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository, SocialKeywordRepository socialKeywordRepository, KeywordRepository keywordRepository, ImageApi imageApi) {
+    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository, SocialKeywordRepository socialKeywordRepository, KeywordRepository keywordRepository, ImageApi imageApi, SocialImageRepository socialImageRepository) {
         this.socialRepository = socialRepository;
         this.imageRepository = imageRepository;
         this.participateRepository = participateRepository;
@@ -54,6 +51,7 @@ public class SocialService {
         this.socialKeywordRepository = socialKeywordRepository;
         this.keywordRepository = keywordRepository;
         this.imageApi = imageApi;
+        this.socialImageRepository = socialImageRepository;
     }
 
     public List<Social> readAllSocial() {
@@ -283,14 +281,27 @@ public class SocialService {
         return socialList;
     }
 
+//    @Transactional //이미지 업로드 수정 2023.09.18
 //    public int uploadImage(MultipartFile file) throws IOException, ParseException {
 //        ResponseEntity res = imageApi.singleImage(file);
 //
 //        JSONParser  parser = new JSONParser();
 //        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
-//        JSONArray jsonArray1 = (JSONArray) jsonObject.get("fileInfo");
 //
 //        SocialImage image = new SocialImage();
-//        image.setSocialNum();
+//
+//        image.setName(((String) jsonObject.get("originalname")));
+//        image.setPath(((String) jsonObject.get("path")).replace("uploads\\",""));
+//
+//
+//        SocialImage findImages = socialImageRepository.save(image);
+//        System.out.println(findImages);
+//
+//        if (Objects.isNull(findImages)) {
+//            return 0;
+//        } else {
+//            return 1;
+//        }
+//
 //    }
 }
