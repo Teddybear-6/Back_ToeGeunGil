@@ -53,15 +53,9 @@ public class CommunityService {
         List<CommunityKeyword> communityKeywordList = new ArrayList<>();
         System.out.println(keyword.size());
         for(int i = 0; i < keyword.size(); i++){
-            /*
-            * 1. 여기서 CommunityKeywordRepository 가 아니라 keywordRepository의 findById  를 사용해야해요
-            * 2. 커뮤니티 테이블에 keywordNum 이라는 컬럼이 남아 있어서 문제였어
-            *
-            * */
+
             Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
-            System.out.println("d");
             communityKeywordList.add(new CommunityKeyword(new CommunityPK(community.getCommunityNum(), findKeyword.getKeywordCode()), community, findKeyword));
-            System.out.println("ssss");
         }
         System.out.println(communityKeywordList);
         community.setCommunityKeywordList(communityKeywordList);

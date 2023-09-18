@@ -32,10 +32,10 @@ public class Community {
     @Column(name = "community_status") // 커뮤니티 상태
     private String communityStatus;
     @Column(name = "post_write_date") // 커뮤니티 작성일
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date postWriteDate;
     @Column(name = "post_update_date") // 커뮤니티 수정일
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date postUpdateDate;
 
     public Community() {

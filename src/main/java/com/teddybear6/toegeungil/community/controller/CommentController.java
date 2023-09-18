@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/comments")
+@RequestMapping("/communitys")
 @CrossOrigin(origins = "http://localhost:3000")
 public class CommentController {
 
@@ -21,7 +21,7 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @GetMapping("/community/{communityNum}")
+    @GetMapping("/comments/{communityNum}")
     public ResponseEntity<List<?>> CommentByCommunityNum(@PathVariable int communityNum){
         List<CommentDTO> commentDTOList = commentService.CommentByCommunityNum(communityNum);
 
@@ -33,7 +33,7 @@ public class CommentController {
 
         return ResponseEntity.ok().body(commentDTOList);
     }
-    @PostMapping("/community/{communityNum}")
+    @PostMapping("/comments/{communityNum}")
     public ResponseEntity<?> registCommentForCommunity(@PathVariable int communityNum, @RequestBody CommentDTO commentDTO){
 
         int result = 0;
@@ -51,7 +51,7 @@ public class CommentController {
             return ResponseEntity.status(500).body("댓글 등록에 실패하였습니다.");
         }
     }
-    @PutMapping("/community/{communityNum}/{commentNum}")
+    @PutMapping("/comments/{communityNum}")
     public ResponseEntity<?> updateComment(@PathVariable int communityNum, @PathVariable int commentNum, @RequestBody CommentDTO commentDTO){
 
         int result = commentService.updateCommentByCommunity(communityNum, commentNum, commentDTO);
@@ -65,7 +65,7 @@ public class CommentController {
         }
     }
 
-    @DeleteMapping("/community/{communityNum}/{commentNum}")
+    @DeleteMapping("/comments/{communityNum}")
     public ResponseEntity<?> deleteComment(@PathVariable int communityNum, @PathVariable int commentNum){
 
         int result = commentService.deleteCommentByCommunity(communityNum, commentNum);

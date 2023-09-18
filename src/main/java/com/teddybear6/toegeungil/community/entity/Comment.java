@@ -29,10 +29,10 @@ public class Comment {
     @Column(name = "comment_detail", nullable = false)
     private String commentDetail; // comment 내용
     @Column(name = "comment_write_date")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date commentWriteDate; // comment 날짜
     @Column(name = "comment_update_date")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date commentUpdateDate; // comment 수정 날짜
 
     public Comment() {
