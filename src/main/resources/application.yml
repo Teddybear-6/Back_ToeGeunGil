@@ -17,8 +17,6 @@ server:
 #    active: dev
 #  config:
 #    import: optional:configserver:http://222.112.124.237:7777
-#
-#
 
 spring:
   datasource:

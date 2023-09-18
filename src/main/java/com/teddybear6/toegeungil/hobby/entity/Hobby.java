@@ -41,8 +41,15 @@ public class Hobby {
     @Column(name = "hobby_intro")
     private String intro; // 시작전 소개
 
+
     @Column(name = "local_code")
     private int localCode;
+
+
+    @Column(name ="closing_date")
+    @Temporal(TemporalType.DATE)
+    private  Date closingDate;
+
 
     @Column(name = "hobby_date")
     @Temporal(TemporalType.DATE)
@@ -142,6 +149,7 @@ public class Hobby {
         this.close = hobbyDTO.getClose();
         this.localCode= hobbyDTO.getLocalCode();
         this.hobbyPlace =hobbyDTO.getHobbyPlace();
+        this.closingDate =hobbyDTO.getClosingDate();
     }
 
     public int getHobbyCode() {
@@ -154,6 +162,14 @@ public class Hobby {
 
     public String getHobbyTitle() {
         return hobbyTitle;
+    }
+
+    public Date getClosingDate() {
+        return closingDate;
+    }
+
+    public void setClosingDate(Date closingDate) {
+        this.closingDate = closingDate;
     }
 
     public void setHobbyTitle(String hobbyTitle) {
@@ -314,6 +330,7 @@ public class Hobby {
                 ", hobbyPrice=" + hobbyPrice +
                 ", intro='" + intro + '\'' +
                 ", localCode=" + localCode +
+                ", closingDate=" + closingDate +
                 ", date=" + date +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +

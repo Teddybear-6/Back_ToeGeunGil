@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/keyword")
 public class KeywordController {
     private final KeywordService keywordService;
