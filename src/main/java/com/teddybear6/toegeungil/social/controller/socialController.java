@@ -1,12 +1,17 @@
 package com.teddybear6.toegeungil.social.controller;
 
 import com.teddybear6.toegeungil.category.entity.Category;
+import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.local.entity.Local;
 import com.teddybear6.toegeungil.social.dto.ParticipateDTO;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
+import com.teddybear6.toegeungil.social.dto.SocialImageDTO;
+import com.teddybear6.toegeungil.social.dto.SocialKeywordDTO;
 import com.teddybear6.toegeungil.social.entity.Participate;
 import com.teddybear6.toegeungil.social.entity.Social;
+import com.teddybear6.toegeungil.social.entity.SocialImage;
 import com.teddybear6.toegeungil.social.service.SocialService;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -87,21 +92,36 @@ public class socialController {
             return ResponseEntity.status(404).body("게시글 조회에 실패하였습니다...");
         } else {
             SocialDTO socialDTO = new SocialDTO(social);
+            List<Keyword> keywordList = new ArrayList<>();
+            for (int i = 0; i < social.getSocialKeywordList().size(); i++) {
+                keywordList.add(social.getSocialKeywordList().get(i).getKeyword());
+            }
+            List<SocialKeywordDTO> socialKeywordDTOList = keywordList.stream().map(m -> new SocialKeywordDTO(m)).collect(Collectors.toList());
+            socialDTO.setKeywordDTOList(socialKeywordDTOList);
+
             return ResponseEntity.ok().body(socialDTO);
         }
     }
 
     @PostMapping //03_소셜 등록(/social)
-    public ResponseEntity<?> SocialPostRegistration(SocialDTO socialDTO) {
-        Social social = new Social(socialDTO);
-        social.setPostRegDate(new Date()); //게시글 등록일
+    public ResponseEntity<?> SocialPostRegistration(@RequestPart("socialPost") SocialDTO socialDTO, @RequestPart("img") MultipartFile file) { //@RequestBody -> Json으로 넘기기위해 필요한 친구
 
-        social.setSocialDate(new Date()); //모임일
-        social.setSocialStartTime(new Date()); //모임시작시간
-        social.setSocialEndTime(new Date()); //모임종료시간
+        socialDTO.setPostRegDate(new Date()); //게시글 등록일
 
+        //얘네는 수정 필요.
+        socialDTO.setSocialDate(new Date()); //모임일
+        socialDTO.setSocialStartTime(new Date()); //모임시작시간
+        socialDTO.setSocialEndTime(new Date()); //모임종료시간
 
-        int result = socialService.SocialPostRegistration(social);
+        int result = 0;
+        try {
+            result = socialService.SocialPostRegistration(socialDTO, file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
         if (result == 0) {
             //socialService.SocialPostRegistration에서 반환받은 값이 0일 경우
             return ResponseEntity.status(404).body("게시글 등록에 실패하였습니다...");
@@ -134,6 +154,40 @@ public class socialController {
         }
     }
 
+    /*
+    이미지 (수정) 2023.09.18*/
+//    @PostMapping("/img") //이미지 업로드 (소셜 게시글 등록과 합침)
+//    public ResponseEntity<?> uploadImage(@RequestPart("img") MultipartFile file, SocialImageDTO socialImageDTO) {
+//        int result = 0;
+//        try {
+//            result = socialService.uploadImage(file);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (ParseException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        if (result == 0) {
+//            //socialService.SocialPostRegistration에서 반환받은 값이 0일 경우
+//            return ResponseEntity.status(404).body("이미지 등록에 실패하였습니다...");
+//        } else {
+//            return ResponseEntity.ok().body("이미지가 등록되었습니다");
+//        }
+//    }
+
+    @GetMapping("/img/{socialNum}") //사진 다운로드(최종)
+    public ResponseEntity<?> downloadImage(@PathVariable int socialNum) {
+        SocialImage socialImage = socialService.downloadImage(socialNum);
+
+        if (Objects.isNull(socialImage)) {
+            return ResponseEntity.status(404).body("이미지 조회에 실패하였습니다...");
+        } else {
+            SocialImageDTO socialImageDTO = new SocialImageDTO(socialImage);
+            return ResponseEntity.ok().body(socialImageDTO);
+//            "http://106.250.199.126:9000/image/"+socialImageDTO.getPath()
+        }
+    }
+
 
     /*
     사진 https://velog.io/@mooh2jj/SpringBoot-File-uploaddownload-%EA%B5%AC%ED%98%84*/
@@ -143,9 +197,16 @@ public class socialController {
         return ResponseEntity.ok().body(uploadImage);
     }
 
-    @GetMapping("/image/{imageName}") //11_사진 다운로드
-    public ResponseEntity<?> downloadSocialImage(@PathVariable("imageName") String imageName) {
-        byte[] downloadImage = socialService.downloadSocialImage(imageName);
+//    @GetMapping("/image/{imageName}") //11_사진 다운로드
+//    public ResponseEntity<?> downloadSocialImage(@PathVariable("imageName") String imageName) {
+//        byte[] downloadImage = socialService.downloadSocialImage(imageName);
+//        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(downloadImage);
+//    }
+
+    @GetMapping("/image/{imageId}")
+    public ResponseEntity<?> downloadSocialImgeId(@PathVariable("imageId") Long imageId) {
+        //사진 번호로 이미지 가져오기
+        byte[] downloadImage = socialService.downloadSocialImgeId(imageId);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(downloadImage);
     }
 

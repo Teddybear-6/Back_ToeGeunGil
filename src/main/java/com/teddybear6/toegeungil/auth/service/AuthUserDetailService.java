@@ -23,7 +23,7 @@ public class AuthUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername (String username) throws UsernameNotFoundException {
         System.out.println("여기도 되나");
         UserEntity findUser  =userRepository.findUserEmail(username);
-        System.out.println(findUser+"desv");
+        System.out.println(findUser);
         return new AuthUserDetail(findUser);
     }
 

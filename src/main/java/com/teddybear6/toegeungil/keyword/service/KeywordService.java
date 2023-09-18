@@ -59,12 +59,12 @@ public class KeywordService {
 
     @Transactional
     public int deleteById(int keywordCode) {
-         keywordRepository.deleteById(keywordCode);
-         Keyword keyword = keywordRepository.findById(keywordCode);
-         if(Objects.isNull(keyword)){
-             return 1;
-         }else {
-             return 0;
-         }
+        keywordRepository.deleteById(keywordCode);
+        Keyword keyword = keywordRepository.findById(keywordCode);
+        if(Objects.isNull(keyword)){
+            return 1;
+        }else {
+            return 0;
+        }
     }
 }

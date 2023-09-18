@@ -2,38 +2,37 @@ package com.teddybear6.toegeungil.notice.service;
 
 import com.teddybear6.toegeungil.notice.dto.NoticeDetailDTO;
 import com.teddybear6.toegeungil.notice.entity.Notice;
-import com.teddybear6.toegeungil.notice.repository.NoticeRegistory;
+import com.teddybear6.toegeungil.notice.repository.NoticeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 @Service
 public class NoticeService {
 
-    private final NoticeRegistory noticeRegistory;
+    private final NoticeRepository noticeRepository;
 
-    public NoticeService(NoticeRegistory noticeRegistory) {
-        this.noticeRegistory = noticeRegistory;
+    public NoticeService(NoticeRepository noticeRegistory) {
+        this.noticeRepository = noticeRegistory;
     }
 
     public Notice findNoticeByCode(int noticeNum) {
-        Notice notice = noticeRegistory.findById(noticeNum);
+        Notice notice = noticeRepository.findById(noticeNum);
         return notice;
     }
 
     /* 전체 조회 */
     public List<Notice> findAllNotice() {
-        List<Notice> noticeList = noticeRegistory.findAll();
+        List<Notice> noticeList = noticeRepository.findAll();
         return noticeList;
     }
 
     /* 등록 */
     @Transactional
     public int registNotice(Notice notice) {
-        Notice result = noticeRegistory.save(notice);
+        Notice result = noticeRepository.save(notice);
         System.out.println(result);
 
         if (Objects.isNull(result)) {
@@ -49,7 +48,7 @@ public class NoticeService {
         findnotice.setNoticeTitle(noticeDetailDTO.getNoticeTitle());
         findnotice.setNoticeContent(noticeDetailDTO.getNoticeContent());
 
-        Notice result = noticeRegistory.save(findnotice);
+        Notice result = noticeRepository.save(findnotice);
 
         if (Objects.isNull(result)) {
             return 0;
@@ -61,9 +60,9 @@ public class NoticeService {
     /* 삭제 */
     @Transactional
     public int deleteNotice(int noticeNum) {
-        noticeRegistory.deleteById(noticeNum);
+        noticeRepository.deleteById(noticeNum);
 
-        Notice result = noticeRegistory.findById(noticeNum);
+        Notice result = noticeRepository.findById(noticeNum);
         System.out.println(result);
         if(Objects.isNull(result)){
             return 1;
