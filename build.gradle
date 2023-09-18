@@ -36,7 +36,7 @@ dependencies {
 
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+      implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
     runtimeOnly 'com.mysql:mysql-connector-j'
 
@@ -45,6 +45,10 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+
+
+    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 }
 dependencyManagement {
     imports {
