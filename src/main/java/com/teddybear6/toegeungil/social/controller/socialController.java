@@ -175,7 +175,7 @@ public class socialController {
 //        }
 //    }
 
-    @GetMapping("/img/{socialNum}")
+    @GetMapping("/img/{socialNum}") //사진 다운로드(최종)
     public ResponseEntity<?> downloadImage(@PathVariable int socialNum) {
         SocialImage socialImage = socialService.downloadImage(socialNum);
 
@@ -184,6 +184,7 @@ public class socialController {
         } else {
             SocialImageDTO socialImageDTO = new SocialImageDTO(socialImage);
             return ResponseEntity.ok().body(socialImageDTO);
+//            "http://106.250.199.126:9000/image/"+socialImageDTO.getPath()
         }
     }
 
