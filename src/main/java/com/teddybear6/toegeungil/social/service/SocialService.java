@@ -87,29 +87,9 @@ public class SocialService {
         }
 
         social.setSocialKeywordList(keywordList);
-        Social findSocial = socialRepository.save(social);
+        Social result = socialRepository.save(social);
 
-
-        //이미지
-//        ResponseEntity res = imageApi.singleImage(file);
-//        JSONParser parser = new JSONParser();
-//        JSONObject jsonObject = (JSONObject) parser.parse(res.getBody().toString());
-//        JSONObject fileInfo =  (JSONObject) jsonObject.get("fileInfo");
-//
-//        SocialImage image = new SocialImage();
-//        image.setSocialNum(findSocial.getSocialNum());
-//
-//        String originalname =  (String)fileInfo.get("originalname");
-//        String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
-//
-//        image.setName(originalname);
-//        image.setPath(path);
-//
-//        SocialImage findImage = socialImageRepository.save(image);
-//        System.out.println(image);
-//        System.out.println(findImage);
-
-        if (Objects.isNull(findSocial)) {
+        if (Objects.isNull(result)) {
             return 0; //result가 null일 경우 0 반환
         } else {
             return 1;
@@ -137,9 +117,9 @@ public class SocialService {
         if (!Objects.isNull(social.getSocialEndTime())) { //모임 종료 시간
             findSocial.setSocialEndTime(social.getSocialEndTime());
         }
-        if (social.getFileNum() > 0) { //사진 번호
-            findSocial.setFileNum(social.getFileNum());
-        }
+//        if (social.getFileNum() > 0) { //사진 번호
+//            findSocial.setFileNum(social.getFileNum());
+//        }
         if (social.getCategoryCode() > 0) { //카테고리 번호
             findSocial.setCategoryCode(social.getCategoryCode());
         }

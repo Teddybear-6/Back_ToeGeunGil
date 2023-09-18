@@ -40,8 +40,8 @@ public class Social {
     @Temporal(TemporalType.TIME)
     private Date socialEndTime; //모임 종료 시간
 
-    @Column(name = "file_num", nullable = false) //NOT NULL
-    private int fileNum; //사진 번호(FK)
+//    @Column(name = "file_num", nullable = false) //NOT NULL
+//    private int fileNum; //사진 번호(FK)
 
     @Column(name = "category_code", nullable = false) //NOT NULL
     private int categoryCode; //카테고리 번호(FK)
@@ -87,7 +87,7 @@ public class Social {
         this.socialFixedNum = socialDTO.getSocialFixedNum();
         this.socialStartTime = socialDTO.getSocialStartTime();
         this.socialEndTime = socialDTO.getSocialEndTime();
-        this.fileNum = socialDTO.getFileNum();
+//        this.fileNum = socialDTO.getFileNum();
         this.categoryCode = socialDTO.getCategoryCode();
 //        this.keywordCode = socialDTO.getKeywordCode();
         this.localCode = socialDTO.getLocalCode();
@@ -100,7 +100,7 @@ public class Social {
     }
 
     public Social(int socialNum, int userNum, String socialName, Date socialDate, int socialFixedNum, Date socialStartTime, Date socialEndTime,
-                  int fileNum, int categoryCode, int localCode, String localDetails, String socialIntro, String socialOther,
+                  int categoryCode, int localCode, String localDetails, String socialIntro, String socialOther,
                   Date postRegDate, Date postModiDate, String socialState, List<SocialKeyword> socialKeywordList) {
         this.socialNum = socialNum;
         this.userNum = userNum;
@@ -109,7 +109,7 @@ public class Social {
         this.socialFixedNum = socialFixedNum;
         this.socialStartTime = socialStartTime;
         this.socialEndTime = socialEndTime;
-        this.fileNum = fileNum;
+//        this.fileNum = fileNum;
         this.categoryCode = categoryCode;
 //        this.keywordCode = keywordCode;
         this.localCode = localCode;
@@ -178,13 +178,13 @@ public class Social {
         this.socialEndTime = socialEndTime;
     }
 
-    public int getFileNum() {
-        return fileNum;
-    }
+//    public int getFileNum() {
+//        return fileNum;
+//    }
 
-    public void setFileNum(int fileNum) {
-        this.fileNum = fileNum;
-    }
+//    public void setFileNum(int fileNum) {
+//        this.fileNum = fileNum;
+//    }
 
     public int getCategoryCode() {
         return categoryCode;
@@ -276,7 +276,7 @@ public class Social {
                 ", socialFixedNum=" + socialFixedNum +
                 ", socialStartTime=" + socialStartTime +
                 ", socialEndTime=" + socialEndTime +
-                ", fileNum=" + fileNum +
+//                ", fileNum=" + fileNum +
                 ", categoryCode=" + categoryCode +
 //                ", keywordCode=" + keywordCode +
                 ", localCode=" + localCode +

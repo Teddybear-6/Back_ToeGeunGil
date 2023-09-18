@@ -19,8 +19,8 @@ server:
 #    import: optional:configserver:http://106.250.199.126:7777
 #    use-legacy-processing: true
 
-#
-#
+
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

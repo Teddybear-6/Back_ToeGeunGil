@@ -153,7 +153,7 @@ public class socialController {
 
     /*
     이미지 (수정) 2023.09.18*/
-    @PostMapping("/img")
+    @PostMapping("/img") //이미지 업로드
     public ResponseEntity<?> uploadImage(@RequestPart("img") MultipartFile file, SocialImageDTO socialImageDTO) {
         int result = 0;
         try {
@@ -171,6 +171,10 @@ public class socialController {
             return ResponseEntity.ok().body("이미지가 등록되었습니다");
         }
     }
+
+//    @GetMapping("/img/{socialNum}")
+//    public ResponseEntity<?> downloadImage()
+
 
     /*
     사진 https://velog.io/@mooh2jj/SpringBoot-File-uploaddownload-%EA%B5%AC%ED%98%84*/

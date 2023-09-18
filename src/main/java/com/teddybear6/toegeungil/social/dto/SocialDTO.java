@@ -22,7 +22,7 @@ public class SocialDTO {
 
     private Date socialEndTime; //모임 종료 시간
 
-    private int fileNum; //사진 번호(FK)
+//    private int fileNum; //사진 번호(FK)
 
     private int categoryCode; //카테고리 번호(FK)
 
@@ -56,7 +56,7 @@ public class SocialDTO {
         this.socialFixedNum = social.getSocialFixedNum();
         this.socialStartTime = social.getSocialStartTime();
         this.socialEndTime = social.getSocialEndTime();
-        this.fileNum = social.getFileNum();
+//        this.fileNum = social.getFileNum();
         this.categoryCode = social.getCategoryCode();
 //        this.keywordCode = social.getKeywordCode();
         this.localCode = social.getLocalCode();
@@ -69,7 +69,7 @@ public class SocialDTO {
     }
 
     public SocialDTO(int socialNum, int userNum, String socialName, Date socialDate, int socialFixedNum,
-                     Date socialStartTime, Date socialEndTime, int fileNum, int categoryCode, int localCode,
+                     Date socialStartTime, Date socialEndTime, int categoryCode, int localCode,
                      String localDetails, String socialIntro, String socialOther, Date postRegDate, Date postModiDate, String socialState,
                      List<SocialKeywordDTO> keywordDTOList) {
         this.socialNum = socialNum;
@@ -79,7 +79,7 @@ public class SocialDTO {
         this.socialFixedNum = socialFixedNum;
         this.socialStartTime = socialStartTime;
         this.socialEndTime = socialEndTime;
-        this.fileNum = fileNum;
+//        this.fileNum = fileNum;
         this.categoryCode = categoryCode;
 //        this.keywordCode = keywordCode;
         this.localCode = localCode;
@@ -148,13 +148,13 @@ public class SocialDTO {
         this.socialEndTime = socialEndTime;
     }
 
-    public int getFileNum() {
-        return fileNum;
-    }
+//    public int getFileNum() {
+//        return fileNum;
+//    }
 
-    public void setFileNum(int fileNum) {
-        this.fileNum = fileNum;
-    }
+//    public void setFileNum(int fileNum) {
+//        this.fileNum = fileNum;
+//    }
 
     public int getCategoryCode() {
         return categoryCode;
@@ -246,7 +246,7 @@ public class SocialDTO {
                 ", socialFixedNum=" + socialFixedNum +
                 ", socialStartTime=" + socialStartTime +
                 ", socialEndTime=" + socialEndTime +
-                ", fileNum=" + fileNum +
+//                ", fileNum=" + fileNum +
                 ", categoryCode=" + categoryCode +
 //                ", keywordCode=" + keywordCode +
                 ", localCode=" + localCode +
