@@ -5,6 +5,7 @@ import com.teddybear6.toegeungil.qna.repository.QuestionRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +37,8 @@ public class QnaService {
         Question result = questionRepository.save(question);
         System.out.println(result);
 
+        question.setQuestionDate(new Date());
+
         if(Objects.isNull(result)){
             return 0;
         }else{
@@ -50,9 +53,12 @@ public class QnaService {
             findQuestion.setQuestionContent(updateQuestion.getQuestionContent());
             System.out.println("변경한 제목 : " + findQuestion.getQuestionTitle());
             System.out.println("변경한 내용 : " + findQuestion.getQuestionContent());
+            findQuestion.setQuestionUpdate(new Date());
 
         }
         Question result = questionRepository.save(findQuestion);
+
+
         if(Objects.isNull(result)){
             return 0;
         }else {
