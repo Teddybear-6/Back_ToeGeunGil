@@ -49,7 +49,7 @@ public class NoticeController {
 
     /* <POST> /notices: 공지사항 등록 */
     @PostMapping
-    public ResponseEntity<?> registNotice( Notice notice) {
+    public ResponseEntity<?> registNotice(@RequestBody Notice notice) {
         System.out.println(notice);
         notice.setNoticeDate(new Date());
         int result = noticeService.registNotice(notice);
