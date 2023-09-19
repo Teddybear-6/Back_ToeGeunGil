@@ -58,7 +58,7 @@ public class Social {
     @Column(name = "social_intro", nullable = false) //NOT NULL
     private String socialIntro; //모임 소개
 
-    @Column(name = "social_other")
+    @Column(name = "social_other", columnDefinition = "VARCHAR(500) default '기타 사항 없음'")
     private String socialOther; //모임 기타 사항
 
     @Column(name = "post_reg_date", nullable = false) //NOT NULL
