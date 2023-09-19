@@ -37,7 +37,7 @@ public class CommentController {
     public ResponseEntity<?> registCommentForCommunity(@PathVariable int communityNum, @RequestBody CommentDTO commentDTO){
 
         int result = 0;
-
+        System.out.println(commentDTO);
         try {
             result = commentService.registCommentForCommunity(communityNum, commentDTO);
         }catch (IOException e){
@@ -51,7 +51,7 @@ public class CommentController {
             return ResponseEntity.status(500).body("댓글 등록에 실패하였습니다.");
         }
     }
-    @PutMapping("/comments/{communityNum}")
+    @PutMapping("/comments/{communityNum}/{commentNum}")
     public ResponseEntity<?> updateComment(@PathVariable int communityNum, @PathVariable int commentNum, @RequestBody CommentDTO commentDTO){
 
         int result = commentService.updateCommentByCommunity(communityNum, commentNum, commentDTO);
@@ -65,7 +65,7 @@ public class CommentController {
         }
     }
 
-    @DeleteMapping("/comments/{communityNum}")
+    @DeleteMapping("/comments/{communityNum}/{commentNum}")
     public ResponseEntity<?> deleteComment(@PathVariable int communityNum, @PathVariable int commentNum){
 
         int result = commentService.deleteCommentByCommunity(communityNum, commentNum);

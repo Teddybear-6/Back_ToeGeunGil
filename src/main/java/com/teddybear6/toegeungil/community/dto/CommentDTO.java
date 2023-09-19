@@ -3,6 +3,7 @@ package com.teddybear6.toegeungil.community.dto;
 import com.teddybear6.toegeungil.community.entity.Comment;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class CommentDTO {
@@ -11,13 +12,13 @@ public class CommentDTO {
     private int userNum; // 회원 번호
     private int communityNum; // 커뮤니티 번호
     private String commentDetail; // 댓글 내용
-    private Date commentWriteDate; // 댓글 작성 날짜
-    private Date commentUpdateDate; // 댓글 수정 날짜
+    private LocalDateTime commentWriteDate; // 댓글 작성 날짜
+    private LocalDateTime commentUpdateDate; // 댓글 수정 날짜
 
     public CommentDTO() {
     }
 
-    public CommentDTO(int commentNum, int userNum, int communityNum, String commentDetail, Date commentWriteDate, Date commentUpdateDate) {
+    public CommentDTO(int commentNum, int userNum, int communityNum, String commentDetail, LocalDateTime commentWriteDate, LocalDateTime commentUpdateDate) {
         this.commentNum = commentNum;
         this.userNum = userNum;
         this.communityNum = communityNum;
@@ -67,19 +68,19 @@ public class CommentDTO {
         this.commentDetail = commentDetail;
     }
 
-    public Date getCommentWriteDate() {
+    public LocalDateTime getCommentWriteDate() {
         return commentWriteDate;
     }
 
-    public void setCommentWriteDate(Date commentWriteDate) {
+    public void setCommentWriteDate(LocalDateTime commentWriteDate) {
         this.commentWriteDate = commentWriteDate;
     }
 
-    public Date getCommentUpdateDate() {
+    public LocalDateTime getCommentUpdateDate() {
         return commentUpdateDate;
     }
 
-    public void setCommentUpdateDate(Date commentUpdateDate) {
+    public void setCommentUpdateDate(LocalDateTime commentUpdateDate) {
         this.commentUpdateDate = commentUpdateDate;
     }
 

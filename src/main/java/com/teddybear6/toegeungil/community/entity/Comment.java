@@ -1,11 +1,20 @@
 package com.teddybear6.toegeungil.community.entity;
 
 import com.teddybear6.toegeungil.community.dto.CommentDTO;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
+@DynamicInsert
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "comments")
 public class Comment {
 
@@ -29,16 +38,16 @@ public class Comment {
     @Column(name = "comment_detail", nullable = false)
     private String commentDetail; // comment 내용
     @Column(name = "comment_write_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date commentWriteDate; // comment 날짜
+    @CreatedDate
+    private LocalDateTime commentWriteDate; // comment 날짜
     @Column(name = "comment_update_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date commentUpdateDate; // comment 수정 날짜
+    @UpdateTimestamp
+    private LocalDateTime commentUpdateDate; // comment 수정 날짜
 
     public Comment() {
     }
 
-    public Comment(int commentNum, int userNum, int communityNum, String commentDetail, Date commentWriteDate, Date commentUpdateDate) {
+    public Comment(int commentNum, int userNum, int communityNum, String commentDetail, LocalDateTime commentWriteDate, LocalDateTime commentUpdateDate) {
         this.commentNum = commentNum;
         this.userNum = userNum;
         this.communityNum = communityNum;
@@ -52,8 +61,6 @@ public class Comment {
         this.userNum = commentDTO.getUserNum();
         this.communityNum = commentDTO.getCommunityNum();
         this.commentDetail = commentDTO.getCommentDetail();
-        this.commentWriteDate = commentDTO.getCommentWriteDate();
-        this.commentUpdateDate = commentDTO.getCommentUpdateDate();
     }
 
     public int getCommentNum() {
@@ -88,19 +95,19 @@ public class Comment {
         this.commentDetail = commentDetail;
     }
 
-    public Date getCommentWriteDate() {
+    public LocalDateTime getCommentWriteDate() {
         return commentWriteDate;
     }
 
-    public void setCommentWriteDate(Date commentWriteDate) {
+    public void setCommentWriteDate(LocalDateTime commentWriteDate) {
         this.commentWriteDate = commentWriteDate;
     }
 
-    public Date getCommentUpdateDate() {
+    public LocalDateTime getCommentUpdateDate() {
         return commentUpdateDate;
     }
 
-    public void setCommentUpdateDate(Date commentUpdateDate) {
+    public void setCommentUpdateDate(LocalDateTime commentUpdateDate) {
         this.commentUpdateDate = commentUpdateDate;
     }
 
