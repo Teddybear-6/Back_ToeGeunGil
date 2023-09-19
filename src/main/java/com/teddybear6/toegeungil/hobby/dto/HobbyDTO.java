@@ -1,8 +1,10 @@
 package com.teddybear6.toegeungil.hobby.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.teddybear6.toegeungil.hobby.entity.Hobby;
 
-import java.util.Arrays;
+
+
 import java.util.Date;
 import java.util.List;
 
@@ -44,10 +46,12 @@ public class HobbyDTO {
 
     private String intro; // 시작전 소개
 
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date; // 일정
 
+    @JsonFormat(pattern = "kk:mm")
     private Date startTime; //시간
+    @JsonFormat(pattern = "kk:mm")
     private Date endTime; //시간
 
     private int categoryCode; // 카테고리
@@ -69,10 +73,13 @@ public class HobbyDTO {
     private Date updateDate;
 
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date closingDate;
+
     public HobbyDTO() {
     }
 
-    public HobbyDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, Date date, Date startTime, Date endTime, int categoryCode, int localCode, String hobbyPlace, List<HobbyKeywordDTO> keywordDTOList, String close, List<ImageIdDTO> imageId, String hobbyStats, Date crateDate, Date updateDate) {
+    public HobbyDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, Date date, Date startTime, Date endTime, int categoryCode, int localCode, String hobbyPlace, List<HobbyKeywordDTO> keywordDTOList, String close, List<ImageIdDTO> imageId, String hobbyStats, Date crateDate, Date updateDate, Date closingDate) {
         this.hobbyCode = hobbyCode;
         this.hobbyTitle = hobbyTitle;
         this.tutorCode = tutorCode;
@@ -92,6 +99,7 @@ public class HobbyDTO {
         this.hobbyStats = hobbyStats;
         this.crateDate = crateDate;
         this.updateDate = updateDate;
+        this.closingDate = closingDate;
     }
 
     public HobbyDTO(Hobby hobby) {
@@ -112,6 +120,7 @@ public class HobbyDTO {
         this.crateDate =hobby.getCrateDate();
         this.updateDate =hobby.getUpdateDate();
         this.hobbyPlace =hobby.getHobbyPlace();
+        this.closingDate = hobby.getClosingDate();
     }
 
 
@@ -251,6 +260,31 @@ public class HobbyDTO {
         this.hobbyStats = hobbyStats;
     }
 
+
+    public Date getCrateDate() {
+        return crateDate;
+    }
+
+    public void setCrateDate(Date crateDate) {
+        this.crateDate = crateDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Date getClosingDate() {
+        return closingDate;
+    }
+
+    public void setClosingDate(Date closingDate) {
+        this.closingDate = closingDate;
+    }
+
     @Override
     public String toString() {
         return "HobbyDTO{" +
@@ -273,6 +307,7 @@ public class HobbyDTO {
                 ", hobbyStats='" + hobbyStats + '\'' +
                 ", crateDate=" + crateDate +
                 ", updateDate=" + updateDate +
+                ", closingDate=" + closingDate +
                 '}';
     }
 }

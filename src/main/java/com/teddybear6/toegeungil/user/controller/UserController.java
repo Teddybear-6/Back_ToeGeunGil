@@ -40,7 +40,7 @@ public class UserController {
         UserEntity result = userViewService.findById(userNo);
 
         if (Objects.isNull(result)) {
-            return ResponseEntity.status(404).body(null);
+           return ResponseEntity.status(404).body(null);
         }else {
             LoginReqDTO loginReqDTO = new LoginReqDTO();
             loginReqDTO.setEmail(result.getUserEmail());

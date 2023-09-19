@@ -1,10 +1,40 @@
 server:
   port: 8001
+<<<<<<< HEAD
 
+=======
+
+
+  error:
+    include-exception: true # 오류 응답에 exception의 내용을 포함할지
+    include-stacktrace: always # 오류 응답에 stacktrace 내용을 포함할 지 여부
+
+
+
+>>>>>>> ff00d28f641390685bcf0dc7ab5c845828a7b147
 spring:
   application:
     name: application
   profiles:
     active: dev
   config:
+<<<<<<< HEAD
     import: optional:configserver:http://106.250.199.126:7777
+=======
+    import: optional:configserver:http://106.250.199.126:7777
+
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/toegeungil
+#    username: teddy6
+#    password: teddy6223
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        format_sql: true
+>>>>>>> ff00d28f641390685bcf0dc7ab5c845828a7b147

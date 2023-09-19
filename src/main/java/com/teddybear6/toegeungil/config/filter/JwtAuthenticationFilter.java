@@ -58,28 +58,30 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
 
     }
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request,
-                                            HttpServletResponse response,
-                                            FilterChain chain,
-                                            Authentication authResult) throws IOException, ServletException {
+        @Override
+        protected void successfulAuthentication(HttpServletRequest request,
+                HttpServletResponse response,
+                FilterChain chain,
+                Authentication authResult) throws IOException, ServletException {
 
-        AuthUserDetail authUserDetail = (AuthUserDetail) authResult.getPrincipal();
-        String jwtToken = jwtConfig.createToken(authUserDetail, key);
+            AuthUserDetail authUserDetail = (AuthUserDetail) authResult.getPrincipal();
+            String jwtToken = jwtConfig.createToken(authUserDetail, key);
+            System.out.println(jwtToken);
+            LoginReqDTO loginReqDTO = new LoginReqDTO();
+            loginReqDTO.setUserRole(authUserDetail.getUserEntity().getRole());
+            loginReqDTO.setUserNo(authUserDetail.getUserEntity().getUserNo());
+            loginReqDTO.setEmail(authUserDetail.getUserEntity().getUserEmail());
+            loginReqDTO.setUserName(authUserDetail.getUserEntity().getUserName());
 
-        LoginReqDTO loginReqDTO = new LoginReqDTO();
-        loginReqDTO.setUserRole(authUserDetail.getUserEntity().getRole());
-        loginReqDTO.setUserNo(authUserDetail.getUserEntity().getUserNo());
-        loginReqDTO.setEmail(authUserDetail.getUserEntity().getUserEmail());
-        loginReqDTO.setUserName(authUserDetail.getUserEntity().getUserName());
+            ObjectMapper objectMapper = new ObjectMapper();
+            String responseValue = objectMapper.writeValueAsString(loginReqDTO);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String responseValue = objectMapper.writeValueAsString(loginReqDTO);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.addHeader("Authorization", "Bearer " + jwtToken);
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.addHeader("Authorization", "Bearer " + jwtToken);
-        response.getWriter().println(responseValue);
+            response.getWriter().println(responseValue);
 
+        }
     }
-}
+

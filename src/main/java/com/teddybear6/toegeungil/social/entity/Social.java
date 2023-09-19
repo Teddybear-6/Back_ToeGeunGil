@@ -1,13 +1,15 @@
 package com.teddybear6.toegeungil.social.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
-@Entity
+@Entity(name = "social")
 @DynamicInsert
 @Table(name = "social") //Entity와 매핑할 테이블 이름
 public class Social {
@@ -38,14 +40,14 @@ public class Social {
     @Temporal(TemporalType.TIME)
     private Date socialEndTime; //모임 종료 시간
 
-    @Column(name = "file_num", nullable = false) //NOT NULL
-    private int fileNum; //사진 번호(FK)
+//    @Column(name = "file_num", nullable = false) //NOT NULL
+//    private int fileNum; //사진 번호(FK)
 
     @Column(name = "category_code", nullable = false) //NOT NULL
     private int categoryCode; //카테고리 번호(FK)
 
-    @Column(name = "keyword_code")
-    private int keywordCode; //키워드 번호(FK)
+//    @Column(name = "keyword_code")
+//    private int keywordCode; //키워드 번호(FK)
 
     @Column(name = "local_code", nullable = false) //NOT NULL
     private int localCode; //지역 번호(FK)
@@ -56,7 +58,7 @@ public class Social {
     @Column(name = "social_intro", nullable = false) //NOT NULL
     private String socialIntro; //모임 소개
 
-    @Column(name = "social_other")
+    @Column(name = "social_other", columnDefinition = "VARCHAR(500) default '기타 사항 없음'")
     private String socialOther; //모임 기타 사항
 
     @Column(name = "post_reg_date", nullable = false) //NOT NULL
@@ -70,6 +72,10 @@ public class Social {
     @Column(name = "social_state", columnDefinition = "VARCHAR(1) default 'Y'") //NOT NULL, (columnDefinition = "자료형 default 원하는 값")
     private String socialState; //게시글 상태
 
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "social")
+    private List<SocialKeyword> socialKeywordList;
+
     public Social() {
     }
 
@@ -81,9 +87,9 @@ public class Social {
         this.socialFixedNum = socialDTO.getSocialFixedNum();
         this.socialStartTime = socialDTO.getSocialStartTime();
         this.socialEndTime = socialDTO.getSocialEndTime();
-        this.fileNum = socialDTO.getFileNum();
+//        this.fileNum = socialDTO.getFileNum();
         this.categoryCode = socialDTO.getCategoryCode();
-        this.keywordCode = socialDTO.getKeywordCode();
+//        this.keywordCode = socialDTO.getKeywordCode();
         this.localCode = socialDTO.getLocalCode();
         this.localDetails = socialDTO.getLocalDetails();
         this.socialIntro = socialDTO.getSocialIntro();
@@ -94,8 +100,8 @@ public class Social {
     }
 
     public Social(int socialNum, int userNum, String socialName, Date socialDate, int socialFixedNum, Date socialStartTime, Date socialEndTime,
-                  int fileNum, int categoryCode, int keywordCode, int localCode, String localDetails, String socialIntro, String socialOther,
-                  Date postRegDate, Date postModiDate, String socialState) {
+                  int categoryCode, int localCode, String localDetails, String socialIntro, String socialOther,
+                  Date postRegDate, Date postModiDate, String socialState, List<SocialKeyword> socialKeywordList) {
         this.socialNum = socialNum;
         this.userNum = userNum;
         this.socialName = socialName;
@@ -103,9 +109,9 @@ public class Social {
         this.socialFixedNum = socialFixedNum;
         this.socialStartTime = socialStartTime;
         this.socialEndTime = socialEndTime;
-        this.fileNum = fileNum;
+//        this.fileNum = fileNum;
         this.categoryCode = categoryCode;
-        this.keywordCode = keywordCode;
+//        this.keywordCode = keywordCode;
         this.localCode = localCode;
         this.localDetails = localDetails;
         this.socialIntro = socialIntro;
@@ -113,6 +119,7 @@ public class Social {
         this.postRegDate = postRegDate;
         this.postModiDate = postModiDate;
         this.socialState = socialState;
+        this.socialKeywordList = socialKeywordList;
     }
 
     public int getSocialNum() {
@@ -171,13 +178,13 @@ public class Social {
         this.socialEndTime = socialEndTime;
     }
 
-    public int getFileNum() {
-        return fileNum;
-    }
+//    public int getFileNum() {
+//        return fileNum;
+//    }
 
-    public void setFileNum(int fileNum) {
-        this.fileNum = fileNum;
-    }
+//    public void setFileNum(int fileNum) {
+//        this.fileNum = fileNum;
+//    }
 
     public int getCategoryCode() {
         return categoryCode;
@@ -187,13 +194,13 @@ public class Social {
         this.categoryCode = categoryCode;
     }
 
-    public int getKeywordCode() {
-        return keywordCode;
-    }
+//    public int getKeywordCode() {
+//        return keywordCode;
+//    }
 
-    public void setKeywordCode(int keywordCode) {
-        this.keywordCode = keywordCode;
-    }
+//    public void setKeywordCode(int keywordCode) {
+//        this.keywordCode = keywordCode;
+//    }
 
     public int getLocalCode() {
         return localCode;
@@ -251,6 +258,14 @@ public class Social {
         this.socialState = socialState;
     }
 
+    public List<SocialKeyword> getSocialKeywordList() {
+        return socialKeywordList;
+    }
+
+    public void setSocialKeywordList(List<SocialKeyword> socialKeywordList) {
+        this.socialKeywordList = socialKeywordList;
+    }
+
     @Override
     public String toString() {
         return "Social{" +
@@ -261,9 +276,9 @@ public class Social {
                 ", socialFixedNum=" + socialFixedNum +
                 ", socialStartTime=" + socialStartTime +
                 ", socialEndTime=" + socialEndTime +
-                ", fileNum=" + fileNum +
+//                ", fileNum=" + fileNum +
                 ", categoryCode=" + categoryCode +
-                ", keywordCode=" + keywordCode +
+//                ", keywordCode=" + keywordCode +
                 ", localCode=" + localCode +
                 ", localDetails='" + localDetails + '\'' +
                 ", socialIntro='" + socialIntro + '\'' +
@@ -271,6 +286,7 @@ public class Social {
                 ", postRegDate=" + postRegDate +
                 ", postModiDate=" + postModiDate +
                 ", socialState='" + socialState + '\'' +
+                ", socialKeywordList=" + socialKeywordList +
                 '}';
     }
 }

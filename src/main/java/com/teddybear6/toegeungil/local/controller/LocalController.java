@@ -14,8 +14,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/local")
 @CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/local")
 public class LocalController {
 
     private final LocalService  localService;

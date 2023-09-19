@@ -1,32 +1,32 @@
 package com.teddybear6.toegeungil.hobby.controller;
 
 
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
+
 import com.teddybear6.toegeungil.hobby.dto.*;
 import com.teddybear6.toegeungil.hobby.entity.*;
 import com.teddybear6.toegeungil.hobby.service.HobbyService;
 
 
-import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 
+import com.teddybear6.toegeungil.user.entity.UserEntity;
+import com.teddybear6.toegeungil.user.sevice.UserViewService;
 import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import java.util.Objects;
 import java.util.stream.Collectors;
-
-
 
 
 @RestController
@@ -55,11 +55,12 @@ public class HobbyController {
 
 
     private final HobbyService hobbyService;
+    private final UserViewService userViewService;
 
-    public HobbyController(HobbyService hobbyService) {
+    public HobbyController(HobbyService hobbyService, UserViewService userViewService) {
         this.hobbyService = hobbyService;
+        this.userViewService = userViewService;
     }
-
 
     //findall
     @GetMapping
@@ -74,23 +75,41 @@ public class HobbyController {
     }
 
     //취미 메인사진 조사
-//    @GetMapping("/mainimages/{hobbyCode}")
-//    public ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode) {
-//        List<HobbyImage> hobbyImages = hobbyService.findMainImage(hobbyCode);
-//
-//        if (hobbyImages.size() == 0) {
-//            //나중에 기본이미지로 바꾸기 무조건 하나씩 넣기하면 필요없음
-//            return ResponseEntity.status(404).body(null);
-//        }
-//
-//        return ResponseEntity.ok().contentType(MediaType.valueOf(hobbyImages.get(0).getType())).body(ImageUtils.decompressImage(hobbyImages.get(0).getImageDate()));
-//    }
+    @GetMapping("/mainimages/{hobbyCode}")
+    public ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode) {
+        List<HobbyImage> hobbyImages = hobbyService.findMainImage(hobbyCode);
+
+
+        if (hobbyImages.size() == 0) {
+            //나중에 기본이미지로 바꾸기 무조건 하나씩 넣기하면 필요없음
+            return ResponseEntity.status(404).body(null);
+        }
+        ImageIdDTO imageIdDTO = new ImageIdDTO();
+        imageIdDTO.setHobbyCode(hobbyCode);
+        imageIdDTO.setId(hobbyImages.get(0).getId());
+        imageIdDTO.setPath(hobbyImages.get(0).getPath());
+
+        return ResponseEntity.ok().body(imageIdDTO);
+    }
 
     //등록
-    @PostMapping
-    public ResponseEntity<?> registHobby(@RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") MultipartFile[] files) {
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
+    public ResponseEntity<?> registHobby(@RequestPart(value = "hobby") HobbyDTO hobbyDTO, @RequestPart(value = "hobbyImage", required = false) MultipartFile[] files, @AuthenticationPrincipal AuthUserDetail userDetails) {
+
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "회원이 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
+
+
+        System.out.println(userEntity);
+
         int result = 0;
         try {
+            hobbyDTO.setTutorCode(userEntity.getUserNo());
             result = hobbyService.registHobby(hobbyDTO, files);
         } catch (IOException e) {
             e.printStackTrace();
@@ -99,30 +118,50 @@ public class HobbyController {
         }
 
         if (result > 0) {
-            return ResponseEntity.ok().body("등록 성공했습니다.");
+            respose.put("value", "등록 성공했습니다.");
+            return ResponseEntity.ok().body(respose);
         } else {
-            return ResponseEntity.status(500).body("등록에 실패했습니다");
+            respose.put("value", "등록 실패했습니다.");
+            return ResponseEntity.status(500).body("등록 실패했습니다.");
         }
 
     }
-
-
     //수정
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
     @PutMapping("/{hobbyCode}")
-    public ResponseEntity<?> updateHobby(@PathVariable int hobbyCode, @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") MultipartFile[] files) {
+    public ResponseEntity<?> updateHobby(@PathVariable int hobbyCode, @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart("hobbyImage") MultipartFile[] files , @AuthenticationPrincipal AuthUserDetail userDetails) {
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
 
+
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "회원이 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
 
         Hobby hobby = hobbyService.findById(hobbyCode);
 
         if (Objects.isNull(hobby)) {
-            return ResponseEntity.status(404).body("존재하지 않는 취미입니다.");
+            respose.put("value", "존재하지 않는 취미입니다..");
+            return ResponseEntity.status(404).body(respose);
         }
+
+        if(hobby.getTutorCode()!=userEntity.getUserNo()){
+            respose.put("value", "작성자가 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
+
+
+
 
         int result = hobbyService.updateHobby(hobby, hobbyDTO, files);
         if (result > 0) {
-            return ResponseEntity.ok().body("수정 성공했습니다.");
+            respose.put("value", "수정 성공했습니다.");
+            return ResponseEntity.ok().body(respose);
         } else {
-            return ResponseEntity.status(500).body("수정 실패했습니다.");
+            respose.put("value", "수정 실패했습니다.");
+            return ResponseEntity.status(500).body(respose);
         }
 
     }
@@ -166,7 +205,7 @@ public class HobbyController {
 
         for (int i = 0; i < hobbyImages.size(); i++) {
 
-            imageIdDTOS.add(new ImageIdDTO(hobbyImages.get(i).getId(),hobbyImages.get(i).getPath(),hobbyImages.get(i).getName(),hobbyImages.get(i).getHobbyCode()));
+            imageIdDTOS.add(new ImageIdDTO(hobbyImages.get(i).getId(), hobbyImages.get(i).getPath(), hobbyImages.get(i).getName(), hobbyImages.get(i).getHobbyCode()));
 
         }
 
@@ -179,7 +218,7 @@ public class HobbyController {
     }
 
     @GetMapping("/size")
-    public ResponseEntity<?> hobbySize(){
+    public ResponseEntity<?> hobbySize() {
         List<Hobby> hobbyList = hobbyService.findByAll();
         return ResponseEntity.ok().body(hobbyList.size());
     }
@@ -192,7 +231,6 @@ public class HobbyController {
 //        HobbyImage image = hobbyService.detailImage(imageId);
 //        return ResponseEntity.ok().contentType(MediaType.valueOf(image.getType())).body(ImageUtils.decompressImage(image.getImageDate()));
 //    }
-
 
 
 //    @GetMapping("/image/{hobbyCode}")
@@ -221,7 +259,7 @@ public class HobbyController {
 
     //참가하기
     @PostMapping("/join/{hobbyCode}/{userNo}")
-    public ResponseEntity<?> joinHobby(@PathVariable int hobbyCode , @PathVariable int userNo) {
+    public ResponseEntity<?> joinHobby(@PathVariable int hobbyCode, @PathVariable int userNo) {
 
         Hobby hobby = hobbyService.findById(hobbyCode);
         if (hobby.getClose().equals("Y")) {
@@ -316,17 +354,19 @@ public class HobbyController {
 
     //후기등록
     @PostMapping("/review/{hobbyCode}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<?> hobbyReview(@PathVariable int hobbyCode, @RequestBody HobbyReviewDTO hobbyReviewDTO, @AuthenticationPrincipal UserDetails userDetails)  {
-        System.out.println(hobbyCode);
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
+    public ResponseEntity<?> hobbyReview(@PathVariable int hobbyCode, @RequestBody HobbyReviewDTO hobbyReviewDTO, @AuthenticationPrincipal AuthUserDetail userDetails) {
+        System.out.println(hobbyReviewDTO);
         Hobby hobby = hobbyService.findById(hobbyCode);
-
+        hobbyReviewDTO.setUserNo(userDetails.getUserEntity().getUserNo());
         HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, hobbyReviewDTO.getUserNo());
         if (Objects.isNull(hobby) || hobby.getClose().equals("N") || Objects.isNull(hobbyJoin)) {
-            return ResponseEntity.status(404).body("후기를 작성할 수 없습니다.");
+            return ResponseEntity.status(500).body("후기를 작성할 수 없습니다.");
         }
         HobbyReview findHobbyReview = hobbyService.findByIdReview(hobbyCode, hobbyReviewDTO.getUserNo());
-        if (!Objects.isNull(findHobbyReview) && !findHobbyReview.getReviewStatus().equals("Y")) {
+
+        if (!Objects.isNull(findHobbyReview) && findHobbyReview.getReviewStatus().equals("Y")) {
+
             return ResponseEntity.status(404).body("이미 작성하셨습니다.");
         }
         hobbyReviewDTO.setHobbyCode(hobbyCode);
@@ -414,14 +454,12 @@ public class HobbyController {
             return ResponseEntity.status(404).body("존재하지 않는 후기입니다.");
         }
         ReviewAnswer frindReviewAnswer = hobbyService.reviewAnswerFindByRevieCode(reviewCode);
-        if(!Objects.isNull(frindReviewAnswer)){
-            return  ResponseEntity.status(404).body("이미 작성된 후기입니다.");
+        if (!Objects.isNull(frindReviewAnswer)) {
+            return ResponseEntity.status(404).body("이미 작성된 후기입니다.");
         }
 
 
-
         reviewAnswerDTO.setReviewCode(reviewCode);
-
 
 
         ReviewAnswer reviewAnswer = hobbyService.registReviewAnswer(reviewAnswerDTO);
