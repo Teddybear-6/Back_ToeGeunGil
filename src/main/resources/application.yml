@@ -16,13 +16,14 @@ spring:
   config:
     import: optional:configserver:http://106.250.199.126:7777
 
+
 #spring:
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: jdbc:mysql://localhost:3306/toegeungil
 #    username: teddy6
 #    password: teddy6223
-#
+
 #  jpa:
 #    hibernate:
 #      ddl-auto: update
