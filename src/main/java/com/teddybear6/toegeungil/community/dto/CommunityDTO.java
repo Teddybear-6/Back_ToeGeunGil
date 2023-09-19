@@ -2,8 +2,10 @@ package com.teddybear6.toegeungil.community.dto;
 
 import com.teddybear6.toegeungil.community.entity.Community;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommunityDTO {
 
@@ -36,7 +38,7 @@ public class CommunityDTO {
 
     public CommunityDTO(Community community) {
         this.communityNum = community.getCommunityNum();
-        this.userNum = community.getUserNum() == null? 0 : community.getUserNum();
+        this.userNum = community.getUserNum();
         this.communityTitle = community.getCommunityTitle();
         this.communityIntro = community.getCommunityIntro();
         this.categoryNum = community.getCategoryNum();
@@ -44,7 +46,11 @@ public class CommunityDTO {
         this.communityStatus = community.getCommunityStatus();
         this.postWriteDate = community.getPostWriteDate();
         this.postUpdateDate = community.getPostUpdateDate();
+        this.communityKeywordDTOList = community.getCommunityKeywordList().stream()
+                .map(m -> new CommunityKeywordDTO(m.getKeyword()))
+                .collect(Collectors.toList());
     }
+
 
     public int getCommunityNum() {
         return communityNum;

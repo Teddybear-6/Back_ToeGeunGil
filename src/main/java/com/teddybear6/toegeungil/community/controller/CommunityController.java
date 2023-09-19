@@ -1,5 +1,7 @@
 package com.teddybear6.toegeungil.community.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teddybear6.toegeungil.community.dto.CommunityDTO;
 import com.teddybear6.toegeungil.community.entity.Community;
 import com.teddybear6.toegeungil.community.service.CommunityService;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,19 +25,19 @@ public class CommunityController {
         this.communityService = communityService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<?>> findAllCommunity(){
-        List<Community> communityList = communityService.findAllCommunity();
-        if(communityList.size() == 0){
-            List<String> error = new ArrayList<>();
-            error.add("커뮤니티 글이 존재하지 않습니다.");
-            return ResponseEntity.status(404).body(error);
-        }
+    @GetMapping // 커뮤니티 전체 조회
+    public ResponseEntity<List<?>> findAllCommunity() {
+        List<CommunityDTO> communityList = communityService.findAllCommunity();
 
-        return ResponseEntity.ok().body(communityList);
+        if (communityList.isEmpty()) {
+            return ResponseEntity.status(404).body(Collections.singletonList("error"));
+        } else {
+            return ResponseEntity.ok().body(communityList);
+        }
     }
 
-    @GetMapping("/{communityNum}") // 커뮤니티 번호로 조회
+
+    @GetMapping("/{communityNum}") // 커뮤니티 번호로 부분 조회
     public ResponseEntity<Object> findByCommunityCode(@PathVariable int communityNum){
         Community community = communityService.findByCommunityCode(communityNum);
 
