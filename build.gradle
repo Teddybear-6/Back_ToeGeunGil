@@ -25,9 +25,16 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
+<<<<<<< HEAD
 
     // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+=======
+// https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.3'
+>>>>>>> ff00d28f641390685bcf0dc7ab5c845828a7b147
 
     // https://mvnrepository.com/artifact/com.auth0/java-jwtm
     implementation group: 'com.auth0', name: 'java-jwt', version: '3.19.2'
@@ -38,6 +45,19 @@ dependencies {
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
+<<<<<<< HEAD
+=======
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+
+>>>>>>> ff00d28f641390685bcf0dc7ab5c845828a7b147
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
