@@ -19,16 +19,19 @@ ext {
     set('springCloudVersion', "2021.0.8")
 }
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-//    implementation 'org.springframework.cloud:spring-cloud-starter-config'
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+// https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.3'
 
     // https://mvnrepository.com/artifact/com.auth0/java-jwtm
     implementation group: 'com.auth0', name: 'java-jwt', version: '3.19.2'
-
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl
@@ -36,20 +39,30 @@ dependencies {
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+
     runtimeOnly 'com.mysql:mysql-connector-j'
 
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+
+
+    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 }
 
-//dependencyManagement {
-//    imports {
-//        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-//    }
-//}
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
 
 tasks.named('test') {
     useJUnitPlatform()

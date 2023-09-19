@@ -1,18 +1,19 @@
 package com.teddybear6.toegeungil.config.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.teddybear6.toegeungil.authjwt.auth.command.application.dto.AuthUserDetail;
-import com.teddybear6.toegeungil.authjwt.auth.command.application.dto.LoginDTO;
-import com.teddybear6.toegeungil.authjwt.auth.command.application.dto.LoginReqDTO;
-import com.teddybear6.toegeungil.config.AuthentitationManager;
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
+import com.teddybear6.toegeungil.auth.dto.LoginDTO;
+import com.teddybear6.toegeungil.auth.dto.LoginReqDTO;
 import com.teddybear6.toegeungil.config.JwtConfig;
 
+import com.teddybear6.toegeungil.user.entity.UserEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
-import javax.naming.AuthenticationException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
+
     private final AuthenticationManager authenticationManager;
 
     private String key;
@@ -45,7 +48,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             UsernamePasswordAuthenticationToken authenticationToken
                     = new UsernamePasswordAuthenticationToken(loginDto.getUserId(), loginDto.getUserPass());
 
+
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
+            AuthUserDetail principalDetails = (AuthUserDetail) authentication.getPrincipal();
             return authentication;
 
         } catch (IOException e) {
@@ -61,22 +66,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             AuthUserDetail authUserDetail = (AuthUserDetail) authResult.getPrincipal();
             String jwtToken = jwtConfig.createToken(authUserDetail, key);
-
+            System.out.println(jwtToken);
             LoginReqDTO loginReqDTO = new LoginReqDTO();
             loginReqDTO.setUserRole(authUserDetail.getUserEntity().getRole());
-            loginReqDTO.setUserNo(Integer.parseInt(authUserDetail.getUserEntity().getUserNo()));
+            loginReqDTO.setUserNo(authUserDetail.getUserEntity().getUserNo());
             loginReqDTO.setEmail(authUserDetail.getUserEntity().getUserEmail());
             loginReqDTO.setUserName(authUserDetail.getUserEntity().getUserName());
 
             ObjectMapper objectMapper = new ObjectMapper();
             String responseValue = objectMapper.writeValueAsString(loginReqDTO);
 
-
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.addHeader("Authorization", "Bearer " + jwtToken);
-            response.getWriter().println(responseValue);
 
+            response.getWriter().println(responseValue);
 
         }
     }

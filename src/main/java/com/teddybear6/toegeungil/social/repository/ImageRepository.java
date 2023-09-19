@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ImageRepository extends JpaRepository<Image, Long> {
     Optional<Image> findByImageName(String imageName); //사진 다운로드
+    Optional<Image> findByImageId(Long imageId); //사진 번호로 사진 다운로드
 }

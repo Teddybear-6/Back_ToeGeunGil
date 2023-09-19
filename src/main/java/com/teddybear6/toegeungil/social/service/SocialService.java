@@ -2,25 +2,32 @@ package com.teddybear6.toegeungil.social.service;
 
 import com.teddybear6.toegeungil.category.entity.Category;
 import com.teddybear6.toegeungil.category.repository.CategoryRepository;
+import com.teddybear6.toegeungil.common.utils.ImageApi;
+import com.teddybear6.toegeungil.keyword.entity.Keyword;
+import com.teddybear6.toegeungil.keyword.repository.KeywordRepository;
 import com.teddybear6.toegeungil.local.entity.Local;
 import com.teddybear6.toegeungil.local.repository.LocalRepository;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
-import com.teddybear6.toegeungil.social.entity.Image;
-import com.teddybear6.toegeungil.social.entity.Participate;
-import com.teddybear6.toegeungil.social.entity.Social;
-import com.teddybear6.toegeungil.social.repository.ImageRepository;
-import com.teddybear6.toegeungil.social.repository.ParticipateRepository;
-import com.teddybear6.toegeungil.social.repository.SocialRepository;
+import com.teddybear6.toegeungil.social.dto.SocialKeywordDTO;
+import com.teddybear6.toegeungil.social.entity.*;
+import com.teddybear6.toegeungil.social.repository.*;
 import com.teddybear6.toegeungil.common.utils.ImageUtils;
+import org.json.simple.parser.ParseException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class SocialService {
@@ -30,19 +37,38 @@ public class SocialService {
     private final ParticipateRepository participateRepository; //소셜참여
     private final CategoryRepository categoryRepository; //카테고리
     private final LocalRepository localRepository; //지역
+    private final SocialKeywordRepository socialKeywordRepository;
+    private final KeywordRepository keywordRepository;
+    private final SocialImageRepository socialImageRepository;
 
-    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository) {
+    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository, SocialKeywordRepository socialKeywordRepository, KeywordRepository keywordRepository, SocialImageRepository socialImageRepository) {
         this.socialRepository = socialRepository;
         this.imageRepository = imageRepository;
         this.participateRepository = participateRepository;
         this.categoryRepository = categoryRepository;
         this.localRepository = localRepository;
+        this.socialKeywordRepository = socialKeywordRepository;
+        this.keywordRepository = keywordRepository;
+        this.socialImageRepository = socialImageRepository;
     }
 
-    public List<Social> readAllSocial() {
+
+    public List<SocialDTO> readAllSocial() {
         //01_소셜 전체 조회(/social)
         List<Social> socialList = socialRepository.findAll();
-        return socialList;
+        List<SocialDTO> socialDTOList = socialList.stream().map(m -> new SocialDTO(m)).collect(Collectors.toList());
+
+        for (int i = 0; i < socialList.size(); i++) {
+            List<Keyword> keywordList = new ArrayList<>();
+            List<SocialKeywordDTO> keywordDTOList = new ArrayList<>();
+            for (int j = 0; j < socialList.get(i).getSocialKeywordList().size(); j++) {
+                keywordList.add(socialList.get(i).getSocialKeywordList().get(j).getKeyword());
+                keywordDTOList = keywordList.stream().map(m-> new SocialKeywordDTO(m)).collect(Collectors.toList());
+            }
+            socialDTOList.get(i).setKeywordDTOList(keywordDTOList);
+        }
+        System.out.println(socialDTOList);
+        return socialDTOList;
     }
 
     public Social readSocialPostNum(int socialNum) {
@@ -58,10 +84,44 @@ public class SocialService {
     - 만약 예외가 발생할 경우, 트랜잭션을 롤백한다. (JPA p.503) */
 
     @Transactional
-    public int SocialPostRegistration(Social social) {
+    public int SocialPostRegistration(SocialDTO socialDTO, MultipartFile file) throws IOException, ParseException {
         //03_소셜 등록(/social)
-        Social result = socialRepository.save(social);
-        if (Objects.isNull(result)) {
+        Social social = new Social(socialDTO);
+        List<SocialKeywordDTO> keyword = socialDTO.getKeywordDTOList();
+        List<SocialKeyword> keywordList = new ArrayList<>(); //null
+
+        for (int i = 0; i < keyword.size(); i++) {
+            //keywordRepository의 findById 사용하기
+            //엔티티에서 keywordNum 컬럼 삭제하기
+            Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
+            keywordList.add(new SocialKeyword(new SocialKeywordPK(social.getSocialNum(), findKeyword.getKeywordCode()), social, findKeyword));
+        }
+
+        social.setSocialKeywordList(keywordList);
+        Social findSocial = socialRepository.save(social);
+
+        //이미지 로직
+        ResponseEntity res = ImageApi.singleImage(file);
+        System.out.println(res.getBody().toString());
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
+        System.out.println(jsonObject);
+        JSONObject fileInfo =  (JSONObject) jsonObject.get("fileInfo");
+
+        SocialImage image = new SocialImage();
+        image.setSocialNum(findSocial.getSocialNum());
+
+        String originalname =  (String)fileInfo.get("originalname");
+        String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
+
+        image.setName(originalname);
+        image.setPath(path);
+
+        SocialImage findImage = socialImageRepository.save(image);
+        System.out.println(image);
+        System.out.println(findImage);
+
+        if (Objects.isNull(findSocial)) {
             return 0; //result가 null일 경우 0 반환
         } else {
             return 1;
@@ -89,15 +149,15 @@ public class SocialService {
         if (!Objects.isNull(social.getSocialEndTime())) { //모임 종료 시간
             findSocial.setSocialEndTime(social.getSocialEndTime());
         }
-        if (social.getFileNum() > 0) { //사진 번호
-            findSocial.setFileNum(social.getFileNum());
-        }
+//        if (social.getFileNum() > 0) { //사진 번호
+//            findSocial.setFileNum(social.getFileNum());
+//        }
         if (social.getCategoryCode() > 0) { //카테고리 번호
             findSocial.setCategoryCode(social.getCategoryCode());
         }
-        if (social.getKeywordCode() > 0) { //키워드 번호
-            findSocial.setKeywordCode(social.getKeywordCode());
-        }
+//        if (social.getKeywordCode() > 0) { //키워드 번호
+//            findSocial.setKeywordCode(social.getKeywordCode());
+//        }
         if (social.getLocalCode() > 0) { //지역 번호
             findSocial.setLocalCode(social.getLocalCode());
         }
@@ -111,7 +171,7 @@ public class SocialService {
             findSocial.setSocialOther(social.getSocialOther());
         }
         if (!Objects.isNull(social.getPostModiDate())) { //게시글 수정일
-            findSocial.setPostModiDate(social.getPostModiDate());
+            findSocial.setPostModiDate(new Date());
         }
         if (!Objects.isNull(social.getSocialState())) { //게시글 상태
             findSocial.setSocialState(social.getSocialState());
@@ -158,9 +218,18 @@ public class SocialService {
         return null;
     }
 
+    
+
     public byte[] downloadSocialImage(String imageName) {
         //11_사진 다운로드(보여주기)
         Image imageData = imageRepository.findByImageName(imageName)
+                .orElseThrow(RuntimeException::new);
+        return ImageUtils.decompressImage(imageData.getImageData());
+    }
+
+    public byte[] downloadSocialImgeId(Long imageId) {
+        //사진 번호로 이미지 다운로드!!
+        Image imageData = imageRepository.findByImageId(imageId)
                 .orElseThrow(RuntimeException::new);
         return ImageUtils.decompressImage(imageData.getImageData());
     }
@@ -243,4 +312,40 @@ public class SocialService {
 
         return socialList;
     }
+
+//    @Transactional //이미지 업로드 수정 2023.09.18 (소셜 게시글 등록과 합침)
+//    public int uploadImage(MultipartFile file) throws IOException, ParseException {
+//        ResponseEntity res = imageApi.singleImage(file);
+//        System.out.println(res.getBody().toString());
+//        JSONParser parser = new JSONParser();
+//        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
+//        System.out.println(jsonObject);
+//        JSONObject fileInfo =  (JSONObject) jsonObject.get("fileInfo");
+//
+//        SocialImage image = new SocialImage();
+////        image.setSocialNum(findSocial.getSocialNum());
+//
+//        String originalname =  (String)fileInfo.get("originalname");
+//        String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
+//
+//        image.setName(originalname);
+//        image.setPath(path);
+//
+//        SocialImage findImage = socialImageRepository.save(image);
+//        System.out.println(image);
+//        System.out.println(findImage);
+//
+//        if (Objects.isNull(findImage)) {
+//            return 0; //result가 null일 경우 0 반환
+//        } else {
+//            return 1;
+//        }
+//
+//    }
+
+    public SocialImage downloadImage(int socialNum) {
+        SocialImage socialImage = socialImageRepository.findBySocialNum(socialNum);
+        return socialImage;
+    }
+
 }

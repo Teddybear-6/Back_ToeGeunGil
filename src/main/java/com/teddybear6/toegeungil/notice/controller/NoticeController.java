@@ -7,11 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 @RestController
 @RequestMapping("/notices") // 도메인을 의미
+@CrossOrigin(origins = "http://localhost:3000")
 public class NoticeController {
 
     private final NoticeService noticeService;
@@ -47,7 +49,9 @@ public class NoticeController {
 
     /* <POST> /notices: 공지사항 등록 */
     @PostMapping
-    public ResponseEntity<?> registNotice(Notice notice) {
+    public ResponseEntity<?> registNotice(@RequestBody Notice notice) {
+        System.out.println(notice);
+        notice.setNoticeDate(new Date());
         int result = noticeService.registNotice(notice);
 
         if (result > 0) {

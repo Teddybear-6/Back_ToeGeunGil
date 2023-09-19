@@ -6,6 +6,7 @@ import com.teddybear6.toegeungil.qna.repository.AnswerRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,6 +35,8 @@ public class AnsService {
     public int registAnswer(Answer answer){
         Answer result = answerRepository.save(answer);
         System.out.println(result);
+
+        answer.setAnswerDate(new Date());
 
         if(Objects.isNull(result)){
             return 0;
