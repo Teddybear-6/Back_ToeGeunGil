@@ -1,8 +1,10 @@
 package com.teddybear6.toegeungil.hobby.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.teddybear6.toegeungil.hobby.entity.Hobby;
 
-import java.util.Arrays;
+
+
 import java.util.Date;
 import java.util.List;
 
@@ -44,10 +46,12 @@ public class HobbyDTO {
 
     private String intro; // 시작전 소개
 
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date; // 일정
 
+    @JsonFormat(pattern = "kk:mm")
     private Date startTime; //시간
+    @JsonFormat(pattern = "kk:mm")
     private Date endTime; //시간
 
     private int categoryCode; // 카테고리
@@ -68,6 +72,8 @@ public class HobbyDTO {
 
     private Date updateDate;
 
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date closingDate;
 
     public HobbyDTO() {

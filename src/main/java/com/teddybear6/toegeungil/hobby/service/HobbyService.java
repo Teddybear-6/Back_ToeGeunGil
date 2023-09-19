@@ -87,6 +87,7 @@ public class HobbyService {
             hobbyImages.add(image);
         }
         List<HobbyImage> findImages = storageRepository.saveAll(hobbyImages);
+        System.out.println("확인");
         System.out.println(findHobby);
         System.out.println(findImages.get(0).getHobbyCode());
         if (Objects.isNull(findHobby)) {
