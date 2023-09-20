@@ -37,7 +37,7 @@ public class HobbyDTO {
     private String hobbyTitle; //제목
 
     private int tutorCode; //선생 번호
-    
+
     private String tutorIntro; //선생소개
 
     private int maxPersonnel;  //최대인원
