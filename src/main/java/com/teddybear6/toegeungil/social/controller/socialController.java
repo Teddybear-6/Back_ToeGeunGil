@@ -104,14 +104,9 @@ public class socialController {
     }
 
     @PostMapping //03_소셜 등록(/social)
-    public ResponseEntity<?> SocialPostRegistration(@RequestPart("socialPost") SocialDTO socialDTO, @RequestPart("img") MultipartFile file) { //@RequestBody -> Json으로 넘기기위해 필요한 친구
+    public ResponseEntity<?> SocialPostRegistration(@RequestPart("social") SocialDTO socialDTO, @RequestPart("image") MultipartFile file) { //@RequestBody -> Json으로 넘기기위해 필요한 친구
 
         socialDTO.setPostRegDate(new Date()); //게시글 등록일
-
-        //얘네는 수정 필요.
-        socialDTO.setSocialDate(new Date()); //모임일
-        socialDTO.setSocialStartTime(new Date()); //모임시작시간
-        socialDTO.setSocialEndTime(new Date()); //모임종료시간
 
         int result = 0;
         try {
