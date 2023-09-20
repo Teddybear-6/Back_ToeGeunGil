@@ -2,14 +2,15 @@ package com.teddybear6.toegeungil.hobby.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.teddybear6.toegeungil.hobby.dto.HobbyDTO;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
 
@@ -94,12 +95,14 @@ public class Hobby {
     private Date updateDate;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL , mappedBy = "hobby")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hobby")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<HobbyKeyword> hobbyKeywordList;
 
 
     @JoinColumn(name = "hobby_code")
-    @OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<HobbyImage> hobbyImages;
 
 

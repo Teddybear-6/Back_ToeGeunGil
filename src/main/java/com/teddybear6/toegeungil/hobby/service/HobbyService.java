@@ -34,12 +34,11 @@ public class HobbyService {
 
     private final HobbyKeywordRepository hobbyKeywordRepository;
 
-    private  final ReviewAnswerRepository reviewAnswerRepository;
+    private final ReviewAnswerRepository reviewAnswerRepository;
 
     private final HobbyJoinRepository hobbyJoinRepository;
 
     private final HobbyReviewRepository hobbyReviewRepository;
-
 
 
     public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository, ReviewAnswerRepository reviewAnswerRepository, HobbyJoinRepository hobbyJoinRepository, HobbyReviewRepository hobbyReviewRepository) {
@@ -51,11 +50,6 @@ public class HobbyService {
         this.hobbyJoinRepository = hobbyJoinRepository;
         this.hobbyReviewRepository = hobbyReviewRepository;
     }
-
-
-
-
-
 
     @Transactional
     public int registHobby(HobbyDTO hobbyDTO, MultipartFile[] files) throws IOException, ParseException {
@@ -71,25 +65,23 @@ public class HobbyService {
 
         hobby.setHobbyKeywordList(hobbyKeywordList);
         Hobby findHobby = hobbyRepository.save(hobby);
-        ResponseEntity  res =  ImageApi.multiImages(files);
+        ResponseEntity res = ImageApi.multiImages(files);
         JSONParser parser = new JSONParser();
-        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
+        JSONObject jsonObject = (JSONObject) parser.parse(res.getBody().toString());
         JSONArray jsonArray1 = (JSONArray) jsonObject.get("fileInfo");
 
 
         for (int i = 0; i < jsonArray1.size(); i++) {
             HobbyImage image = new HobbyImage();
             image.setHobbyCode(findHobby.getHobbyCode());
-            JSONObject obj = (JSONObject)  jsonArray1.get(i);
+            JSONObject obj = (JSONObject) jsonArray1.get(i);
 
             image.setName(((String) obj.get("originalname")));
-            image.setPath(((String) obj.get("path")).replace("uploads\\",""));
+            image.setPath(((String) obj.get("path")).replace("uploads\\", ""));
             hobbyImages.add(image);
         }
         List<HobbyImage> findImages = storageRepository.saveAll(hobbyImages);
-        System.out.println("확인");
-        System.out.println(findHobby);
-        System.out.println(findImages.get(0).getHobbyCode());
+
         if (Objects.isNull(findHobby)) {
             return 0;
         } else {
@@ -114,7 +106,6 @@ public class HobbyService {
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
 
-        System.out.println(hobbyGetDTOS);
         return hobbyGetDTOS;
     }
 
@@ -151,16 +142,19 @@ public class HobbyService {
     }
 
     @Transactional
-    public int updateHobby(Hobby hobby, HobbyDTO hobbyDTO, MultipartFile[]  files) {
+    public int updateHobby(Hobby hobby, HobbyDTO hobbyDTO, MultipartFile[] files, List<HobbyKeywordDTO> hobbyKeywordDTO, List<ImageUrlsDTO> urls) {
 
-        List<HobbyKeywordDTO> keyword = hobbyDTO.getKeywordDTOList();
+
+        List<HobbyKeywordDTO> keyword = hobbyKeywordDTO;
         List<HobbyKeyword> hobbyKeywordList = new ArrayList<>();
         List<HobbyImage> hobbyImages = new ArrayList<>();
 
+
         hobby.setHobbyTitle(hobbyDTO.getHobbyTitle());     //제목
         hobby.setHobbyPrice(hobbyDTO.getHobbyPrice());     //가격
+        hobby.setTutorCode(hobbyDTO.getTutorCode());       //강사코드
         hobby.setClose(hobbyDTO.getClose());               //마감여부
-
+        hobby.setMaxPersonnel(hobbyDTO.getMaxPersonnel()); //최대인원
         hobby.setCategoryCode(hobbyDTO.getCategoryCode()); //카테고리
         hobby.setLocalCode(hobbyDTO.getLocalCode());       //지역
         hobby.setIntro(hobbyDTO.getIntro());               //소개
@@ -168,59 +162,85 @@ public class HobbyService {
         hobby.setDate(hobbyDTO.getDate());                 //날짜
         hobby.setStartTime(hobbyDTO.getStartTime());       //시작시간
         hobby.setEndTime(hobbyDTO.getEndTime());           //끝나는 시간
+        hobby.setClosingDate(hobbyDTO.getClosingDate());   //마감날짜
+        hobby.setHobbyPlace(hobbyDTO.getHobbyPlace());        //상세지역
 
+
+//
 
         for (int i = 0; i < keyword.size(); i++) {
-            Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
-            hobbyKeywordList.add(new HobbyKeyword(new HobbyPk(hobby.getHobbyCode(), findKeyword.getKeywordCode()), hobby, findKeyword));
-
-        }
-
-        //따로 지워줄 경우 에러가 나지만 clear 후 set 해주면 된다
-        hobby.getHobbyKeywordList().clear();
-        hobby.setHobbyKeywordList(hobbyKeywordList);
-
-
-
+                    Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
+                    hobbyKeywordList.add(new HobbyKeyword(new HobbyPk(hobby.getHobbyCode(), findKeyword.getKeywordCode()), hobby, findKeyword));
+                }
 
 
         try {
-
-            if(files.length!=0 && !Objects.isNull(hobbyDTO.getImageId())){
-                ResponseEntity  res =  ImageApi.multiImages(files);
-                JSONParser parser = new JSONParser();
-                JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
-                JSONArray jsonArray1 = (JSONArray) jsonObject.get("fileInfo");
-                hobby.getHobbyKeywordList().clear();
-                System.out.println(hobbyDTO.getImageId());
-                for(int i = 0 ; i < hobbyDTO.getImageId().size();i++){
+            System.out.println(files + "이미지 확인중 ");
+            if (Objects.isNull(files) && urls.size() != 0) {
+                for (int i = 0; i < urls.size(); i++) {
                     HobbyImage image = new HobbyImage();
                     image.setHobbyCode(hobby.getHobbyCode());
-                    image.setPath(hobbyDTO.getImageId().get(i).getPath());
-                    image.setName(hobbyDTO.getImageId().get(i).getName());
+                    image.setPath(urls.get(i).getPath());
                     hobbyImages.add(image);
-
                 }
+            } else if (urls.size() == 0) {
+                ResponseEntity res = ImageApi.multiImages(files);
+                JSONParser parser = new JSONParser();
+                JSONObject jsonObject = (JSONObject) parser.parse(res.getBody().toString());
+                JSONArray jsonArray1 = (JSONArray) jsonObject.get("fileInfo");
                 for (int i = 0; i < jsonArray1.size(); i++) {
                     HobbyImage image = new HobbyImage();
+                    JSONObject obj = (JSONObject) jsonArray1.get(i);
                     image.setHobbyCode(hobby.getHobbyCode());
-                    JSONObject obj = (JSONObject)  jsonArray1.get(i);
-
                     image.setName(((String) obj.get("originalname")));
-                    image.setPath(((String) obj.get("path")).replace("uploads\\",""));
+                    image.setPath(((String) obj.get("path")).replace("uploads\\", ""));
+                    hobbyImages.add(image);
+                }
+            } else {
+                for (int i = 0; i < urls.size(); i++) {
+                    HobbyImage image = new HobbyImage();
+                    image.setHobbyCode(hobby.getHobbyCode());
+                    image.setPath(urls.get(i).getPath());
+                    hobbyImages.add(image);
+                }
+                ResponseEntity res = ImageApi.multiImages(files);
+                JSONParser parser = new JSONParser();
+                JSONObject jsonObject = (JSONObject) parser.parse(res.getBody().toString());
+                JSONArray jsonArray1 = (JSONArray) jsonObject.get("fileInfo");
+                for (int i = 0; i < jsonArray1.size(); i++) {
+                    HobbyImage image = new HobbyImage();
+                    JSONObject obj = (JSONObject) jsonArray1.get(i);
+                    image.setHobbyCode(hobby.getHobbyCode());
+                    image.setName(((String) obj.get("originalname")));
+                    image.setPath(((String) obj.get("path")).replace("uploads\\", ""));
                     hobbyImages.add(image);
                 }
 
-
-                hobby.setHobbyImages(hobbyImages);
             }
+
+
+            hobby.getHobbyKeywordList().stream().forEach(hobbyKeyword -> {
+                hobbyKeywordRepository.delete(hobbyKeyword);
+            });
+
+
+            hobby.getHobbyKeywordList().clear();
+
+            hobbyKeywordRepository.deleteAllInBatch(hobby.getHobbyKeywordList());
+            storageRepository.deleteAllInBatch(hobby.getHobbyImages());
+            hobbyKeywordRepository.flush();
+            storageRepository.flush();
+
+
+            storageRepository.saveAll(hobbyImages);
+            hobbyKeywordRepository.saveAll(hobbyKeywordList);
+
+
         } catch (IOException e) {
             return 0;
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-
-
 
         Hobby findHobby = hobbyRepository.save(hobby);
 
@@ -312,12 +332,12 @@ public class HobbyService {
 
     @Transactional
     public int deleteByReviewCode(HobbyReview hobbyReview) {
-        HobbyReview findReiview =  hobbyReviewRepository.save(hobbyReview);
-        System.out.println(findReiview.getReviewStatus());
+        HobbyReview findReiview = hobbyReviewRepository.save(hobbyReview);
 
-        if(findReiview.getReviewStatus().equals("N")){
+
+        if (findReiview.getReviewStatus().equals("N")) {
             return 1;
-        }else {
+        } else {
             return 0;
         }
     }
@@ -329,17 +349,17 @@ public class HobbyService {
         findReview.setContent(hobbyReviewDTO.getContent());
         findReview.setScore(hobbyReviewDTO.getScore());
 
-        if(findReview.getContent().equals(hobbyReviewDTO.getContent()) && findReview.getScore()==hobbyReviewDTO.getScore()){
+        if (findReview.getContent().equals(hobbyReviewDTO.getContent()) && findReview.getScore() == hobbyReviewDTO.getScore()) {
             return 1;
-        }else {
+        } else {
             return 0;
         }
 
 
     }
 
-    public List<HobbyGetDTO> findByCategoryCode(int categoryCode,Pageable pageable) {
-        List<Hobby> hobbies = hobbyRepository.findByCategoryCode(categoryCode,pageable);
+    public List<HobbyGetDTO> findByCategoryCode(int categoryCode, Pageable pageable) {
+        List<Hobby> hobbies = hobbyRepository.findByCategoryCode(categoryCode, pageable);
 
         List<HobbyGetDTO> hobbyGetDTOS = hobbies.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
@@ -353,7 +373,6 @@ public class HobbyService {
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
 
-        System.out.println(hobbyGetDTOS);
         return hobbyGetDTOS;
     }
 
@@ -364,7 +383,7 @@ public class HobbyService {
     }
 
     public List<HobbyGetDTO> findByLocalCode(int localCode, Pageable pageable) {
-        List<Hobby> hobbies = hobbyRepository.findByLocalCode(localCode,pageable);
+        List<Hobby> hobbies = hobbyRepository.findByLocalCode(localCode, pageable);
         List<HobbyGetDTO> hobbyGetDTOS = hobbies.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
         for (int i = 0; i < hobbies.size(); i++) {
@@ -377,12 +396,12 @@ public class HobbyService {
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
 
-        System.out.println(hobbyGetDTOS);
+
         return hobbyGetDTOS;
     }
 
     public List<HobbyGetDTO> findByCategoryCodeAndLocalCode(int categoryCode, int localCode, Pageable pageable) {
-        List<Hobby> hobbies = hobbyRepository.findByCategoryCodeAndLocalCode(categoryCode,localCode,pageable);
+        List<Hobby> hobbies = hobbyRepository.findByCategoryCodeAndLocalCode(categoryCode, localCode, pageable);
         List<HobbyGetDTO> hobbyGetDTOS = hobbies.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
         for (int i = 0; i < hobbies.size(); i++) {
@@ -395,7 +414,7 @@ public class HobbyService {
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
 
-        System.out.println(hobbyGetDTOS);
+
         return hobbyGetDTOS;
     }
 
@@ -410,7 +429,7 @@ public class HobbyService {
     }
 
     public ReviewAnswer reviewAnswerFindByRevieCode(int reviewCode) {
-        ReviewAnswer reviewAnswer  = reviewAnswerRepository.findAllByReviewCode(reviewCode);
+        ReviewAnswer reviewAnswer = reviewAnswerRepository.findAllByReviewCode(reviewCode);
 
         return reviewAnswer;
     }

@@ -105,7 +105,7 @@ public class HobbyController {
         }
 
 
-        System.out.println(userEntity);
+
 
         int result = 0;
         try {
@@ -130,48 +130,43 @@ public class HobbyController {
 
     @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
     @PutMapping
-    public ResponseEntity<?> updateHobby( @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart(value = "hobbyImage" ,required = false) MultipartFile[] files , @RequestPart("urls") List<ImageUrlsDTO> urls , @AuthenticationPrincipal AuthUserDetail userDetails) {
-
-        System.out.println(hobbyDTO+"하비");
-        System.out.println(false);
-        System.out.println(urls+"주소");
+    public ResponseEntity<?> updateHobby( @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart(value = "hobbyImage" ,required = false) MultipartFile[] files , @RequestPart(value = "urls",required = false) List<ImageUrlsDTO> urls ,@RequestPart("keywordDTOList") List<HobbyKeywordDTO> hobbyKeywordDTO , @AuthenticationPrincipal AuthUserDetail userDetails ) {
 
 
 
-//        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
         Map<String, String> respose = new HashMap<>();
 
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "회원이 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
 
-//        if (Objects.isNull(userEntity)) {
-//            respose.put("value", "회원이 아닙니다.");
-//            return ResponseEntity.status(500).body(respose);
-//        }
-//
-//        Hobby hobby = hobbyService.findById(hobbyDTO.getHobbyCode());
-//
-//        if (Objects.isNull(hobby)) {
-//            respose.put("value", "존재하지 않는 취미입니다..");
-//            return ResponseEntity.status(404).body(respose);
-//        }
-//
-//        if(hobby.getTutorCode()!=userEntity.getUserNo()){
-//            respose.put("value", "작성자가 아닙니다.");
-//            return ResponseEntity.status(404).body(respose);
-//        }
+        Hobby hobby = hobbyService.findById(hobbyDTO.getHobbyCode());
+
+        if (Objects.isNull(hobby)) {
+            respose.put("value", "존재하지 않는 취미입니다..");
+            return ResponseEntity.status(404).body(respose);
+        }
+
+        if(hobby.getTutorCode()!=userEntity.getUserNo()){
+            respose.put("value", "작성자가 아닙니다.");
+            return ResponseEntity.status(404).body(respose);
+        }
+        int result = hobbyService.updateHobby(hobby, hobbyDTO, files, hobbyKeywordDTO , urls);
 
 
-        int result = 1;
-        respose.put("value", "수정 성공했습니다.");
-        return ResponseEntity.ok().body(respose);
 
-//        int result = hobbyService.updateHobby(hobby, hobbyDTO, files);
-//        if (result > 0) {
-//            respose.put("value", "수정 성공했습니다.");
-//            return ResponseEntity.ok().body(respose);
-//        } else {
-//            respose.put("value", "수정 실패했습니다.");
-//            return ResponseEntity.status(500).body(respose);
-//        }
+
+
+        if (result > 0) {
+            respose.put("value", "수정 성공했습니다.");
+            return ResponseEntity.ok().body(respose);
+        } else {
+            respose.put("value", "수정 실패했습니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
 
     }
 
@@ -365,7 +360,7 @@ public class HobbyController {
     @PostMapping("/review/{hobbyCode}")
     @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     public ResponseEntity<?> hobbyReview(@PathVariable int hobbyCode, @RequestBody HobbyReviewDTO hobbyReviewDTO, @AuthenticationPrincipal AuthUserDetail userDetails) {
-        System.out.println(hobbyReviewDTO);
+
         Hobby hobby = hobbyService.findById(hobbyCode);
         hobbyReviewDTO.setUserNo(userDetails.getUserEntity().getUserNo());
         HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, hobbyReviewDTO.getUserNo());
