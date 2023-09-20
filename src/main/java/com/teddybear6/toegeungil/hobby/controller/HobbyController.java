@@ -74,9 +74,36 @@ public class HobbyController {
         return ResponseEntity.ok().body(hobbyList);
     }
 
+    @GetMapping("/tutor")
+    @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
+    public ResponseEntity<List<?>> hobbyfindTutir( @AuthenticationPrincipal AuthUserDetail userDetails, final Pageable pageable) {
+        System.out.println("확인");
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+
+        if (Objects.isNull(userEntity)) {
+            List<String> error = new ArrayList<>();
+            error.add("취미가 존재하지 않습니다.");
+
+            return ResponseEntity.status(500).body(error);
+        }
+
+        List<HobbyGetDTO> hobbyList = hobbyService.findByTutorCode(pageable , userEntity.getUserNo() );
+        if (hobbyList.size() == 0) {
+            List<String> error = new ArrayList<>();
+            error.add("취미가 존재하지 않습니다.");
+            return ResponseEntity.status(500).body(error);
+        }
+        return ResponseEntity.ok().body(hobbyList);
+
+    }
+
+
+
+
+
     //취미 메인사진 조사
     @GetMapping("/mainimages/{hobbyCode}")
-    public ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode) {
+    public ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode ) {
         List<HobbyImage> hobbyImages = hobbyService.findMainImage(hobbyCode);
 
 

@@ -452,4 +452,22 @@ public class HobbyService {
 
         return hobbyList;
     }
+
+    public List<HobbyGetDTO> findByTutorCode(Pageable pageable, int userNo) {
+
+        List<Hobby> hobbyList = hobbyRepository.findByTutorCode(userNo,pageable);
+        List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
+
+        for (int i = 0; i < hobbyList.size(); i++) {
+            List<Keyword> keyword = new ArrayList<>();
+            List<HobbyKeywordDTO> keywordDTOList = new ArrayList<>();
+            for (int j = 0; j < hobbyList.get(i).getHobbyKeywordList().size(); j++) {
+                keyword.add(hobbyList.get(i).getHobbyKeywordList().get(j).getKeyword());
+                keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
+            }
+            hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
+        }
+
+        return hobbyGetDTOS;
+    }
 }

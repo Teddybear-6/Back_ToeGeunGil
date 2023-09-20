@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.hobby.repository;
 
+import com.teddybear6.toegeungil.hobby.dto.HobbyReviewDTO;
 import com.teddybear6.toegeungil.hobby.entity.Hobby;
 
 
@@ -19,4 +20,6 @@ public interface HobbyRepository extends JpaRepository<Hobby,Integer> {
     List<Hobby> findByLocalCode(int localCode, Pageable pageable);
 
     List<Hobby> findByCategoryCodeAndLocalCode(int categoryCode, int localCode, Pageable pageable);
+
+    List<Hobby> findByTutorCode(int userNo, Pageable pageable);
 }
