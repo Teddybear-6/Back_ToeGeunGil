@@ -12,10 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -61,7 +58,9 @@ public class CommunityController {
     }
 
     @PostMapping // 커뮤니티 등록하기
-    public ResponseEntity<?> registCommunity(@RequestBody CommunityDTO communityDTO) {
+    public ResponseEntity<?> registCommunity(@RequestPart("community") CommunityDTO communityDTO) {
+
+        communityDTO.setPostWriteDate(new Date());
         System.out.println(communityDTO);
         int result = 0;
         try {
