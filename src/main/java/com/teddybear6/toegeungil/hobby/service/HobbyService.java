@@ -175,7 +175,7 @@ public class HobbyService {
 
 
         try {
-            System.out.println(files + "이미지 확인중 ");
+
             if (Objects.isNull(files) && urls.size() != 0) {
                 for (int i = 0; i < urls.size(); i++) {
                     HobbyImage image = new HobbyImage();
@@ -469,5 +469,11 @@ public class HobbyService {
         }
 
         return hobbyGetDTOS;
+    }
+
+    public List<Hobby> findByTutorCode(int tutorCode) {
+        List<Hobby> hobbyList = hobbyRepository.findByTutorCode(tutorCode);
+
+        return hobbyList;
     }
 }

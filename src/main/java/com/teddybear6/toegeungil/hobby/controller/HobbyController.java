@@ -77,13 +77,11 @@ public class HobbyController {
     @GetMapping("/tutor")
     @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
     public ResponseEntity<List<?>> hobbyfindTutir( @AuthenticationPrincipal AuthUserDetail userDetails, final Pageable pageable) {
-        System.out.println("확인");
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
 
         if (Objects.isNull(userEntity)) {
             List<String> error = new ArrayList<>();
             error.add("취미가 존재하지 않습니다.");
-
             return ResponseEntity.status(500).body(error);
         }
 
@@ -108,7 +106,6 @@ public class HobbyController {
 
 
         if (hobbyImages.size() == 0) {
-            //나중에 기본이미지로 바꾸기 무조건 하나씩 넣기하면 필요없음
             return ResponseEntity.status(404).body(null);
         }
         ImageIdDTO imageIdDTO = new ImageIdDTO();
@@ -132,8 +129,6 @@ public class HobbyController {
         }
 
 
-
-
         int result = 0;
         try {
             hobbyDTO.setTutorCode(userEntity.getUserNo());
@@ -149,6 +144,7 @@ public class HobbyController {
             return ResponseEntity.ok().body(respose);
         } else {
             respose.put("value", "등록 실패했습니다.");
+            System.out.println(respose);
             return ResponseEntity.status(500).body(respose);
         }
 
@@ -158,9 +154,6 @@ public class HobbyController {
     @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
     @PutMapping
     public ResponseEntity<?> updateHobby( @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart(value = "hobbyImage" ,required = false) MultipartFile[] files , @RequestPart(value = "urls",required = false) List<ImageUrlsDTO> urls ,@RequestPart("keywordDTOList") List<HobbyKeywordDTO> hobbyKeywordDTO , @AuthenticationPrincipal AuthUserDetail userDetails ) {
-
-
-
 
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
         Map<String, String> respose = new HashMap<>();
@@ -182,10 +175,6 @@ public class HobbyController {
             return ResponseEntity.status(404).body(respose);
         }
         int result = hobbyService.updateHobby(hobby, hobbyDTO, files, hobbyKeywordDTO , urls);
-
-
-
-
 
         if (result > 0) {
             respose.put("value", "수정 성공했습니다.");
@@ -251,6 +240,12 @@ public class HobbyController {
     @GetMapping("/size")
     public ResponseEntity<?> hobbySize() {
         List<Hobby> hobbyList = hobbyService.findByAll();
+        return ResponseEntity.ok().body(hobbyList.size());
+    }
+
+    @GetMapping("/tutorlist/size/{tutorCode}")
+    public ResponseEntity<?> tutorHobbySize(@PathVariable int tutorCode) {
+        List<Hobby> hobbyList = hobbyService.findByTutorCode(tutorCode);
         return ResponseEntity.ok().body(hobbyList.size());
     }
 
