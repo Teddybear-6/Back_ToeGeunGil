@@ -189,17 +189,37 @@ public class HobbyController {
 
     //삭제
     @DeleteMapping("/{hobbyCode}")
-    public ResponseEntity<?> hobbyDelete(@PathVariable int hobbyCode) {
-        Hobby hobby = hobbyService.findById(hobbyCode);
-        if (Objects.isNull(hobby)) {
-            return ResponseEntity.status(404).body("존재하지 않는 취미입니다.");
+    @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
+    public ResponseEntity<?> hobbyDelete(@PathVariable int hobbyCode,  @AuthenticationPrincipal AuthUserDetail userDetails ) {
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
+
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "회원이 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
         }
+
+        Hobby hobby = hobbyService.findById(hobbyCode);
+
+        if (Objects.isNull(hobby)) {
+            respose.put("value", "존재하지 않는 취미입니다..");
+            return ResponseEntity.status(404).body(respose);
+        }
+
+        if(hobby.getTutorCode()!=userEntity.getUserNo()){
+            respose.put("value", "작성자가 아닙니다.");
+            return ResponseEntity.status(404).body(respose);
+        }
+
+
         int result = hobbyService.deleteById(hobby);
 
         if (result > 0) {
-            return ResponseEntity.ok().body("삭제되었습니다.");
+            respose.put("value", "삭제되었습니다.");
+            return ResponseEntity.ok().body(respose);
         } else {
-            return ResponseEntity.status(500).body("삭제에 실패했습니다");
+            respose.put("value", "삭제에 실패했습니다");
+            return ResponseEntity.status(500).body(respose);
         }
     }
 

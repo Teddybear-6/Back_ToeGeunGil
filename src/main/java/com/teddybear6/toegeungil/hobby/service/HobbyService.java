@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,8 +64,9 @@ public class HobbyService {
             hobbyKeywordList.add(new HobbyKeyword(new HobbyPk(hobby.getHobbyCode(), findKeyword.getKeywordCode()), hobby, findKeyword));
         }
 
-        hobby.setHobbyKeywordList(hobbyKeywordList);
+
         Hobby findHobby = hobbyRepository.save(hobby);
+        hobbyKeywordRepository.saveAll(hobbyKeywordList);
         ResponseEntity res = ImageApi.multiImages(files);
         JSONParser parser = new JSONParser();
         JSONObject jsonObject = (JSONObject) parser.parse(res.getBody().toString());
@@ -93,7 +95,7 @@ public class HobbyService {
 
     public List<HobbyGetDTO> findAll(final Pageable pageable) {
 
-        List<Hobby> hobbyList = hobbyRepository.findAll(pageable).getContent();
+        List<Hobby> hobbyList = hobbyRepository.findAllByOrderByHobbyCodeDesc(pageable);
         List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
         for (int i = 0; i < hobbyList.size(); i++) {
@@ -455,7 +457,7 @@ public class HobbyService {
 
     public List<HobbyGetDTO> findByTutorCode(Pageable pageable, int userNo) {
 
-        List<Hobby> hobbyList = hobbyRepository.findByTutorCode(userNo,pageable);
+        List<Hobby> hobbyList = hobbyRepository.findByTutorCodeOrderByHobbyCodeDesc(userNo,pageable);
         List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
         for (int i = 0; i < hobbyList.size(); i++) {

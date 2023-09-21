@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
@@ -81,6 +82,7 @@ public class Hobby {
 
     @Column(name = "hobby_place")
     private String hobbyPlace;
+
 
     @Column(name = "create_date")
     @CreatedDate
