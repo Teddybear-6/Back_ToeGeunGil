@@ -126,7 +126,7 @@ public class socialController {
     }
 
     @PutMapping //04_소셜 수정(/social{socialNum})
-    public ResponseEntity<?> updateSocialPostNum(SocialDTO socialDTO) {
+    public ResponseEntity<?> updateSocialPostNum(@RequestPart("social") SocialDTO socialDTO, @RequestPart("image") MultipartFile file) {
         /*
         update 과정
         ex) 1.변경전[0,0,0] -> 2.변경후[0,0,1] -> 3.save(id) 메서드 호출 후 변경 전;후 값 비교
