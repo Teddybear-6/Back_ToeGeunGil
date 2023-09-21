@@ -37,13 +37,18 @@ public class CommunityService {
     // 커뮤니티 전체 조회하기
     public List<CommunityDTO> findAllCommunity() {
         List<Community> communityList = communityRepository.findAll();
-        List<CommunityDTO> communityDTOList = new ArrayList<>();
+        List<CommunityDTO> communityDTOList = communityList.stream().map(m -> new CommunityDTO(m)).collect(Collectors.toList());
 
-        for (Community community : communityList) {
-            CommunityDTO communityDTO = new CommunityDTO(community);
-            communityDTOList.add(communityDTO);
+        for (int i=0; i < communityList.size(); i++){
+            List<Keyword> keywordList = new ArrayList<>();
+            List<CommunityKeywordDTO> keywordDTOList = new ArrayList<>();
+            for (int j=0; j < communityList.get(i).getCommunityKeywordList().size(); j++){
+                keywordList.add(communityList.get(i).getCommunityKeywordList().get(j).getKeyword());
+                keywordDTOList = keywordList.stream().map(m -> new CommunityKeywordDTO(m)).collect(Collectors.toList());
+            }
+            communityDTOList.get(i).setCommunityKeywordDTOList(keywordDTOList);
         }
-
+        System.out.println(communityDTOList);
         return communityDTOList;
     }
 
@@ -64,6 +69,8 @@ public class CommunityService {
             Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
             communityKeywordList.add(new CommunityKeyword(new CommunityPK(community.getCommunityNum(), findKeyword.getKeywordCode()), community, findKeyword));
         }
+
+        community.setCommunityKeywordList(communityKeywordList);
 
         community.setPostWriteDate(new Date());
 

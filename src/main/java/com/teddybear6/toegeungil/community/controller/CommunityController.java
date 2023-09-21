@@ -3,8 +3,11 @@ package com.teddybear6.toegeungil.community.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teddybear6.toegeungil.community.dto.CommunityDTO;
+import com.teddybear6.toegeungil.community.dto.CommunityKeywordDTO;
 import com.teddybear6.toegeungil.community.entity.Community;
+import com.teddybear6.toegeungil.community.entity.CommunityKeyword;
 import com.teddybear6.toegeungil.community.service.CommunityService;
+import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/communitys")
@@ -41,13 +45,19 @@ public class CommunityController {
     public ResponseEntity<Object> findByCommunityCode(@PathVariable int communityNum){
         Community community = communityService.findByCommunityCode(communityNum);
 
-        if(Objects.isNull(community)){
+        if(Objects.isNull(community)) {
             return ResponseEntity.status(404).body(new String("잘못된 코드 입력"));
+        }else {
+            CommunityDTO communityDTO = new CommunityDTO(community);
+            List<Keyword> keywordList = new ArrayList<>();
+            for (int i = 0; i < community.getCommunityKeywordList().size(); i++) {
+                keywordList.add(community.getCommunityKeywordList().get(i).getKeyword());
+            }
+            List<CommunityKeywordDTO> communityKeywordDTOList = keywordList.stream().map(m -> new CommunityKeywordDTO(m)).collect(Collectors.toList());
+            communityDTO.setCommunityKeywordDTOList(communityKeywordDTOList);
+
+            return ResponseEntity.ok().body(communityDTO);
         }
-
-        CommunityDTO communityDTO = new CommunityDTO(community);
-
-        return ResponseEntity.ok().body(communityDTO);
     }
 
     @PostMapping // 커뮤니티 등록하기
@@ -117,6 +127,3 @@ public class CommunityController {
 
 
 }
-
-
-
