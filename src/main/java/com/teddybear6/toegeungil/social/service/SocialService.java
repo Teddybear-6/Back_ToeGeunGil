@@ -13,6 +13,7 @@ import com.teddybear6.toegeungil.social.entity.*;
 import com.teddybear6.toegeungil.social.repository.*;
 import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,7 +56,7 @@ public class SocialService {
 
     public List<SocialDTO> readAllSocial() {
         //01_소셜 전체 조회(/social)
-        List<Social> socialList = socialRepository.findAll();
+        List<Social> socialList = socialRepository.findAll(Sort.by(Sort.Direction.DESC, "SocialNum")); //socialNum 기준 내림차순
         List<SocialDTO> socialDTOList = socialList.stream().map(m -> new SocialDTO(m)).collect(Collectors.toList());
 
         for (int i = 0; i < socialList.size(); i++) {
