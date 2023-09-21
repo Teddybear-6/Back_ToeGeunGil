@@ -93,7 +93,7 @@ public class HobbyController {
     }
 
     //등록
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
     public ResponseEntity<?> registHobby(@RequestPart(value = "hobby") HobbyDTO hobbyDTO, @RequestPart(value = "hobbyImage", required = false) MultipartFile[] files, @AuthenticationPrincipal AuthUserDetail userDetails) {
 
