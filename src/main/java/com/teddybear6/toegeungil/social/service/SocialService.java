@@ -128,7 +128,7 @@ public class SocialService {
     }
 
     @Transactional
-    public int updateSocialPostNum(Social social, SocialDTO socialDTO) {
+    public int updateSocialPostNum(Social social, SocialDTO socialDTO,  MultipartFile file, SocialImage socialImage) {
         //04_소셜 수정(/social{socialNum})
 
         if (!Objects.isNull(socialDTO.getSocialName())) { //게시글 제목
@@ -199,7 +199,41 @@ public class SocialService {
         System.out.println("담긴 키워드 확인 : " + social.getSocialKeywordList());
         System.out.println("DTO 값도 다시 확인 : " + socialDTO.getKeywordDTOList());
 
-        //사진
+        //기존 사진 값 삭제
+        int socialNum = social.getSocialNum(); //사진 번호 가져오기
+        SocialImage img = socialImageRepository.findBySocialNum(socialNum);
+        try {
+            if (!Objects.isNull(img.getId())) {
+                socialImageRepository.delete(img);
+
+                ResponseEntity res = ImageApi.singleImage(file);
+                JSONParser parser = new JSONParser();
+                JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
+                JSONObject fileInfo =  (JSONObject) jsonObject.get("fileInfo");
+
+                SocialImage image = new SocialImage();
+                image.setSocialNum(socialNum);
+
+                String originalname =  (String)fileInfo.get("originalname");
+                String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
+
+                image.setName(originalname);
+                image.setPath(path);
+
+                SocialImage findImage = socialImageRepository.save(image);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("기존 이미지 : " + img);
+
+        System.out.println("삭제 되었나 : " + img);
+
+
 
         Social result = socialRepository.save(social);
         if (Objects.isNull(result)) {
