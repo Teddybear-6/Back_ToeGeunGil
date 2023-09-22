@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Objects;
 
 @Service
@@ -73,6 +74,37 @@ public class UserViewService {
         // 없으면 존재하지 않는 회원입니다.
 
     }
+
+    // 임시비밀번호 바꿔주는 함수
+//    @Transactional
+//    public boolean updateTempPwd(String email, String randnum8){
+//        try {
+//            UserEntity user = userRepository.findUserEmail(email);
+//            BCryptPasswordEncoder bCryptPasswordEncoder = userRepository.findUserEmail(String email);
+//            return yes;
+//
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return no;
+//    }
+//
+//
+//
+//
+//    public boolean sendTemPwd(String email, int num) {
+//        try{
+//            String passwordEncoder= userRepository.GetRandomNum(8);
+//            if (userRepository.findUserEmail(email, temppwd)){
+//                return sendemail.sendEmail(email, "퇴근길 관리자입니다", "임시번호는"+ 'tmpped' +"입니다");
+//            }
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return false;
+//
+//    }
+
 
 
 //    @Transactional

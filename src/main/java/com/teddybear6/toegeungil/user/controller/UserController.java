@@ -2,22 +2,33 @@ package com.teddybear6.toegeungil.user.controller;
 
 import com.teddybear6.toegeungil.auth.dto.LoginReqDTO;
 import com.teddybear6.toegeungil.auth.vo.UserRole;
+import com.teddybear6.toegeungil.common.email.MailProperties;
+import com.teddybear6.toegeungil.user.dto.EmailAuthDTO;
 import com.teddybear6.toegeungil.user.dto.FindPassDTO;
 import com.teddybear6.toegeungil.user.dto.InsertUserDTO;
 import com.teddybear6.toegeungil.user.entity.UserEntity;
+import com.teddybear6.toegeungil.user.sevice.EmailService;
 import com.teddybear6.toegeungil.user.sevice.UserViewService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Objects;
 @RestController
 @RequestMapping("/user")
 public class UserController {
     private final UserViewService userViewService;
+    private final EmailService emailService;
+    private final MailProperties mailProperties;
 
-    public UserController(UserViewService userViewService) {
+    public UserController(UserViewService userViewService, EmailService emailService, MailProperties mailProperties) {
         this.userViewService = userViewService;
+        this.emailService = emailService;
+        this.mailProperties = mailProperties;
     }
 
     public UserEntity findUserEmail(String userId) {
@@ -93,6 +104,14 @@ public class UserController {
         return ResponseEntity.ok().body(true);
     }
 
+//    @PostMapping("/sendtemppwd")
+//    public boolean sendTemPwd(@RequestParam("email")String email, @RequestParam("randnum")String randnum){
+//        if(userViewService.updateTempPwd(email,randnum)){
+//            return emailservice.sendTempPwd(email,8);
+//        }
+//        return false;
+//    }
+
 //    @GetMapping()
 
 //    @RestController
@@ -140,5 +159,18 @@ public class UserController {
 //        return ResponseEntity.ok().body("삭제완료");
 //    }
 
+
+    //이메일
+    @ResponseBody
+    @PostMapping("/mailConfirm")
+    public String mailConfirm(@RequestBody EmailAuthDTO emailAuthDTO) throws MessagingException, UnsupportedEncodingException {
+        System.out.println("호출");
+
+        String authCode = emailService.sendEmail(emailAuthDTO.getEmail());
+
+        System.out.println(authCode);
+        return authCode;
+
+    }
 
 }
