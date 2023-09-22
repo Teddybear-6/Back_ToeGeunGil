@@ -13,9 +13,9 @@ public class CommunityDTO {
     private int userNum; // 회원 번호(작성자)
     private String communityTitle; // 커뮤니티 제목
     private String communityIntro; // 커뮤니티 소개
-    private int categoryNum; // 카테고리 번호
+    private int categoryCode; // 카테고리 번호
     private List<CommunityKeywordDTO> communityKeywordDTOList;// 키워드 번호
-    private int locationNum; // 지역 번호
+    private int localCode; // 지역 번호
     private String communityStatus; // 커뮤니티 상태
     private Date postWriteDate; // 커뮤니티 작성일
     private Date postUpdateDate; // 커뮤니티 수정일
@@ -23,14 +23,14 @@ public class CommunityDTO {
     public CommunityDTO() {
     }
 
-    public CommunityDTO(int communityNum, int userNum, String communityTitle, String communityIntro, int categoryNum, List<CommunityKeywordDTO> communityKeywordDTOList, int locationNum, String communityStatus, Date postWriteDate, Date postUpdateDate) {
+    public CommunityDTO(int communityNum, int userNum, String communityTitle, String communityIntro, int categoryCode, List<CommunityKeywordDTO> communityKeywordDTOList, int localCode, String communityStatus, Date postWriteDate, Date postUpdateDate) {
         this.communityNum = communityNum;
         this.userNum = userNum;
         this.communityTitle = communityTitle;
         this.communityIntro = communityIntro;
-        this.categoryNum = categoryNum;
+        this.categoryCode = categoryCode;
         this.communityKeywordDTOList = communityKeywordDTOList;
-        this.locationNum = locationNum;
+        this.localCode = localCode;
         this.communityStatus = communityStatus;
         this.postWriteDate = postWriteDate;
         this.postUpdateDate = postUpdateDate;
@@ -41,8 +41,8 @@ public class CommunityDTO {
         this.userNum = community.getUserNum();
         this.communityTitle = community.getCommunityTitle();
         this.communityIntro = community.getCommunityIntro();
-        this.categoryNum = community.getCategoryNum();
-        this.locationNum = community.getLocationNum();
+        this.categoryCode = community.getCategoryCode();
+        this.localCode = community.getLocalCode();
         this.communityStatus = community.getCommunityStatus();
         this.postWriteDate = community.getPostWriteDate();
         this.postUpdateDate = community.getPostUpdateDate();
@@ -50,7 +50,6 @@ public class CommunityDTO {
                 .map(m -> new CommunityKeywordDTO(m.getKeyword()))
                 .collect(Collectors.toList());
     }
-
 
     public int getCommunityNum() {
         return communityNum;
@@ -84,12 +83,12 @@ public class CommunityDTO {
         this.communityIntro = communityIntro;
     }
 
-    public int getCategoryNum() {
-        return categoryNum;
+    public int getCategoryCode() {
+        return categoryCode;
     }
 
-    public void setCategoryNum(int categoryNum) {
-        this.categoryNum = categoryNum;
+    public void setCategoryCode(int categoryCode) {
+        this.categoryCode = categoryCode;
     }
 
     public List<CommunityKeywordDTO> getCommunityKeywordDTOList() {
@@ -100,12 +99,12 @@ public class CommunityDTO {
         this.communityKeywordDTOList = communityKeywordDTOList;
     }
 
-    public int getLocationNum() {
-        return locationNum;
+    public int getLocalCode() {
+        return localCode;
     }
 
-    public void setLocationNum(int locationNum) {
-        this.locationNum = locationNum;
+    public void setLocalCode(int localCode) {
+        this.localCode = localCode;
     }
 
     public String getCommunityStatus() {
@@ -139,9 +138,9 @@ public class CommunityDTO {
                 ", userNum=" + userNum +
                 ", communityTitle='" + communityTitle + '\'' +
                 ", communityIntro='" + communityIntro + '\'' +
-                ", categoryNum=" + categoryNum +
+                ", categoryCode=" + categoryCode +
                 ", communityKeywordDTOList=" + communityKeywordDTOList +
-                ", locationNum=" + locationNum +
+                ", localCode=" + localCode +
                 ", communityStatus='" + communityStatus + '\'' +
                 ", postWriteDate=" + postWriteDate +
                 ", postUpdateDate=" + postUpdateDate +

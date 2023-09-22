@@ -60,6 +60,7 @@ public class CommunityController {
     @PostMapping // 커뮤니티 등록하기
     public ResponseEntity<?> registCommunity(@RequestPart("community") CommunityDTO communityDTO) {
 
+        System.out.println((communityDTO));
         communityDTO.setPostWriteDate(new Date());
         System.out.println(communityDTO);
         int result = 0;
@@ -116,10 +117,10 @@ public class CommunityController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<CommunityDTO>> CommunityList(@RequestParam(name = "categoryNum", required = false) Integer categoryNum,
-                                                            @RequestParam(name = "locationNum", required = false) Integer locationNum){
+    public ResponseEntity<List<CommunityDTO>> CommunityList(@RequestParam(name = "categoryCode", required = false) Integer categoryCode,
+                                                            @RequestParam(name = "locationCode", required = false) Integer localCode){
 
-        List<CommunityDTO> communityList = communityService.CommunityListFilters(categoryNum,locationNum);
+        List<CommunityDTO> communityList = communityService.CommunityListFilters(categoryCode,localCode);
 
         return ResponseEntity.ok(communityList);
     }

@@ -95,8 +95,8 @@ public class CommunityService {
         // 매개 변수의 값으로 기존 커뮤니티의 필드를 업데이트하기
         findCommunity.setCommunityTitle(communityDTO.getCommunityTitle());
         findCommunity.setCommunityIntro(communityDTO.getCommunityIntro());
-        findCommunity.setCategoryNum(communityDTO.getCategoryNum());
-        findCommunity.setLocationNum(communityDTO.getLocationNum());
+        findCommunity.setCategoryCode(communityDTO.getCategoryCode());
+        findCommunity.setLocalCode(communityDTO.getLocalCode());
         findCommunity.setCommunityStatus(communityDTO.getCommunityStatus());
         findCommunity.setPostUpdateDate(new Date());
 
@@ -137,16 +137,16 @@ public class CommunityService {
     }
 
     //커뮤니티 검색 필터 (지역, 카테고리로 조회하기)
-    public List<CommunityDTO> CommunityListFilters(Integer categoryNum, Integer locationNum) {
+    public List<CommunityDTO> CommunityListFilters(Integer categoryCode, Integer localCode) {
 
         List<CommunityDTO> communityList = new ArrayList<>();
 
-        if (categoryNum != null && locationNum != null){
-            communityList = communityRepository.findByCategoryNumAndLocationNum(categoryNum, locationNum);
-        } else if (categoryNum != null) {
-            communityList = communityRepository.findByCategoryNum(categoryNum);
-        } else if(locationNum != null) {
-            communityList = communityRepository.findByLocationNum(locationNum);
+        if (categoryCode != null && localCode != null){
+            communityList = communityRepository.findByCategoryCodeAndLocalCode(categoryCode, localCode);
+        } else if (categoryCode != null) {
+            communityList = communityRepository.findByCategoryCode(categoryCode);
+        } else if(localCode != null) {
+            communityList = communityRepository.findByLocalCode(localCode);
         }
 
         return communityList;
