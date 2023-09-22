@@ -1,15 +1,17 @@
 package com.teddybear6.toegeungil.notice.controller;
 
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
 import com.teddybear6.toegeungil.notice.dto.NoticeDetailDTO;
 import com.teddybear6.toegeungil.notice.entity.Notice;
 import com.teddybear6.toegeungil.notice.service.NoticeService;
+import com.teddybear6.toegeungil.user.entity.UserEntity;
+import com.teddybear6.toegeungil.user.sevice.UserViewService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/notices") // 도메인을 의미
@@ -17,9 +19,11 @@ import java.util.Objects;
 public class NoticeController {
 
     private final NoticeService noticeService;
+    private final UserViewService userViewService;
 
-    public NoticeController(NoticeService noticeService) {
+    public NoticeController(NoticeService noticeService, UserViewService userViewService) {
         this.noticeService = noticeService;
+        this.userViewService = userViewService;
     }
 
     /* <GET> /notices : 공지사항 목록 전체 조회 */
@@ -64,7 +68,16 @@ public class NoticeController {
 
     /* <PUT> /notices/{noticeNum} : 공지사항 수정 */
     @PutMapping("/{noticeNum}")
-    public ResponseEntity<?> updateNotice(@PathVariable int noticeNum, @RequestBody NoticeDetailDTO noticeDetailDTO) {
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> updateNotice(@AuthenticationPrincipal AuthUserDetail userDetails, @PathVariable int noticeNum, @RequestBody NoticeDetailDTO noticeDetailDTO) {
+        System.out.println(userDetails);
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
+
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "관리자가 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
 
         Notice findnotice = noticeService.findNoticeByCode(noticeNum);
 
@@ -86,7 +99,16 @@ public class NoticeController {
 
     /* <DELETE> /notices/{noticeNum} : 공지사항 삭제 */
     @DeleteMapping("/{noticeNum}")
-    public ResponseEntity<?> deleteNotice(@PathVariable int noticeNum) {
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> deleteNotice(@AuthenticationPrincipal AuthUserDetail userDetails, @PathVariable int noticeNum) {
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
+
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "관리자가 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
+
         Notice notice = noticeService.findNoticeByCode(noticeNum);
 
         if (Objects.isNull(notice)) {
