@@ -401,4 +401,14 @@ public class SocialService {
         return socialImage;
     }
 
+    public int deleteScoailPostNum(Social social) {
+        social.setSocialState("N");
+        socialRepository.save(social);
+
+        if (social.getSocialState().equals("N")) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }

@@ -151,6 +151,24 @@ public class socialController {
         }
     }
 
+    @DeleteMapping("/{socialNum}")
+    public ResponseEntity<?> deleteScoailPostNum(@PathVariable int socialNum) {
+
+        Social findSocial = socialService.readSocialPostNum(socialNum);
+        //영속성 컨텍스트에 존재하지 않을 경우, "해당 게시글이 존재하지 않습니다."
+        if (Objects.isNull(findSocial)) {
+            return ResponseEntity.status(404).body("해당 게시글이 존재하지 않습니다.");
+        }
+
+        int result = socialService.deleteScoailPostNum(findSocial);
+        if (result > 0) {
+            return ResponseEntity.ok().body("게시글이 삭제되었습니다.");
+        } else {
+            return ResponseEntity.status(500).body("게시글 삭제에 실패하였습니다...");
+        }
+
+    }
+
     /*
     이미지 (수정) 2023.09.18*/
 //    @PostMapping("/img") //이미지 업로드 (소셜 게시글 등록과 합침)
