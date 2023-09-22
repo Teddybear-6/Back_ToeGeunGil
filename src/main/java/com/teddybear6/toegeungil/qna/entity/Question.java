@@ -1,5 +1,8 @@
 package com.teddybear6.toegeungil.qna.entity;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -19,10 +22,16 @@ public class Question {
     @Column(name = "queNickName")
     private String questionNick;                        //질문 작성자
     @Column(name = "queDate")
+    @Temporal(TemporalType.DATE)
+    @CreatedDate
     private Date questionDate;                          //질문 생성일
     @Column(name = "queUpdate")
+    @Temporal(TemporalType.DATE)
+    @LastModifiedDate
     private Date questionUpdate;                        //질문 수정일
     @Column(name = "queDelete")
+    @Temporal(TemporalType.DATE)
+    @LastModifiedDate
     private Date questionDelete;                        //질문 삭제일
     @Column(name = "queStatus")
     private String questionStatus;                      //질문 상태
