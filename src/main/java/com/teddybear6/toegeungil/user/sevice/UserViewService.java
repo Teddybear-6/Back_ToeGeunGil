@@ -1,17 +1,17 @@
 package com.teddybear6.toegeungil.user.sevice;
 
 import com.teddybear6.toegeungil.auth.vo.UserRole;
+import com.teddybear6.toegeungil.user.dto.FindPassDTO;
 import com.teddybear6.toegeungil.user.dto.InsertUserDTO;
 import com.teddybear6.toegeungil.user.entity.UserEntity;
 import com.teddybear6.toegeungil.user.repository.UserEntityRepository;
 import com.teddybear6.toegeungil.user.repository.UserRepository;
 
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -20,16 +20,14 @@ public class UserViewService {
     private final UserEntityRepository userEntityRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserViewService(UserRepository userRepository, UserEntityRepository userEntityRepository,@Lazy PasswordEncoder passwordEncoder) {
+    public UserViewService(UserRepository userRepository,  UserEntityRepository userEntityRepository, @Lazy PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userEntityRepository = userEntityRepository;
         this.passwordEncoder = passwordEncoder;
+
     }
 
-
-
     public UserEntity findUserEmail(String userId) {
-        System.out.println("findUser");
         UserEntity userEntity = userRepository.findUserEmail(userId);
         return userEntity;
     }
@@ -56,6 +54,23 @@ public class UserViewService {
         UserEntity user = userEntityRepository.findById(userNo);
 
         return user;
+
+    }
+
+
+    // 비밀번호 찾기
+    public String finduserpass(FindPassDTO passDTO /*/*이름 닉네임 이메일 받기*/) {
+
+        UserEntity user = userEntityRepository.findByUserEmail(passDTO.getEmail() /*이름 닉네임 이메일 넣기*/);
+
+        System.out.println(user);
+        if(user.getUserName()==passDTO.getName()){
+            return passwordEncoder.encode(user.getUserPassword());
+        }else {
+            return null;
+        }
+        // 회원이 있으면  비밀번호를 복화해서 알려주고
+        // 없으면 존재하지 않는 회원입니다.
 
     }
 
