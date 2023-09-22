@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.List;
 @Entity(name = "social")
 @DynamicInsert
 @Table(name = "social") //Entity와 매핑할 테이블 이름
+@Where(clause = "social_state='Y'")
 public class Social {
 
     @Id //PK
