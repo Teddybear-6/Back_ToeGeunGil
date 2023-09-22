@@ -126,13 +126,15 @@ public class socialController {
     }
 
     @PutMapping //04_소셜 수정(/social{socialNum})
-    public ResponseEntity<?> updateSocialPostNum(SocialDTO socialDTO) {
+    public ResponseEntity<?> updateSocialPostNum(@RequestPart("social") SocialDTO socialDTO, @RequestPart(value = "image", required = false) MultipartFile file, SocialImage socialImage) {
         /*
         update 과정
         ex) 1.변경전[0,0,0] -> 2.변경후[0,0,1] -> 3.save(id) 메서드 호출 후 변경 전;후 값 비교
             -> 4.영속성컨텍스트 [0,0,1] 저장 -> 5.DB에 반영*/
 
         //update를 위해 수정하고자 하는 값이 영속(존재) 상태인지 확인한다.
+        System.out.println(socialDTO);
+
         Social findSocial = socialService.readSocialPostNum(socialDTO.getSocialNum());
         //영속성 컨텍스트에 존재하지 않을 경우, "해당 게시글이 존재하지 않습니다."
         if (Objects.isNull(findSocial)) {
@@ -140,13 +142,32 @@ public class socialController {
         }
 
         SocialDTO social = socialDTO;
-        int result = socialService.updateSocialPostNum(findSocial, social);
+        social.setPostModiDate(new Date());
+        int result = socialService.updateSocialPostNum(findSocial, social, file, socialImage);
         System.out.println("result : " + result);
         if (result == 0) {
             return ResponseEntity.status(404).body("게시글 수정에 실패하였습니다...");
         } else {
             return ResponseEntity.ok().body("게시글이 수정되었습니다.");
         }
+    }
+
+    @DeleteMapping("/{socialNum}")
+    public ResponseEntity<?> deleteScoailPostNum(@PathVariable int socialNum) {
+
+        Social findSocial = socialService.readSocialPostNum(socialNum);
+        //영속성 컨텍스트에 존재하지 않을 경우, "해당 게시글이 존재하지 않습니다."
+        if (Objects.isNull(findSocial)) {
+            return ResponseEntity.status(404).body("해당 게시글이 존재하지 않습니다.");
+        }
+
+        int result = socialService.deleteScoailPostNum(findSocial);
+        if (result > 0) {
+            return ResponseEntity.ok().body("게시글이 삭제되었습니다.");
+        } else {
+            return ResponseEntity.status(500).body("게시글 삭제에 실패하였습니다...");
+        }
+
     }
 
     /*
