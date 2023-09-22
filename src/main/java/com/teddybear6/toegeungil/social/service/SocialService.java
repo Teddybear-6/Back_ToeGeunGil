@@ -199,7 +199,6 @@ public class SocialService {
         System.out.println("담긴 키워드 확인 : " + social.getSocialKeywordList());
         System.out.println("DTO 값도 다시 확인 : " + socialDTO.getKeywordDTOList());
 
-
         if (file != null) {
             //기존 사진 값 삭제
             int socialNum = social.getSocialNum(); //사진 번호 가져오기
@@ -231,8 +230,6 @@ public class SocialService {
                 throw new RuntimeException(e);
             }
         }
-
-
 
         Social result = socialRepository.save(social);
         if (Objects.isNull(result)) {
