@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.social.controller;
 
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
 import com.teddybear6.toegeungil.category.entity.Category;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.local.entity.Local;
@@ -11,10 +12,13 @@ import com.teddybear6.toegeungil.social.entity.Participate;
 import com.teddybear6.toegeungil.social.entity.Social;
 import com.teddybear6.toegeungil.social.entity.SocialImage;
 import com.teddybear6.toegeungil.social.service.SocialService;
+import com.teddybear6.toegeungil.user.entity.UserEntity;
+import com.teddybear6.toegeungil.user.sevice.UserViewService;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,9 +56,11 @@ public class socialController {
     - 사진파일(File) */
 
     private final SocialService socialService;
+    private final UserViewService userViewService;
 
-    public socialController(SocialService socialService) {
+    public socialController(SocialService socialService, UserViewService userViewService) {
         this.socialService = socialService;
+        this.userViewService = userViewService;
     }
 
     /*
@@ -106,12 +112,20 @@ public class socialController {
 
     @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @PostMapping //03_소셜 등록(/social)
-    public ResponseEntity<?> SocialPostRegistration(@RequestPart("social") SocialDTO socialDTO, @RequestPart("image") MultipartFile file) { //@RequestBody -> Json으로 넘기기위해 필요한 친구
+    public ResponseEntity<?> SocialPostRegistration(@RequestPart("social") SocialDTO socialDTO, @RequestPart("image") MultipartFile file, @AuthenticationPrincipal AuthUserDetail userDetails) { //@RequestBody -> Json으로 넘기기위해 필요한 친구
 
-        socialDTO.setPostRegDate(new Date()); //게시글 등록일
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "회원이 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
 
         int result = 0;
+
         try {
+            socialDTO.setPostRegDate(new Date()); //게시글 등록일
+            socialDTO.setUserNum(userEntity.getUserNo());
             result = socialService.SocialPostRegistration(socialDTO, file);
         } catch (IOException e) {
             e.printStackTrace();
