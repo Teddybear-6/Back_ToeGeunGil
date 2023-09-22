@@ -14,6 +14,7 @@ import com.teddybear6.toegeungil.social.service.SocialService;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -103,6 +104,7 @@ public class socialController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @PostMapping //03_소셜 등록(/social)
     public ResponseEntity<?> SocialPostRegistration(@RequestPart("social") SocialDTO socialDTO, @RequestPart("image") MultipartFile file) { //@RequestBody -> Json으로 넘기기위해 필요한 친구
 
@@ -125,6 +127,7 @@ public class socialController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @PutMapping //04_소셜 수정(/social{socialNum})
     public ResponseEntity<?> updateSocialPostNum(@RequestPart("social") SocialDTO socialDTO, @RequestPart(value = "image", required = false) MultipartFile file, SocialImage socialImage) {
         /*
@@ -152,6 +155,7 @@ public class socialController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @DeleteMapping("/{socialNum}")
     public ResponseEntity<?> deleteScoailPostNum(@PathVariable int socialNum) {
 
