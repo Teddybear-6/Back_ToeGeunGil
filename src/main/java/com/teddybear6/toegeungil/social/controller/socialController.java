@@ -142,6 +142,7 @@ public class socialController {
         }
 
         SocialDTO social = socialDTO;
+        social.setPostModiDate(new Date());
         int result = socialService.updateSocialPostNum(findSocial, social, file, socialImage);
         System.out.println("result : " + result);
         if (result == 0) {
