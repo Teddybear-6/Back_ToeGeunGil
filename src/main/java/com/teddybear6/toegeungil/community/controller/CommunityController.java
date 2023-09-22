@@ -1,14 +1,11 @@
 package com.teddybear6.toegeungil.community.controller;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teddybear6.toegeungil.community.dto.CommunityDTO;
 import com.teddybear6.toegeungil.community.dto.CommunityKeywordDTO;
 import com.teddybear6.toegeungil.community.entity.Community;
-import com.teddybear6.toegeungil.community.entity.CommunityKeyword;
 import com.teddybear6.toegeungil.community.service.CommunityService;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -58,7 +55,8 @@ public class CommunityController {
     }
 
     @PostMapping // 커뮤니티 등록하기
-    public ResponseEntity<?> registCommunity(@RequestPart("community") CommunityDTO communityDTO) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR', 'USER')")
+    public ResponseEntity<?> registCommunity(@RequestBody CommunityDTO communityDTO) {
 
         System.out.println((communityDTO));
         communityDTO.setPostWriteDate(new Date());
@@ -78,6 +76,7 @@ public class CommunityController {
     }
 
     @PutMapping("/{communityNum}")// 커뮤니티 수정
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR', 'USER')")
     public ResponseEntity<?> updateCommunity(@RequestBody CommunityDTO communityDTO){
 
         // 유효성 검사 체크 (RequestParam)으로 코드만 받아오고 나머지는 service 로직에서 찾아오기 .,...
@@ -101,6 +100,7 @@ public class CommunityController {
     }
 
     @DeleteMapping("/{communityNum}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR', 'USER')")
     public ResponseEntity<?> deleteCommunity(@PathVariable int communityNum){
 
         Community community = communityService.findByCommunityCode(communityNum);
