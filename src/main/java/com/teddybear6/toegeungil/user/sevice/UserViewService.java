@@ -75,6 +75,12 @@ public class UserViewService {
 
     }
 
+    public void setPassword(UserEntity user, String authCode) {
+        user.setUserPassword(passwordEncoder.encode(authCode));
+        userEntityRepository.save(user);
+    }
+
+
     // 임시비밀번호 바꿔주는 함수
 //    @Transactional
 //    public boolean updateTempPwd(String email, String randnum8){

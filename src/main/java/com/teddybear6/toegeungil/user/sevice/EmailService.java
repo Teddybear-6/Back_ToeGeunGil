@@ -63,7 +63,6 @@ public class EmailService {
         message.setSubject(title); // 제목 설정
         message.setFrom(setFrom); // 보내는 이메일;
         message.setText(serContext(autnNum),"utf-8","html");
-
         return message;
     }
 

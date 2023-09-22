@@ -163,13 +163,21 @@ public class UserController {
     //이메일
     @ResponseBody
     @PostMapping("/mailConfirm")
-    public String mailConfirm(@RequestBody EmailAuthDTO emailAuthDTO) throws MessagingException, UnsupportedEncodingException {
-        System.out.println("호출");
+    public ResponseEntity<?> mailConfirm(@RequestBody EmailAuthDTO emailAuthDTO) throws MessagingException, UnsupportedEncodingException {
+
+
+        UserEntity user = userViewService.findUserEmail(emailAuthDTO.getEmail());
+        if(Objects.isNull(user)){
+            return ResponseEntity.ok().body(false); // 펄스면 이메일 틀리다
+        }
 
         String authCode = emailService.sendEmail(emailAuthDTO.getEmail());
 
-        System.out.println(authCode);
-        return authCode;
+        userViewService.setPassword(user , authCode);
+
+
+
+        return ResponseEntity.ok().body(true);
 
     }
 
