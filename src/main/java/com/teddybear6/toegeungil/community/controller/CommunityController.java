@@ -77,19 +77,21 @@ public class CommunityController {
         }
     }
 
-    @PutMapping("/{communityNum}") // 커뮤니티 수정
-    public ResponseEntity<?> updateCommunity(@PathVariable int communityNum, @RequestBody CommunityDTO communityDTO){
+    @PutMapping("/{communityNum}")// 커뮤니티 수정
+    public ResponseEntity<?> updateCommunity(@RequestBody CommunityDTO communityDTO){
 
         // 유효성 검사 체크 (RequestParam)으로 코드만 받아오고 나머지는 service 로직에서 찾아오기 .,...
 
-        Community findCommunity = communityService.findByCommunityCode(communityNum);
+        Community findCommunity = communityService.findByCommunityCode(communityDTO.getCommunityNum());
 
         if(Objects.isNull(findCommunity)){
             return ResponseEntity.status(404).body("커뮤니티 카테고리가 존재하지 않습니다.");
         }
 
+        CommunityDTO community = communityDTO;
+
         // 직접 각 필드의 값을 전달하여 communityUpdate 메서드를 호출한다.
-        int result = communityService.communityUpdate(findCommunity, communityDTO);
+        int result = communityService.communityUpdate(findCommunity, community);
 
         if(result > 0){
             return ResponseEntity.ok().body("커뮤니티 수정에 성공했습니다.");

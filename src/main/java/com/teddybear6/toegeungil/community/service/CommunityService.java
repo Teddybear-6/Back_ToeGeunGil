@@ -100,16 +100,21 @@ public class CommunityService {
         findCommunity.setCommunityStatus(communityDTO.getCommunityStatus());
         findCommunity.setPostUpdateDate(new Date());
 
+        findCommunity.getCommunityKeywordList().stream().forEach(communityKeyword -> {
+            communityKeywordRepository.delete(communityKeyword);
+        });
+        findCommunity.getCommunityKeywordList().clear();
+        communityKeywordRepository.deleteAllInBatch(findCommunity.getCommunityKeywordList());
+        communityKeywordRepository.flush();
+
         // CommunityKeywordList 업데이트하기
-        List<CommunityKeyword> updatedKeywords = new ArrayList<>();
-        for (CommunityKeywordDTO keywordDTO : communityDTO.getCommunityKeywordDTOList()) {
-            Keyword keyword = keywordRepository.findById(keywordDTO.getKeywordCode());
-            if (keyword != null) {
-                CommunityKeyword communityKeyword = new CommunityKeyword(new CommunityPK(findCommunity.getCommunityNum(), keyword.getKeywordCode()), findCommunity, keyword);
-                updatedKeywords.add(communityKeyword);
-            }
+        List<CommunityKeywordDTO> keyword = communityDTO.getCommunityKeywordDTOList();
+        List<CommunityKeyword> keywordList = new ArrayList<>();
+        for (int i=0; i < keyword.size(); i++){
+            Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
+            keywordList.add(new CommunityKeyword(new CommunityPK(findCommunity.getCommunityNum(), findKeyword.getKeywordCode()), findCommunity, findKeyword));
         }
-        findCommunity.setCommunityKeywordList(updatedKeywords);
+        findCommunity.setCommunityKeywordList(keywordList);
 
         // update된 community를 entity에 저장
         Community updateCommunity = communityRepository.save(findCommunity);
