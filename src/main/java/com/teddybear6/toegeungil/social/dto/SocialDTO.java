@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.social.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.teddybear6.toegeungil.social.entity.Social;
 
 import javax.persistence.Id;
@@ -14,12 +15,15 @@ public class SocialDTO {
 
     private String socialName; //게시글 제목
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date socialDate; //모임 일자
 
     private int socialFixedNum; //모임 정원(명)
 
+    @JsonFormat(pattern = "kk:mm")
     private Date socialStartTime; //모임 시작 시간
 
+    @JsonFormat(pattern = "kk:mm")
     private Date socialEndTime; //모임 종료 시간
 
 //    private int fileNum; //사진 번호(FK)
