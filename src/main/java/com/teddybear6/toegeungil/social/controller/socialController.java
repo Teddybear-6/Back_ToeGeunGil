@@ -126,13 +126,15 @@ public class socialController {
     }
 
     @PutMapping //04_소셜 수정(/social{socialNum})
-    public ResponseEntity<?> updateSocialPostNum(@RequestPart("social") SocialDTO socialDTO, @RequestPart("image") MultipartFile file, SocialImage socialImage) {
+    public ResponseEntity<?> updateSocialPostNum(@RequestPart("social") SocialDTO socialDTO, @RequestPart(value = "image", required = false) MultipartFile file, SocialImage socialImage) {
         /*
         update 과정
         ex) 1.변경전[0,0,0] -> 2.변경후[0,0,1] -> 3.save(id) 메서드 호출 후 변경 전;후 값 비교
             -> 4.영속성컨텍스트 [0,0,1] 저장 -> 5.DB에 반영*/
 
         //update를 위해 수정하고자 하는 값이 영속(존재) 상태인지 확인한다.
+        System.out.println(socialDTO);
+
         Social findSocial = socialService.readSocialPostNum(socialDTO.getSocialNum());
         //영속성 컨텍스트에 존재하지 않을 경우, "해당 게시글이 존재하지 않습니다."
         if (Objects.isNull(findSocial)) {

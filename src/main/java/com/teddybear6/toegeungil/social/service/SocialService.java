@@ -66,7 +66,7 @@ public class SocialService {
             List<SocialKeywordDTO> keywordDTOList = new ArrayList<>();
             for (int j = 0; j < socialList.get(i).getSocialKeywordList().size(); j++) {
                 keywordList.add(socialList.get(i).getSocialKeywordList().get(j).getKeyword());
-                keywordDTOList = keywordList.stream().map(m-> new SocialKeywordDTO(m)).collect(Collectors.toList());
+                keywordDTOList = keywordList.stream().map(m -> new SocialKeywordDTO(m)).collect(Collectors.toList());
             }
             socialDTOList.get(i).setKeywordDTOList(keywordDTOList);
         }
@@ -106,14 +106,14 @@ public class SocialService {
         //이미지 로직
         ResponseEntity res = ImageApi.singleImage(file);
         JSONParser parser = new JSONParser();
-        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
-        JSONObject fileInfo =  (JSONObject) jsonObject.get("fileInfo");
+        JSONObject jsonObject = (JSONObject) parser.parse(res.getBody().toString());
+        JSONObject fileInfo = (JSONObject) jsonObject.get("fileInfo");
 
         SocialImage image = new SocialImage();
         image.setSocialNum(findSocial.getSocialNum());
 
-        String originalname =  (String)fileInfo.get("originalname");
-        String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
+        String originalname = (String) fileInfo.get("originalname");
+        String path = ((String) fileInfo.get("path")).replace("uploads\\", "");
 
         image.setName(originalname);
         image.setPath(path);
@@ -128,7 +128,7 @@ public class SocialService {
     }
 
     @Transactional
-    public int updateSocialPostNum(Social social, SocialDTO socialDTO,  MultipartFile file, SocialImage socialImage) {
+    public int updateSocialPostNum(Social social, SocialDTO socialDTO, MultipartFile file, SocialImage socialImage) {
         //04_소셜 수정(/social{socialNum})
 
         if (!Objects.isNull(socialDTO.getSocialName())) { //게시글 제목
@@ -199,39 +199,38 @@ public class SocialService {
         System.out.println("담긴 키워드 확인 : " + social.getSocialKeywordList());
         System.out.println("DTO 값도 다시 확인 : " + socialDTO.getKeywordDTOList());
 
-        //기존 사진 값 삭제
-        int socialNum = social.getSocialNum(); //사진 번호 가져오기
-        SocialImage img = socialImageRepository.findBySocialNum(socialNum);
-        try {
-            if (!Objects.isNull(img.getId())) {
-                socialImageRepository.delete(img);
 
-                ResponseEntity res = ImageApi.singleImage(file);
-                JSONParser parser = new JSONParser();
-                JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
-                JSONObject fileInfo =  (JSONObject) jsonObject.get("fileInfo");
+        if (file != null) {
+            //기존 사진 값 삭제
+            int socialNum = social.getSocialNum(); //사진 번호 가져오기
+            SocialImage img = socialImageRepository.findBySocialNum(socialNum);
+            try {
+                if (!Objects.isNull(img) ){
+                    socialImageRepository.delete(img);
 
-                SocialImage image = new SocialImage();
-                image.setSocialNum(socialNum);
 
-                String originalname =  (String)fileInfo.get("originalname");
-                String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
+                    ResponseEntity res = ImageApi.singleImage(file);
+                    JSONParser parser = new JSONParser();
+                    JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
+                    JSONObject fileInfo =  (JSONObject) jsonObject.get("fileInfo");
 
-                image.setName(originalname);
-                image.setPath(path);
+                    SocialImage image = new SocialImage();
+                    image.setSocialNum(socialNum);
 
-                SocialImage findImage = socialImageRepository.save(image);
+                    String originalname =  (String)fileInfo.get("originalname");
+                    String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
+
+                    image.setName(originalname);
+                    image.setPath(path);
+
+                    SocialImage findImage = socialImageRepository.save(image);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
         }
-
-        System.out.println("기존 이미지 : " + img);
-
-        System.out.println("삭제 되었나 : " + img);
 
 
 
@@ -276,7 +275,6 @@ public class SocialService {
         return null;
     }
 
-    
 
     public byte[] downloadSocialImage(String imageName) {
         //11_사진 다운로드(보여주기)
@@ -327,10 +325,10 @@ public class SocialService {
         //21_소셜 참여가 이미 되어있는 경우, 모임 참여 삭제
         participateRepository.delete(findParticipate);
 
-        Participate participate = participateRepository.findBySocialNumAndUserNum(findParticipate.getSocialNum(),findParticipate.getUserNum());
-        if(Objects.isNull(participate)){
+        Participate participate = participateRepository.findBySocialNumAndUserNum(findParticipate.getSocialNum(), findParticipate.getUserNum());
+        if (Objects.isNull(participate)) {
             return 1;
-        }else {
+        } else {
             return 0;
         }
     }
