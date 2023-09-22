@@ -144,10 +144,10 @@ public class HobbyService {
     }
 
     @Transactional
-    public int updateHobby(Hobby hobby, HobbyDTO hobbyDTO, MultipartFile[] files, List<HobbyKeywordDTO> hobbyKeywordDTO, List<ImageUrlsDTO> urls) {
+    public int updateHobby(Hobby hobby, HobbyDTO hobbyDTO, MultipartFile[] files, List<ImageUrlsDTO> urls) {
 
 
-        List<HobbyKeywordDTO> keyword = hobbyKeywordDTO;
+
         List<HobbyKeyword> hobbyKeywordList = new ArrayList<>();
         List<HobbyImage> hobbyImages = new ArrayList<>();
 
@@ -170,8 +170,8 @@ public class HobbyService {
 
 //
 
-        for (int i = 0; i < keyword.size(); i++) {
-                    Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
+        for (int i = 0; i < hobbyDTO.getKeywordDTOList().size(); i++) {
+                    Keyword findKeyword = keywordRepository.findById(hobbyDTO.getKeywordDTOList().get(i).getKeywordCode());
                     hobbyKeywordList.add(new HobbyKeyword(new HobbyPk(hobby.getHobbyCode(), findKeyword.getKeywordCode()), hobby, findKeyword));
                 }
 

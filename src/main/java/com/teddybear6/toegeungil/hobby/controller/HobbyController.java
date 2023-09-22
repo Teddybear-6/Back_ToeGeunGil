@@ -153,8 +153,8 @@ public class HobbyController {
 
     @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
     @PutMapping
-    public ResponseEntity<?> updateHobby( @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart(value = "hobbyImage" ,required = false) MultipartFile[] files , @RequestPart(value = "urls",required = false) List<ImageUrlsDTO> urls ,@RequestPart("keywordDTOList") List<HobbyKeywordDTO> hobbyKeywordDTO , @AuthenticationPrincipal AuthUserDetail userDetails ) {
-
+    public ResponseEntity<?> updateHobby( @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart(value = "hobbyImage" ,required = false) MultipartFile[] files , @RequestPart(value = "urls",required = false) List<ImageUrlsDTO> urls  , @AuthenticationPrincipal AuthUserDetail userDetails ) {
+        System.out.println(hobbyDTO.getKeywordDTOList());
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
         Map<String, String> respose = new HashMap<>();
 
@@ -174,7 +174,8 @@ public class HobbyController {
             respose.put("value", "작성자가 아닙니다.");
             return ResponseEntity.status(404).body(respose);
         }
-        int result = hobbyService.updateHobby(hobby, hobbyDTO, files, hobbyKeywordDTO , urls);
+
+        int result = hobbyService.updateHobby(hobby, hobbyDTO, files , urls);
 
         if (result > 0) {
             respose.put("value", "수정 성공했습니다.");
@@ -359,7 +360,7 @@ public class HobbyController {
         List<HobbyJoin> hobbyJoins = hobbyService.findByJoin(hobbyCode);
 
         if (hobbyJoins.size() == 0) {
-            return ResponseEntity.ok().body(null);
+            return ResponseEntity.ok().body(hobbyJoins);
         } else {
             return ResponseEntity.ok().body(hobbyJoins);
         }
@@ -404,11 +405,12 @@ public class HobbyController {
     public ResponseEntity<?> hobbyReview(@PathVariable int hobbyCode, @RequestBody HobbyReviewDTO hobbyReviewDTO, @AuthenticationPrincipal AuthUserDetail userDetails) {
 
         Hobby hobby = hobbyService.findById(hobbyCode);
-        hobbyReviewDTO.setUserNo(userDetails.getUserEntity().getUserNo());
+
         HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, hobbyReviewDTO.getUserNo());
         if (Objects.isNull(hobby) || hobby.getClose().equals("N") || Objects.isNull(hobbyJoin)) {
             return ResponseEntity.status(500).body("후기를 작성할 수 없습니다.");
         }
+        hobbyReviewDTO.setUserNo(userDetails.getUserEntity().getUserNo());
         HobbyReview findHobbyReview = hobbyService.findByIdReview(hobbyCode, hobbyReviewDTO.getUserNo());
 
         if (!Objects.isNull(findHobbyReview) && findHobbyReview.getReviewStatus().equals("Y")) {
