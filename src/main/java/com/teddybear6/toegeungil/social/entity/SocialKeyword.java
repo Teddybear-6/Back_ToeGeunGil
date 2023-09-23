@@ -58,7 +58,6 @@ public class SocialKeyword {
     public String toString() {
         return "SocialKeyword{" +
                 "socialKeywordPK=" + socialKeywordPK +
-                ", social=" + social +
                 ", keyword=" + keyword +
                 '}';
     }
