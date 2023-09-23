@@ -25,7 +25,7 @@ public class CategoryContorller {
 
 
     @PostMapping
-    public ResponseEntity<?> regist(CategoryDTO categoryDTO) {
+    public ResponseEntity<?> regist(@RequestBody CategoryDTO categoryDTO) {
 
         //중복검사
         List<Category> categoryList = categoryService.findCategoryByName(categoryDTO.getCategoryName());
