@@ -545,12 +545,25 @@ public class HobbyController {
 
         if (hobbies.size() == 0) {
             List<String> error = new ArrayList<>();
-            error.add("해당되는 취미가 없습니다.");
+            error.add(null);
             return ResponseEntity.status(404).body(error);
         }
 
         return ResponseEntity.ok().body(hobbies);
     }
+    @GetMapping("/category/size/{categoryCode}")
+    public ResponseEntity<?> categoryHobbysize(@PathVariable int categoryCode, final Pageable pageable) {
+        List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCode(categoryCode, pageable);
+
+        if (hobbies.size() == 0) {
+            List<String> error = new ArrayList<>();
+            error.add(null);
+            return ResponseEntity.status(404).body(error);
+        }
+
+        return ResponseEntity.ok().body(hobbies.size());
+    }
+
 
 
     //지역별 취미 조회
