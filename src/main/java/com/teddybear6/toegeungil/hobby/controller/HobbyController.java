@@ -81,15 +81,15 @@ public class HobbyController {
 
         if (Objects.isNull(userEntity)) {
             List<String> error = new ArrayList<>();
-            error.add("취미가 존재하지 않습니다.");
+            error.add("유저가 아닙니다.");
             return ResponseEntity.status(500).body(error);
         }
 
         List<HobbyGetDTO> hobbyList = hobbyService.findByTutorCode(pageable , userEntity.getUserNo() );
         if (hobbyList.size() == 0) {
             List<String> error = new ArrayList<>();
-            error.add("취미가 존재하지 않습니다.");
-            return ResponseEntity.status(500).body(error);
+
+            return ResponseEntity.status(500).body(hobbyList);
         }
         return ResponseEntity.ok().body(hobbyList);
 
