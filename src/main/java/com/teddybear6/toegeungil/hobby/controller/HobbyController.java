@@ -406,8 +406,7 @@ public class HobbyController {
 
         Hobby hobby = hobbyService.findById(hobbyCode);
 
-        System.out.println(hobbyCode);
-        System.out.println(hobbyReviewDTO.getUserNo());
+
         HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, userDetails.getUserEntity().getUserNo());
         System.out.println(hobbyJoin);
         if (Objects.isNull(hobby) || hobby.getClose().equals("N") || Objects.isNull(hobbyJoin)) {
