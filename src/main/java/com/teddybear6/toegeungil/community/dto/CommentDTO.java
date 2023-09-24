@@ -2,7 +2,7 @@ package com.teddybear6.toegeungil.community.dto;
 
 import com.teddybear6.toegeungil.community.entity.Comment;
 
-import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class CommentDTO {
