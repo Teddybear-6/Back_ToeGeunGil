@@ -1,9 +1,11 @@
 package com.teddybear6.toegeungil.hobby.repository;
 
+import com.teddybear6.toegeungil.hobby.dto.HobbyReviewDTO;
 import com.teddybear6.toegeungil.hobby.entity.Hobby;
 
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.net.ContentHandler;
@@ -19,4 +21,24 @@ public interface HobbyRepository extends JpaRepository<Hobby,Integer> {
     List<Hobby> findByLocalCode(int localCode, Pageable pageable);
 
     List<Hobby> findByCategoryCodeAndLocalCode(int categoryCode, int localCode, Pageable pageable);
+
+    List<Hobby> findByTutorCode(int userNo, Pageable pageable);
+
+    List<Hobby> findByTutorCode(int tutorCode);
+
+
+
+
+    List<Hobby> findAllByOrderByHobbyCodeDesc(Pageable pageable);
+
+
+
+    List<Hobby> findByTutorCodeOrderByHobbyCodeDesc(int userNo, Pageable pageable);
+
+
+
+
+    List<Hobby> findByHobbyTitleContaining(String name);
+
+    List<Hobby> findHobbyByHobbyTitleContaining(Pageable pageable, String name);
 }

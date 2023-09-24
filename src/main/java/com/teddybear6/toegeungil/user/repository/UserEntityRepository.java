@@ -7,4 +7,6 @@ public interface UserEntityRepository extends JpaRepository<UserEntity,Integer> 
     UserEntity findByUserEmail(String email);
     UserEntity findById(int userNo);
 
+
+
 }

@@ -9,7 +9,9 @@ import com.teddybear6.toegeungil.config.filter.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -65,11 +67,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), AUTH_KEY, jwtConfig))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), AUTH_KEY, authController))
                 .authorizeRequests()
+
                 .antMatchers("/member/**")
                 .hasAnyAuthority(UserRole.USER.getValue(), UserRole.ADMIN.getValue())
                 .antMatchers("/admin/**")
                 .hasAnyAuthority(UserRole.ADMIN.getValue())
-                .antMatchers("/**").permitAll()
+
+                .antMatchers("/**", "/**/**").permitAll()
                 .anyRequest().permitAll();
     }
 
