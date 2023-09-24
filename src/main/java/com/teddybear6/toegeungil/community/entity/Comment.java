@@ -1,11 +1,20 @@
 package com.teddybear6.toegeungil.community.entity;
 
 import com.teddybear6.toegeungil.community.dto.CommentDTO;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
+@DynamicInsert
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "comments")
 public class Comment {
 

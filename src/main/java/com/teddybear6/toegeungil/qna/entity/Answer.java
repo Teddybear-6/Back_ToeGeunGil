@@ -1,5 +1,8 @@
 package com.teddybear6.toegeungil.qna.entity;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -21,10 +24,13 @@ public class Answer {
     private String answerNick;                  //답변자 닉네임
 
     @Column(name = "ansDate")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
+    @CreatedDate
     private Date answerDate;                    //답변 생성일
 
     @Column(name = "ansDelete")
+    @Temporal(TemporalType.DATE)
+    @LastModifiedDate
     private Date answerDelete;                  //답변 삭제일
 
     @Column(name = "ansStatus")

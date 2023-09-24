@@ -8,11 +8,14 @@ import com.teddybear6.toegeungil.keyword.repository.KeywordRepository;
 import com.teddybear6.toegeungil.local.entity.Local;
 import com.teddybear6.toegeungil.local.repository.LocalRepository;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
+import com.teddybear6.toegeungil.social.dto.SocialImageDTO;
 import com.teddybear6.toegeungil.social.dto.SocialKeywordDTO;
 import com.teddybear6.toegeungil.social.entity.*;
 import com.teddybear6.toegeungil.social.repository.*;
 import com.teddybear6.toegeungil.common.utils.ImageUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,7 +58,7 @@ public class SocialService {
 
     public List<SocialDTO> readAllSocial() {
         //01_소셜 전체 조회(/social)
-        List<Social> socialList = socialRepository.findAll();
+        List<Social> socialList = socialRepository.findAll(Sort.by(Sort.Direction.DESC, "SocialNum")); //socialNum 기준 내림차순
         List<SocialDTO> socialDTOList = socialList.stream().map(m -> new SocialDTO(m)).collect(Collectors.toList());
 
         for (int i = 0; i < socialList.size(); i++) {
@@ -63,7 +66,7 @@ public class SocialService {
             List<SocialKeywordDTO> keywordDTOList = new ArrayList<>();
             for (int j = 0; j < socialList.get(i).getSocialKeywordList().size(); j++) {
                 keywordList.add(socialList.get(i).getSocialKeywordList().get(j).getKeyword());
-                keywordDTOList = keywordList.stream().map(m-> new SocialKeywordDTO(m)).collect(Collectors.toList());
+                keywordDTOList = keywordList.stream().map(m -> new SocialKeywordDTO(m)).collect(Collectors.toList());
             }
             socialDTOList.get(i).setKeywordDTOList(keywordDTOList);
         }
@@ -102,24 +105,20 @@ public class SocialService {
 
         //이미지 로직
         ResponseEntity res = ImageApi.singleImage(file);
-        System.out.println(res.getBody().toString());
         JSONParser parser = new JSONParser();
-        JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
-        System.out.println(jsonObject);
-        JSONObject fileInfo =  (JSONObject) jsonObject.get("fileInfo");
+        JSONObject jsonObject = (JSONObject) parser.parse(res.getBody().toString());
+        JSONObject fileInfo = (JSONObject) jsonObject.get("fileInfo");
 
         SocialImage image = new SocialImage();
         image.setSocialNum(findSocial.getSocialNum());
 
-        String originalname =  (String)fileInfo.get("originalname");
-        String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
+        String originalname = (String) fileInfo.get("originalname");
+        String path = ((String) fileInfo.get("path")).replace("uploads\\", "");
 
         image.setName(originalname);
         image.setPath(path);
 
         SocialImage findImage = socialImageRepository.save(image);
-        System.out.println(image);
-        System.out.println(findImage);
 
         if (Objects.isNull(findSocial)) {
             return 0; //result가 null일 경우 0 반환
@@ -129,55 +128,110 @@ public class SocialService {
     }
 
     @Transactional
-    public int updateSocialPostNum(Social findSocial, SocialDTO social) {
+    public int updateSocialPostNum(Social social, SocialDTO socialDTO, MultipartFile file, SocialImage socialImage) {
         //04_소셜 수정(/social{socialNum})
 
-        if (!Objects.isNull(social.getSocialName())) { //게시글 제목
+        if (!Objects.isNull(socialDTO.getSocialName())) { //게시글 제목
             //넘어온 값이 null이 아닐 경우(값이 입력되었을 경우)
-            findSocial.setSocialName(social.getSocialName());
+            social.setSocialName(socialDTO.getSocialName());
         }
-        if (!Objects.isNull(social.getSocialDate())) { //모임 일자
-            findSocial.setSocialDate(social.getSocialDate());
+        if (!Objects.isNull(socialDTO.getSocialDate())) { //모임 일자
+            social.setSocialDate(socialDTO.getSocialDate());
         }
-        if (social.getSocialFixedNum() > 0) { //모임 정원
+        if (socialDTO.getSocialFixedNum() > 0) { //모임 정원
             //넘어온 값이 0보다 클경우 (기본 값 0)
-            findSocial.setSocialFixedNum(social.getSocialFixedNum());
+            social.setSocialFixedNum(socialDTO.getSocialFixedNum());
         }
-        if (!Objects.isNull(social.getSocialStartTime())) { //모임 시작 시간
-            findSocial.setSocialStartTime(social.getSocialStartTime());
+        if (!Objects.isNull(socialDTO.getSocialStartTime())) { //모임 시작 시간
+            social.setSocialStartTime(socialDTO.getSocialStartTime());
         }
-        if (!Objects.isNull(social.getSocialEndTime())) { //모임 종료 시간
-            findSocial.setSocialEndTime(social.getSocialEndTime());
+        if (!Objects.isNull(socialDTO.getSocialEndTime())) { //모임 종료 시간
+            social.setSocialEndTime(socialDTO.getSocialEndTime());
         }
 //        if (social.getFileNum() > 0) { //사진 번호
 //            findSocial.setFileNum(social.getFileNum());
 //        }
-        if (social.getCategoryCode() > 0) { //카테고리 번호
-            findSocial.setCategoryCode(social.getCategoryCode());
+        if (socialDTO.getCategoryCode() > 0) { //카테고리 번호
+            social.setCategoryCode(socialDTO.getCategoryCode());
         }
 //        if (social.getKeywordCode() > 0) { //키워드 번호
 //            findSocial.setKeywordCode(social.getKeywordCode());
 //        }
-        if (social.getLocalCode() > 0) { //지역 번호
-            findSocial.setLocalCode(social.getLocalCode());
+        if (socialDTO.getLocalCode() > 0) { //지역 번호
+            social.setLocalCode(socialDTO.getLocalCode());
         }
-        if (!Objects.isNull(social.getLocalDetails())) { //지역 상세
-            findSocial.setLocalDetails(social.getLocalDetails());
+        if (!Objects.isNull(socialDTO.getLocalDetails())) { //지역 상세
+            social.setLocalDetails(socialDTO.getLocalDetails());
         }
-        if (!Objects.isNull(social.getSocialIntro())) { //모임 소개
-            findSocial.setSocialIntro(social.getSocialIntro());
+        if (!Objects.isNull(socialDTO.getSocialIntro())) { //모임 소개
+            social.setSocialIntro(socialDTO.getSocialIntro());
         }
-        if (!Objects.isNull(social.getSocialOther())) { //모임 기타 사항
-            findSocial.setSocialOther(social.getSocialOther());
+        if (!Objects.isNull(socialDTO.getSocialOther())) { //모임 기타 사항
+            social.setSocialOther(socialDTO.getSocialOther());
         }
-        if (!Objects.isNull(social.getPostModiDate())) { //게시글 수정일
-            findSocial.setPostModiDate(new Date());
+        if (!Objects.isNull(socialDTO.getPostModiDate())) { //게시글 수정일
+            social.setPostModiDate(new Date());
         }
-        if (!Objects.isNull(social.getSocialState())) { //게시글 상태
-            findSocial.setSocialState(social.getSocialState());
+        if (!Objects.isNull(socialDTO.getSocialState())) { //게시글 상태
+            social.setSocialState(socialDTO.getSocialState());
         }
 
-        Social result = socialRepository.save(findSocial);
+        //기존 키워드 값 삭제
+        System.out.println("social 기존 값 : " + social.getSocialKeywordList());
+        social.getSocialKeywordList().stream().forEach(socialKeyword -> {
+            socialKeywordRepository.delete(socialKeyword);
+        });
+        social.getSocialKeywordList().clear();
+        socialKeywordRepository.deleteAllInBatch(social.getSocialKeywordList());
+        System.out.println("social 기존 값 삭제 후 : " + social.getSocialKeywordList());
+        socialKeywordRepository.flush();
+
+        //키워드 다시 새로 담아주기
+        List<SocialKeywordDTO> keyword = socialDTO.getKeywordDTOList();
+        List<SocialKeyword> keywordList = new ArrayList<>(); //null
+        for (int i = 0; i < keyword.size(); i++) {
+            //keywordRepository의 findById 사용하기
+            //엔티티에서 keywordNum 컬럼 삭제하기
+            Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
+            keywordList.add(new SocialKeyword(new SocialKeywordPK(social.getSocialNum(), findKeyword.getKeywordCode()), social, findKeyword));
+        }
+        social.setSocialKeywordList(keywordList);
+        System.out.println("담긴 키워드 확인 : " + social.getSocialKeywordList());
+        System.out.println("DTO 값도 다시 확인 : " + socialDTO.getKeywordDTOList());
+
+        if (file != null) {
+            //기존 사진 값 삭제
+            int socialNum = social.getSocialNum(); //사진 번호 가져오기
+            SocialImage img = socialImageRepository.findBySocialNum(socialNum);
+            try {
+                if (!Objects.isNull(img) ){
+                    socialImageRepository.delete(img);
+
+
+                    ResponseEntity res = ImageApi.singleImage(file);
+                    JSONParser parser = new JSONParser();
+                    JSONObject jsonObject = (JSONObject)  parser.parse(res.getBody().toString());
+                    JSONObject fileInfo =  (JSONObject) jsonObject.get("fileInfo");
+
+                    SocialImage image = new SocialImage();
+                    image.setSocialNum(socialNum);
+
+                    String originalname =  (String)fileInfo.get("originalname");
+                    String path =  ((String)fileInfo.get("path")).replace("uploads\\","");
+
+                    image.setName(originalname);
+                    image.setPath(path);
+
+                    SocialImage findImage = socialImageRepository.save(image);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        Social result = socialRepository.save(social);
         if (Objects.isNull(result)) {
             return 0;
         } else {
@@ -218,7 +272,6 @@ public class SocialService {
         return null;
     }
 
-    
 
     public byte[] downloadSocialImage(String imageName) {
         //11_사진 다운로드(보여주기)
@@ -269,10 +322,10 @@ public class SocialService {
         //21_소셜 참여가 이미 되어있는 경우, 모임 참여 삭제
         participateRepository.delete(findParticipate);
 
-        Participate participate = participateRepository.findBySocialNumAndUserNum(findParticipate.getSocialNum(),findParticipate.getUserNum());
-        if(Objects.isNull(participate)){
+        Participate participate = participateRepository.findBySocialNumAndUserNum(findParticipate.getSocialNum(), findParticipate.getUserNum());
+        if (Objects.isNull(participate)) {
             return 1;
-        }else {
+        } else {
             return 0;
         }
     }
@@ -348,4 +401,14 @@ public class SocialService {
         return socialImage;
     }
 
+    public int deleteScoailPostNum(Social social) {
+        social.setSocialState("N");
+        socialRepository.save(social);
+
+        if (social.getSocialState().equals("N")) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }

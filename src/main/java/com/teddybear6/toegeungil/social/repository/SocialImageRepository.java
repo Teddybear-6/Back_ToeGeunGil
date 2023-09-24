@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SocialImageRepository extends JpaRepository<SocialImage, Integer> {
     SocialImage findBySocialNum(int socialNum);
+
+    SocialImage deleteBySocialNum(int socialNum);
 }

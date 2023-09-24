@@ -1,15 +1,10 @@
 package com.teddybear6.toegeungil.user.repository;
 
 
-import com.teddybear6.toegeungil.auth.vo.UserRole;
 import com.teddybear6.toegeungil.user.entity.UserEntity;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Repository
 public class UserRepository {
@@ -28,8 +23,5 @@ public class UserRepository {
         UserEntity userEntity = userEntityRepository.findByUserEmail(email);
         return userEntity;
     }
-
-
-
 
 }

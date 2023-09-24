@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,8 +54,10 @@ public class CommentService {
         comment.setCommentDetail(commentDTO.getCommentDetail());
         comment.setCommentWriteDate(new Date());
 
+
         Comment savedComment = commentRepository.save(comment);
 
+        System.out.println(savedComment);
         if(savedComment != null){
             return 1;
         }else {
@@ -73,7 +78,9 @@ public class CommentService {
         comment.setCommentDetail(commentDTO.getCommentDetail());
         comment.setCommentUpdateDate(new Date());
 
+
         Comment updateComment = commentRepository.save(comment);
+
 
         if (updateComment != null){
             return 1;
