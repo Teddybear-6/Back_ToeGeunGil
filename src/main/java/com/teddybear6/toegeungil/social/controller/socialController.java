@@ -280,6 +280,17 @@ public class socialController {
         }
     }
 
+    @GetMapping("/participate/{socialNum}/{userNum}")
+    public ResponseEntity<?> SocialParticipateRead(@PathVariable int socialNum, ParticipateDTO participateDTO, @PathVariable int userNum) {
+        Participate findSocialParticipateRegistration = socialService.findSocialParticipateRegistration(participateDTO.getSocialNum(), participateDTO.getUserNum());
+
+        if (Objects.isNull(findSocialParticipateRegistration)) {
+            return ResponseEntity.ok().body(false);
+        } else {
+            return ResponseEntity.ok().body(true);
+        }
+    }
+
 
     /*
     필터*/
