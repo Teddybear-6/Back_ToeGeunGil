@@ -34,4 +34,11 @@ public interface HobbyRepository extends JpaRepository<Hobby,Integer> {
 
 
     List<Hobby> findByTutorCodeOrderByHobbyCodeDesc(int userNo, Pageable pageable);
+
+
+
+
+    List<Hobby> findByHobbyTitleContaining(String name);
+
+    List<Hobby> findHobbyByHobbyTitleContaining(Pageable pageable, String name);
 }

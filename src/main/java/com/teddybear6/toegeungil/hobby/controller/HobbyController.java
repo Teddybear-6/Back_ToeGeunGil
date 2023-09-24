@@ -603,6 +603,28 @@ public class HobbyController {
         }
         return ResponseEntity.ok().body(hobbies);
     }
+    @GetMapping("/search")
+    public ResponseEntity<List<?>> hobbyfindsearch(final Pageable pageable,  @RequestParam(name="hobbytitle")  String hobbyTitle) {
 
+        System.out.println(hobbyTitle+"확인");
+        List<HobbyGetDTO> hobbyList = hobbyService.findHobbyTitleContatining(pageable ,hobbyTitle);
+        if (hobbyList.size() == 0) {
+            List<String> error = new ArrayList<>();
+            error.add(null);
+            return ResponseEntity.status(500).body(error);
+        }
+        return ResponseEntity.ok().body(hobbyList);
+    }
+
+    @GetMapping("/search/size")
+    public ResponseEntity<?> hobbyfindsearchSize(@RequestParam(name="hobbytitle") String hobbyTitle) {
+        List<Hobby> hobbyList = hobbyService.findByHobbyTitleContatining(hobbyTitle);
+        if (hobbyList.size() == 0) {
+            List<String> error = new ArrayList<>();
+            error.add(null);
+            return ResponseEntity.status(500).body(error);
+        }
+        return ResponseEntity.ok().body(hobbyList.size());
+    }
 
 }
