@@ -1,16 +1,19 @@
 package com.teddybear6.toegeungil.local.controller;
 
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
 import com.teddybear6.toegeungil.category.dto.CategoryDTO;
 import com.teddybear6.toegeungil.local.dto.LocalDTO;
 import com.teddybear6.toegeungil.local.entity.Local;
 import com.teddybear6.toegeungil.local.service.LocalService;
+import com.teddybear6.toegeungil.user.entity.UserEntity;
+import com.teddybear6.toegeungil.user.sevice.UserViewService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -19,9 +22,11 @@ import java.util.stream.Collectors;
 public class LocalController {
 
     private final LocalService  localService;
+    private final UserViewService userViewService;
 
-    public LocalController(LocalService localService) {
+    public LocalController(LocalService localService, UserViewService userViewService) {
         this.localService = localService;
+        this.userViewService = userViewService;
     }
 
     @GetMapping
@@ -41,7 +46,16 @@ public class LocalController {
     }
 
     @PostMapping
-    public ResponseEntity<?> registLocal(LocalDTO localDTO){
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> registLocal(@AuthenticationPrincipal AuthUserDetail userDetails,@RequestBody LocalDTO localDTO){
+        System.out.println(userDetails);
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
+
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "관리자가 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
 
         Local local = new Local(localDTO);
         List<Local> findlocal = localService.findByName(localDTO.getLocalName());
@@ -61,6 +75,7 @@ public class LocalController {
 
     @GetMapping("/{localCode}")
     public ResponseEntity<Object> findLocalByCode(@PathVariable int localCode){
+
         Local local = localService.findById(localCode);
 
         if(Objects.isNull(local)){
@@ -73,7 +88,17 @@ public class LocalController {
 
 
     @PutMapping("/{localCode}")
-    public ResponseEntity<?>  updateLocal(@PathVariable int localCode, @RequestBody LocalDTO localDTO){
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?>  updateLocal(@AuthenticationPrincipal AuthUserDetail userDetails,@PathVariable int localCode, @RequestBody LocalDTO localDTO){
+        System.out.println(userDetails);
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
+
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "관리자가 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
+
         Local local = localService.findById(localCode);
 
         if(Objects.isNull(local)){
@@ -92,7 +117,16 @@ public class LocalController {
 
 
     @DeleteMapping("/{localCode}")
-    public ResponseEntity<?> deleteLocal(@PathVariable int localCode){
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> deleteLocal(@AuthenticationPrincipal AuthUserDetail userDetails,@PathVariable int localCode){
+        System.out.println(userDetails);
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
+
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "관리자가 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
 
         Local local = localService.findById(localCode);
         if(Objects.isNull(local)){
