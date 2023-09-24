@@ -2,12 +2,15 @@ package com.teddybear6.toegeungil.auth.service;
 
 import com.teddybear6.toegeungil.auth.controller.AuthController;
 import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
+import com.teddybear6.toegeungil.auth.dto.LoginDTO;
 import com.teddybear6.toegeungil.user.entity.UserEntity;
 import com.teddybear6.toegeungil.user.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 public class AuthUserDetailService implements UserDetailsService {
@@ -25,6 +28,7 @@ public class AuthUserDetailService implements UserDetailsService {
         UserEntity findUser  =userRepository.findUserEmail(username);
         System.out.println(findUser);
         return new AuthUserDetail(findUser);
+
     }
 
 
