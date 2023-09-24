@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.social.controller;
 
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
 import com.teddybear6.toegeungil.category.entity.Category;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.local.entity.Local;
@@ -11,9 +12,14 @@ import com.teddybear6.toegeungil.social.entity.Participate;
 import com.teddybear6.toegeungil.social.entity.Social;
 import com.teddybear6.toegeungil.social.entity.SocialImage;
 import com.teddybear6.toegeungil.social.service.SocialService;
+import com.teddybear6.toegeungil.user.entity.UserEntity;
+import com.teddybear6.toegeungil.user.sevice.UserViewService;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,9 +57,11 @@ public class socialController {
     - 사진파일(File) */
 
     private final SocialService socialService;
+    private final UserViewService userViewService;
 
-    public socialController(SocialService socialService) {
+    public socialController(SocialService socialService, UserViewService userViewService) {
         this.socialService = socialService;
+        this.userViewService = userViewService;
     }
 
     /*
@@ -72,8 +80,8 @@ public class socialController {
     }
 
     @GetMapping //01_소셜 전체 조회(/social)
-    public ResponseEntity<List<?>> readAllSocial() {
-        List<SocialDTO> socialList = socialService.readAllSocial();
+    public ResponseEntity<List<?>> readAllSocial(final Pageable pageable) {
+        List<SocialDTO> socialList = socialService.readAllSocial(pageable);
 
         if (socialList.size() <= 0) {
             return ResponseEntity.status(404).body((Collections.singletonList("error")));
@@ -103,13 +111,22 @@ public class socialController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @PostMapping //03_소셜 등록(/social)
-    public ResponseEntity<?> SocialPostRegistration(@RequestPart("social") SocialDTO socialDTO, @RequestPart("image") MultipartFile file) { //@RequestBody -> Json으로 넘기기위해 필요한 친구
+    public ResponseEntity<?> SocialPostRegistration(@RequestPart("social") SocialDTO socialDTO, @RequestPart("image") MultipartFile file, @AuthenticationPrincipal AuthUserDetail userDetails) { //@RequestBody -> Json으로 넘기기위해 필요한 친구
 
-        socialDTO.setPostRegDate(new Date()); //게시글 등록일
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "회원이 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
 
         int result = 0;
+
         try {
+            socialDTO.setPostRegDate(new Date()); //게시글 등록일
+            socialDTO.setUserNum(userEntity.getUserNo());
             result = socialService.SocialPostRegistration(socialDTO, file);
         } catch (IOException e) {
             e.printStackTrace();
@@ -125,6 +142,7 @@ public class socialController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @PutMapping //04_소셜 수정(/social{socialNum})
     public ResponseEntity<?> updateSocialPostNum(@RequestPart("social") SocialDTO socialDTO, @RequestPart(value = "image", required = false) MultipartFile file, SocialImage socialImage) {
         /*
@@ -152,6 +170,7 @@ public class socialController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @DeleteMapping("/{socialNum}")
     public ResponseEntity<?> deleteScoailPostNum(@PathVariable int socialNum) {
 
@@ -238,8 +257,8 @@ public class socialController {
         return ResponseEntity.ok().body(participateList);
     }
 
-    @PostMapping("/participate/{socialNum}") //21_소셜 참여(/participate)
-    public ResponseEntity<?> SocialParticipateRegistration(@PathVariable int socialNum, ParticipateDTO participateDTO) {
+    @PostMapping("/participate/{socialNum}/{userNum}") //21_소셜 참여(/participate)
+    public ResponseEntity<?> SocialParticipateRegistration(@PathVariable int socialNum, ParticipateDTO participateDTO, @PathVariable int userNum) {
         //참여하기(게시글번호 AND 회원번호)가 존재하는지 확인하기
         Participate findSocialParticipateRegistration = socialService.findSocialParticipateRegistration(participateDTO.getSocialNum(), participateDTO.getUserNum());
         if (!Objects.isNull(findSocialParticipateRegistration)) {
@@ -249,7 +268,7 @@ public class socialController {
         } else {
             //참여가 등록되어있지 않을 경우, 참여 등록
             Participate participate = new Participate(participateDTO); //setter를 생성해주지 않으면 값이 안넘어옴...왜지?
-            participate.socialNum(socialNum).builder();
+            participate.socialNum(socialNum).userNum(userNum).builder();
 
             int result = socialService.SocialParticipateRegistration(participate);
             if (result == 0) {
@@ -261,17 +280,34 @@ public class socialController {
         }
     }
 
+    @GetMapping("/participate/{socialNum}/{userNum}")
+    public ResponseEntity<?> SocialParticipateRead(@PathVariable int socialNum, ParticipateDTO participateDTO, @PathVariable int userNum) {
+        Participate findSocialParticipateRegistration = socialService.findSocialParticipateRegistration(participateDTO.getSocialNum(), participateDTO.getUserNum());
+
+        if (Objects.isNull(findSocialParticipateRegistration)) {
+            return ResponseEntity.ok().body(false);
+        } else {
+            return ResponseEntity.ok().body(true);
+        }
+    }
+
 
     /*
     필터*/
     @GetMapping("/category/{categoryCode}") //30_카테고리 코드 필터
-    public ResponseEntity<List<?>> readSocialPostCategory(@PathVariable int categoryCode) {
+    public ResponseEntity<List<?>> readSocialPostCategory(@PathVariable int categoryCode, final Pageable pageable) {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
         //받아온 카테고리 코드로 해당 게시글 리스트로 받아오기
         List<Social> socialList = socialService.readSocialPostWhereCategoryCode(categoryCode);
 
         return ResponseEntity.ok().body(socialList);
+    }
+
+    @GetMapping("/category/{categoryCode}/size") //30_1_카테고리 사이즈 필터
+    public ResponseEntity<?> readSocialPostCategorySize(@PathVariable int categoryCode, final Pageable pageable) {
+
+        return ResponseEntity.ok().body("");
     }
 
     @GetMapping("local/{localCode}") //31_지역 코드 필터
@@ -298,6 +334,14 @@ public class socialController {
         System.out.println("controller : " + social);
 
         return ResponseEntity.ok().body(social);
+    }
+
+    /*
+    페이징*/
+    @GetMapping("/size")
+    public ResponseEntity<?> socialSize() {
+        List<Social> socialList = socialService.readAllSocialSize();
+        return ResponseEntity.ok().body(socialList.size());
     }
 
 }

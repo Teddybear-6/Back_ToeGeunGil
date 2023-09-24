@@ -40,7 +40,7 @@ public class QuestionController {
         return ResponseEntity.ok().body(questionList);
     }
     @PostMapping("/regist")
-    public ResponseEntity<?> regist(Question question){
+    public ResponseEntity<?> regist(@RequestBody Question question){
         System.out.println("cnt " + question);
         int result = qnaService.registQuestion(question);
 
