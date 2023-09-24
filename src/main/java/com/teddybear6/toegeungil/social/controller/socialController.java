@@ -295,13 +295,19 @@ public class socialController {
     /*
     필터*/
     @GetMapping("/category/{categoryCode}") //30_카테고리 코드 필터
-    public ResponseEntity<List<?>> readSocialPostCategory(@PathVariable int categoryCode) {
+    public ResponseEntity<List<?>> readSocialPostCategory(@PathVariable int categoryCode, final Pageable pageable) {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
         //받아온 카테고리 코드로 해당 게시글 리스트로 받아오기
         List<Social> socialList = socialService.readSocialPostWhereCategoryCode(categoryCode);
 
         return ResponseEntity.ok().body(socialList);
+    }
+
+    @GetMapping("/category/{categoryCode}/size") //30_1_카테고리 사이즈 필터
+    public ResponseEntity<?> readSocialPostCategorySize(@PathVariable int categoryCode, final Pageable pageable) {
+
+        return ResponseEntity.ok().body("");
     }
 
     @GetMapping("local/{localCode}") //31_지역 코드 필터
