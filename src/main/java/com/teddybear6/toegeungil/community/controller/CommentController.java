@@ -36,12 +36,13 @@ public class CommentController {
             error.add("해당 게시글에 댓글이 존재하지 않습니다.");
             return ResponseEntity.status(404).body(error);
         }
-
         return ResponseEntity.ok().body(commentDTOList);
     }
     @PostMapping("/comments/{communityNum}")
     @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     public ResponseEntity<?> registCommentForCommunity(@PathVariable int communityNum, @RequestBody CommentDTO commentDTO){
+
+        commentDTO.setCommentWriteDate(new Date());
 
         int result = 0;
         System.out.println(commentDTO);

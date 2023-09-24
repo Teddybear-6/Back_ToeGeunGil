@@ -38,16 +38,16 @@ public class Comment {
     @Column(name = "comment_detail", nullable = false)
     private String commentDetail; // comment 내용
     @Column(name = "comment_write_date")
-    @CreatedDate
-    private LocalDateTime commentWriteDate; // comment 날짜
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date commentWriteDate; // comment 날짜
     @Column(name = "comment_update_date")
-    @UpdateTimestamp
-    private LocalDateTime commentUpdateDate; // comment 수정 날짜
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date commentUpdateDate; // comment 수정 날짜
 
     public Comment() {
     }
 
-    public Comment(int commentNum, int userNum, int communityNum, String commentDetail, LocalDateTime commentWriteDate, LocalDateTime commentUpdateDate) {
+    public Comment(int commentNum, int userNum, int communityNum, String commentDetail, Date commentWriteDate, Date commentUpdateDate) {
         this.commentNum = commentNum;
         this.userNum = userNum;
         this.communityNum = communityNum;
@@ -61,6 +61,8 @@ public class Comment {
         this.userNum = commentDTO.getUserNum();
         this.communityNum = commentDTO.getCommunityNum();
         this.commentDetail = commentDTO.getCommentDetail();
+        this.commentWriteDate = commentDTO.getCommentWriteDate();
+        this.commentUpdateDate = commentDTO.getCommentUpdateDate();
     }
 
     public int getCommentNum() {
@@ -95,19 +97,19 @@ public class Comment {
         this.commentDetail = commentDetail;
     }
 
-    public LocalDateTime getCommentWriteDate() {
+    public Date getCommentWriteDate() {
         return commentWriteDate;
     }
 
-    public void setCommentWriteDate(LocalDateTime commentWriteDate) {
+    public void setCommentWriteDate(Date commentWriteDate) {
         this.commentWriteDate = commentWriteDate;
     }
 
-    public LocalDateTime getCommentUpdateDate() {
+    public Date getCommentUpdateDate() {
         return commentUpdateDate;
     }
 
-    public void setCommentUpdateDate(LocalDateTime commentUpdateDate) {
+    public void setCommentUpdateDate(Date commentUpdateDate) {
         this.commentUpdateDate = commentUpdateDate;
     }
 

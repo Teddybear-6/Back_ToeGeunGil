@@ -52,6 +52,8 @@ public class CommentService {
         comment.setUserNum(commentDTO.getUserNum());
         comment.setCommunityNum(communityNum);
         comment.setCommentDetail(commentDTO.getCommentDetail());
+        comment.setCommentWriteDate(new Date());
+
 
         Comment savedComment = commentRepository.save(comment);
 
@@ -74,8 +76,11 @@ public class CommentService {
         }
 
         comment.setCommentDetail(commentDTO.getCommentDetail());
+        comment.setCommentUpdateDate(new Date());
+
 
         Comment updateComment = commentRepository.save(comment);
+
 
         if (updateComment != null){
             return 1;
