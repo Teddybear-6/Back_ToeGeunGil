@@ -92,7 +92,6 @@ public class KeywordController {
     @DeleteMapping("/{keywordCode}")
     public ResponseEntity<?> deleteKeyword(@PathVariable int keywordCode){
         Keyword keyword = keywordService.findById(keywordCode);
-        System.out.println(keyword);
         if(Objects.isNull(keyword)){
             return ResponseEntity.status(404).body("존재하지 않는 키워드 입니다.");
         }

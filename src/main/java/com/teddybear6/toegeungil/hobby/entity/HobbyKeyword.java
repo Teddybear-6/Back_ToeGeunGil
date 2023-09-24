@@ -1,8 +1,11 @@
 package com.teddybear6.toegeungil.hobby.entity;
 
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity(name = "hobby_category")
 @Table(name="hobby_keyword_mapping")
@@ -61,5 +64,18 @@ public class HobbyKeyword {
         return "HobbyKeyword{" +
                 ", keyword=" + keyword +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HobbyKeyword keyword1 = (HobbyKeyword) o;
+        return Objects.equals(hobbyPk, keyword1.hobbyPk) && Objects.equals(hobby, keyword1.hobby) && Objects.equals(keyword, keyword1.keyword);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hobbyPk, hobby, keyword);
     }
 }
