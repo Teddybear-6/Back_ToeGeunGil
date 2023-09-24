@@ -77,7 +77,6 @@ public class CategoryContorller {
 
     @PutMapping("/{categoryCode}")
     public ResponseEntity<?> updateCategory(@PathVariable int categoryCode, @RequestBody CategoryDTO categoryDTO) {
-        System.out.println(categoryDTO);
         Category findcategory = categoryService.findCategoryByCode(categoryCode);
 
         if (Objects.isNull(findcategory)) {
