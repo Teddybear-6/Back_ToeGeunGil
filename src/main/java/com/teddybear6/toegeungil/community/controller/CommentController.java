@@ -1,14 +1,18 @@
 package com.teddybear6.toegeungil.community.controller;
 
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
 import com.teddybear6.toegeungil.community.dto.CommentDTO;
 import com.teddybear6.toegeungil.community.entity.Comment;
 import com.teddybear6.toegeungil.community.service.CommentService;
+import com.teddybear6.toegeungil.user.entity.UserEntity;
+import com.teddybear6.toegeungil.user.sevice.UserViewService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/communitys")
@@ -16,9 +20,11 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
+    private final UserViewService userViewService;
 
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentService commentService, UserViewService userViewService) {
         this.commentService = commentService;
+        this.userViewService = userViewService;
     }
 
     @GetMapping("/comments/{communityNum}")
@@ -30,14 +36,16 @@ public class CommentController {
             error.add("해당 게시글에 댓글이 존재하지 않습니다.");
             return ResponseEntity.status(404).body(error);
         }
-
         return ResponseEntity.ok().body(commentDTOList);
     }
     @PostMapping("/comments/{communityNum}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     public ResponseEntity<?> registCommentForCommunity(@PathVariable int communityNum, @RequestBody CommentDTO commentDTO){
 
-        int result = 0;
+        commentDTO.setCommentWriteDate(new Date());
 
+        int result = 0;
+        System.out.println(commentDTO);
         try {
             result = commentService.registCommentForCommunity(communityNum, commentDTO);
         }catch (IOException e){
@@ -51,10 +59,13 @@ public class CommentController {
             return ResponseEntity.status(500).body("댓글 등록에 실패하였습니다.");
         }
     }
-    @PutMapping("/comments/{communityNum}")
-    public ResponseEntity<?> updateComment(@PathVariable int communityNum, @PathVariable int commentNum, @RequestBody CommentDTO commentDTO){
+    @PutMapping("/comments/{communityNum}/{commentNum}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
+    public ResponseEntity<?> updateComment(@PathVariable int communityNum, @PathVariable int commentNum, @RequestBody CommentDTO commentDTO, @AuthenticationPrincipal AuthUserDetail userDetail){
 
         int result = commentService.updateCommentByCommunity(communityNum, commentNum, commentDTO);
+
+
 
         if(result == 1){
             return ResponseEntity.ok().body("댓글 수정에 성공하였습니다.");
@@ -65,7 +76,7 @@ public class CommentController {
         }
     }
 
-    @DeleteMapping("/comments/{communityNum}")
+    @DeleteMapping("/comments/{communityNum}/{commentNum}")
     public ResponseEntity<?> deleteComment(@PathVariable int communityNum, @PathVariable int commentNum){
 
         int result = commentService.deleteCommentByCommunity(communityNum, commentNum);

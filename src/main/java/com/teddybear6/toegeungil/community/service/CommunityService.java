@@ -13,10 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class CommunityService {
@@ -33,31 +35,41 @@ public class CommunityService {
     }
 
     // 커뮤니티 전체 조회하기
-    public List<Community> findAllCommunity() {
-
+    public List<CommunityDTO> findAllCommunity() {
         List<Community> communityList = communityRepository.findAll();
+        List<CommunityDTO> communityDTOList = communityList.stream().map(m -> new CommunityDTO(m)).collect(Collectors.toList());
 
-        return communityList;
+        for (int i=0; i < communityList.size(); i++){
+            List<Keyword> keywordList = new ArrayList<>();
+            List<CommunityKeywordDTO> keywordDTOList = new ArrayList<>();
+            for (int j=0; j < communityList.get(i).getCommunityKeywordList().size(); j++){
+                keywordList.add(communityList.get(i).getCommunityKeywordList().get(j).getKeyword());
+                keywordDTOList = keywordList.stream().map(m -> new CommunityKeywordDTO(m)).collect(Collectors.toList());
+            }
+            communityDTOList.get(i).setCommunityKeywordDTOList(keywordDTOList);
+        }
+        System.out.println(communityDTOList);
+        return communityDTOList;
     }
 
-    // 커뮤니티 글 찾기 (커뮤니티 번호로)
+    // 커뮤니티 번호로 부분 조회
     public Community findByCommunityCode(int communityNum) {
         Community community = communityRepository.findById(communityNum);
+
         return community;
     }
     @Transactional
     public int registCommunity(CommunityDTO communityDTO) throws IOException {
-        System.out.println("ddddd");
         Community community = new Community(communityDTO);
         List<CommunityKeywordDTO> keyword = communityDTO.getCommunityKeywordDTOList();
         List<CommunityKeyword> communityKeywordList = new ArrayList<>();
-        System.out.println(keyword.size());
-        for(int i = 0; i < keyword.size(); i++){
 
+        for(int i = 0; i < keyword.size(); i++){
+            System.out.println(keyword.get(i));
             Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
             communityKeywordList.add(new CommunityKeyword(new CommunityPK(community.getCommunityNum(), findKeyword.getKeywordCode()), community, findKeyword));
         }
-        System.out.println(communityKeywordList);
+
         community.setCommunityKeywordList(communityKeywordList);
 
         community.setPostWriteDate(new Date());
@@ -75,29 +87,45 @@ public class CommunityService {
     // 커뮤니티 글 수정하기
     @Transactional
     public int communityUpdate(Community findCommunity, CommunityDTO communityDTO) {
-
-        // 업데이트할 community 게시글이 있는지 확인한다.
-        if(findCommunity == null){
+        // 업데이트할 community 게시글이 있는지 확인하기
+        if (findCommunity == null) {
             return 0;
         }
 
-        // 매개 변수의 값으로 기존 커뮤니티의 필드를 업데이트한다.
+        // 매개 변수의 값으로 기존 커뮤니티의 필드를 업데이트하기
         findCommunity.setCommunityTitle(communityDTO.getCommunityTitle());
         findCommunity.setCommunityIntro(communityDTO.getCommunityIntro());
-        findCommunity.setCategoryNum(communityDTO.getCategoryNum());
-        findCommunity.setLocationNum(communityDTO.getLocationNum());
+        findCommunity.setCategoryCode(communityDTO.getCategoryCode());
+        findCommunity.setLocalCode(communityDTO.getLocalCode());
         findCommunity.setCommunityStatus(communityDTO.getCommunityStatus());
-        findCommunity.setPostUpdateDate(new Date()); // 수정 날짜 업데이트
+        findCommunity.setPostUpdateDate(new Date());
+
+        findCommunity.getCommunityKeywordList().stream().forEach(communityKeyword -> {
+            communityKeywordRepository.delete(communityKeyword);
+        });
+        findCommunity.getCommunityKeywordList().clear();
+        communityKeywordRepository.deleteAllInBatch(findCommunity.getCommunityKeywordList());
+        communityKeywordRepository.flush();
+
+        // CommunityKeywordList 업데이트하기
+        List<CommunityKeywordDTO> keyword = communityDTO.getCommunityKeywordDTOList();
+        List<CommunityKeyword> keywordList = new ArrayList<>();
+        for (int i=0; i < keyword.size(); i++){
+            Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
+            keywordList.add(new CommunityKeyword(new CommunityPK(findCommunity.getCommunityNum(), findKeyword.getKeywordCode()), findCommunity, findKeyword));
+        }
+        findCommunity.setCommunityKeywordList(keywordList);
 
         // update된 community를 entity에 저장
         Community updateCommunity = communityRepository.save(findCommunity);
 
-        if(updateCommunity != null) {
+        if (updateCommunity != null) {
             return 1;
-        } else{
+        } else {
             return 0;
         }
     }
+
 
     // 커뮤니티 글 삭제하기
     @Transactional
@@ -114,16 +142,16 @@ public class CommunityService {
     }
 
     //커뮤니티 검색 필터 (지역, 카테고리로 조회하기)
-    public List<CommunityDTO> CommunityListFilters(Integer categoryNum, Integer locationNum) {
+    public List<CommunityDTO> CommunityListFilters(Integer categoryCode, Integer localCode) {
 
         List<CommunityDTO> communityList = new ArrayList<>();
 
-        if (categoryNum != null && locationNum != null){
-            communityList = communityRepository.findByCategoryNumAndLocationNum(categoryNum, locationNum);
-        } else if (categoryNum != null) {
-            communityList = communityRepository.findByCategoryNum(categoryNum);
-        } else if(locationNum != null) {
-            communityList = communityRepository.findByLocationNum(locationNum);
+        if (categoryCode != null && localCode != null){
+            communityList = communityRepository.findByCategoryCodeAndLocalCode(categoryCode, localCode);
+        } else if (categoryCode != null) {
+            communityList = communityRepository.findByCategoryCode(categoryCode);
+        } else if(localCode != null) {
+            communityList = communityRepository.findByLocalCode(localCode);
         }
 
         return communityList;

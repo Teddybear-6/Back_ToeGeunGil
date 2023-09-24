@@ -1,16 +1,19 @@
 package com.teddybear6.toegeungil.community.dto;
 
-public class CommunityKeywordDTO {
+import com.teddybear6.toegeungil.keyword.entity.Keyword;
 
+public class CommunityKeywordDTO {
     private int keywordCode;
-    private String keywordName;
 
     public CommunityKeywordDTO() {
     }
 
-    public CommunityKeywordDTO(int keywordCode, String keywordName) {
+    public CommunityKeywordDTO(Keyword keyword) {
+        this.keywordCode = keyword.getKeywordCode();
+    }
+
+    public CommunityKeywordDTO(int keywordCode) {
         this.keywordCode = keywordCode;
-        this.keywordName = keywordName;
     }
 
     public int getKeywordCode() {
@@ -21,19 +24,10 @@ public class CommunityKeywordDTO {
         this.keywordCode = keywordCode;
     }
 
-    public String getKeywordName() {
-        return keywordName;
-    }
-
-    public void setKeywordName(String keywordName) {
-        this.keywordName = keywordName;
-    }
-
     @Override
     public String toString() {
         return "CommunityKeywordDTO{" +
-                "keywordNum=" + keywordCode +
-                ", keywordName='" + keywordName + '\'' +
+                "keywordCode=" + keywordCode +
                 '}';
     }
 }

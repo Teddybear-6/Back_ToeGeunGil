@@ -21,14 +21,14 @@ public class Community {
     private String communityTitle;
     @Column(name = "community_intro", nullable = false) // 커뮤니티 소개
     private String communityIntro;
-    @Column(name = "category_num", nullable = false) // 카테고리 번호
-    private int categoryNum;
+    @Column(name = "category_code", nullable = false) // 카테고리 번호
+    private int categoryCode;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "community")
     private List<CommunityKeyword> communityKeywordList;
 
-    @Column(name = "location_num", nullable = false) // 지역 번호
-    private int locationNum;
+    @Column(name = "local_code", nullable = false) // 지역 번호
+    private int localCode;
     @Column(name = "community_status") // 커뮤니티 상태
     private String communityStatus;
     @Column(name = "post_write_date") // 커뮤니티 작성일
@@ -41,14 +41,14 @@ public class Community {
     public Community() {
     }
 
-    public Community(int communityNum, Integer userNum, String communityTitle, String communityIntro, int categoryNum, List<CommunityKeyword> communityKeywordList, int locationNum, String communityStatus, Date postWriteDate, Date postUpdateDate) {
+    public Community(int communityNum, Integer userNum, String communityTitle, String communityIntro, int categoryCode, List<CommunityKeyword> communityKeywordList, int localCode, String communityStatus, Date postWriteDate, Date postUpdateDate) {
         this.communityNum = communityNum;
         this.userNum = userNum;
         this.communityTitle = communityTitle;
         this.communityIntro = communityIntro;
-        this.categoryNum = categoryNum;
+        this.categoryCode = categoryCode;
         this.communityKeywordList = communityKeywordList;
-        this.locationNum = locationNum;
+        this.localCode = localCode;
         this.communityStatus = communityStatus;
         this.postWriteDate = postWriteDate;
         this.postUpdateDate = postUpdateDate;
@@ -58,8 +58,8 @@ public class Community {
         this.userNum = communityDTO.getUserNum();
         this.communityTitle = communityDTO.getCommunityTitle();
         this.communityIntro = communityDTO.getCommunityIntro();
-        this.categoryNum = communityDTO.getCategoryNum();
-        this.locationNum = communityDTO.getLocationNum();
+        this.categoryCode = communityDTO.getCategoryCode();
+        this.localCode = communityDTO.getLocalCode();
         this.communityStatus = communityDTO.getCommunityStatus();
         this.postWriteDate = communityDTO.getPostWriteDate();
         this.postUpdateDate = communityDTO.getPostUpdateDate();
@@ -97,12 +97,12 @@ public class Community {
         this.communityIntro = communityIntro;
     }
 
-    public int getCategoryNum() {
-        return categoryNum;
+    public int getCategoryCode() {
+        return categoryCode;
     }
 
-    public void setCategoryNum(int categoryNum) {
-        this.categoryNum = categoryNum;
+    public void setCategoryCode(int categoryCode) {
+        this.categoryCode = categoryCode;
     }
 
     public List<CommunityKeyword> getCommunityKeywordList() {
@@ -113,12 +113,12 @@ public class Community {
         this.communityKeywordList = communityKeywordList;
     }
 
-    public int getLocationNum() {
-        return locationNum;
+    public int getLocalCode() {
+        return localCode;
     }
 
-    public void setLocationNum(int locationNum) {
-        this.locationNum = locationNum;
+    public void setLocalCode(int localCode) {
+        this.localCode = localCode;
     }
 
     public String getCommunityStatus() {
@@ -152,9 +152,9 @@ public class Community {
                 ", userNum=" + userNum +
                 ", communityTitle='" + communityTitle + '\'' +
                 ", communityIntro='" + communityIntro + '\'' +
-                ", categoryNum=" + categoryNum +
+                ", categoryCode=" + categoryCode +
                 ", communityKeywordList=" + communityKeywordList +
-                ", locationNum=" + locationNum +
+                ", localCode=" + localCode +
                 ", communityStatus='" + communityStatus + '\'' +
                 ", postWriteDate=" + postWriteDate +
                 ", postUpdateDate=" + postUpdateDate +
