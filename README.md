@@ -22,10 +22,11 @@
 - Teddybear-6 <br/>
   강소임 https://github.com/afdsj <br/>
   고민영 https://github.com/bearnyong <br/>
-  이단비 https://github.com/daneeb1 <br/>
-  전지환 https://github.com/jjjh0508 <br/>
   김민지 https://github.com/KMJs680 <br/>
   김형통 https://github.com/httt56 <br/>
+  이단비 https://github.com/daneeb1 <br/>
+  전지환 https://github.com/jjjh0508 <br/>
+  
 ### 퇴근길 - BACK REPOSITORY
 https://github.com/Teddybear-6/Back_ToeGeunGil
 
