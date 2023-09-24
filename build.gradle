@@ -25,9 +25,10 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
-
-    // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
-    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+// https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.3'
 
     // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf
     implementation group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.11.RELEASE'
@@ -43,8 +44,6 @@ dependencies {
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
-<<<<<<< HEAD
-=======
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
@@ -56,9 +55,12 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
 
->>>>>>> be8b780c161793dfe1bec5d34092c2ae6cbfe141
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+
+
+    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 }
 
 dependencyManagement {

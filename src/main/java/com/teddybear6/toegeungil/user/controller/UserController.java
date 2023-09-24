@@ -63,7 +63,7 @@ public class UserController {
         UserEntity result = userViewService.findById(userNo);
 
         if (Objects.isNull(result)) {
-           return ResponseEntity.status(404).body(null);
+            return ResponseEntity.status(404).body(null);
         }else {
             LoginReqDTO loginReqDTO = new LoginReqDTO();
             loginReqDTO.setEmail(result.getUserEmail());
@@ -90,12 +90,12 @@ public class UserController {
     }
 
     /* 비밀번호 찾기
-    * */
+     * */
     @PostMapping("/findPass")
     //이름, 닉네임 이메일 
     // 
     public ResponseEntity<?> findpass(@RequestBody FindPassDTO passDTO /*이름 닉네임 이메일 받기*/){
-         String pass = userViewService.finduserpass(passDTO /*이름 닉네임 이메일 넣기*/);
+        String pass = userViewService.finduserpass(passDTO /*이름 닉네임 이메일 넣기*/);
 
         System.out.println(pass);
 //        if(!Objects.isNull(userViewService)){
