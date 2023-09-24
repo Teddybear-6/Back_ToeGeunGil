@@ -3,6 +3,7 @@ package com.teddybear6.toegeungil.notice.service;
 import com.teddybear6.toegeungil.notice.dto.NoticeDetailDTO;
 import com.teddybear6.toegeungil.notice.entity.Notice;
 import com.teddybear6.toegeungil.notice.repository.NoticeRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +25,8 @@ public class NoticeService {
     }
 
     /* 전체 조회 */
-    public List<Notice> findAllNotice() {
-        List<Notice> noticeList = noticeRepository.findAll();
+    public List<Notice> findAllNotice(final Pageable pageable) {
+        List<Notice> noticeList = noticeRepository.findAllByOrderByNoticeNumDesc(pageable);
         return noticeList;
     }
 
@@ -69,5 +70,11 @@ public class NoticeService {
         }else {
             return 0;
         }
+    }
+
+    /* paging */
+    public List<Notice> readAllNoticeSize() {
+        List<Notice> noticeList=noticeRepository.findAll();
+        return noticeList;
     }
 }

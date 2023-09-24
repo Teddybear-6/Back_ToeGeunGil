@@ -6,6 +6,7 @@ import com.teddybear6.toegeungil.notice.entity.Notice;
 import com.teddybear6.toegeungil.notice.service.NoticeService;
 import com.teddybear6.toegeungil.user.entity.UserEntity;
 import com.teddybear6.toegeungil.user.sevice.UserViewService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,8 +29,8 @@ public class NoticeController {
 
     /* <GET> /notices : 공지사항 목록 전체 조회 */
     @GetMapping
-    public ResponseEntity<List<?>> findAllNotice() {
-        List<Notice> noticeList = noticeService.findAllNotice();
+    public ResponseEntity<List<?>> findAllNotice(final Pageable pageable) {
+        List<Notice> noticeList = noticeService.findAllNotice(pageable);
 
         if (noticeList.size() <= 0) {
             List<String> error = new ArrayList<>();
@@ -122,5 +123,12 @@ public class NoticeController {
         } else {
             return ResponseEntity.status(400).body("공지사항 삭제 실패입니다");
         }
+    }
+
+    /* paging */
+    @GetMapping("/size")
+    public ResponseEntity<?> noticeSize() {
+        List<Notice> noticeList = noticeService.readAllNoticeSize();
+        return ResponseEntity.ok().body(noticeList.size());
     }
 }
