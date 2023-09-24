@@ -15,6 +15,7 @@ import com.teddybear6.toegeungil.social.repository.*;
 import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -56,9 +57,10 @@ public class SocialService {
     }
 
 
-    public List<SocialDTO> readAllSocial() {
+    public List<SocialDTO> readAllSocial(final Pageable pageable) {
         //01_소셜 전체 조회(/social)
-        List<Social> socialList = socialRepository.findAll(Sort.by(Sort.Direction.DESC, "SocialNum")); //socialNum 기준 내림차순
+//        List<Social> socialList = socialRepository.findAll(Sort.by(Sort.Direction.DESC, "SocialNum")); //socialNum 기준 내림차순
+        List<Social> socialList = socialRepository.findAllByOrderBySocialNumDesc(pageable);
         List<SocialDTO> socialDTOList = socialList.stream().map(m -> new SocialDTO(m)).collect(Collectors.toList());
 
         for (int i = 0; i < socialList.size(); i++) {
@@ -410,5 +412,12 @@ public class SocialService {
         } else {
             return 0;
         }
+    }
+
+    /*
+    페이징*/
+    public List<Social> readAllSocialSize() {
+        List<Social> socialList = socialRepository.findAll();
+        return socialList;
     }
 }

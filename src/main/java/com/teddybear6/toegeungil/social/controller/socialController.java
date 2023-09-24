@@ -15,6 +15,7 @@ import com.teddybear6.toegeungil.social.service.SocialService;
 import com.teddybear6.toegeungil.user.entity.UserEntity;
 import com.teddybear6.toegeungil.user.sevice.UserViewService;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -79,8 +80,8 @@ public class socialController {
     }
 
     @GetMapping //01_소셜 전체 조회(/social)
-    public ResponseEntity<List<?>> readAllSocial() {
-        List<SocialDTO> socialList = socialService.readAllSocial();
+    public ResponseEntity<List<?>> readAllSocial(final Pageable pageable) {
+        List<SocialDTO> socialList = socialService.readAllSocial(pageable);
 
         if (socialList.size() <= 0) {
             return ResponseEntity.status(404).body((Collections.singletonList("error")));
@@ -256,8 +257,8 @@ public class socialController {
         return ResponseEntity.ok().body(participateList);
     }
 
-    @PostMapping("/participate/{socialNum}") //21_소셜 참여(/participate)
-    public ResponseEntity<?> SocialParticipateRegistration(@PathVariable int socialNum, ParticipateDTO participateDTO) {
+    @PostMapping("/participate/{socialNum}/{userNum}") //21_소셜 참여(/participate)
+    public ResponseEntity<?> SocialParticipateRegistration(@PathVariable int socialNum, ParticipateDTO participateDTO, @PathVariable int userNum) {
         //참여하기(게시글번호 AND 회원번호)가 존재하는지 확인하기
         Participate findSocialParticipateRegistration = socialService.findSocialParticipateRegistration(participateDTO.getSocialNum(), participateDTO.getUserNum());
         if (!Objects.isNull(findSocialParticipateRegistration)) {
@@ -267,7 +268,7 @@ public class socialController {
         } else {
             //참여가 등록되어있지 않을 경우, 참여 등록
             Participate participate = new Participate(participateDTO); //setter를 생성해주지 않으면 값이 안넘어옴...왜지?
-            participate.socialNum(socialNum).builder();
+            participate.socialNum(socialNum).userNum(userNum).builder();
 
             int result = socialService.SocialParticipateRegistration(participate);
             if (result == 0) {
@@ -316,6 +317,14 @@ public class socialController {
         System.out.println("controller : " + social);
 
         return ResponseEntity.ok().body(social);
+    }
+
+    /*
+    페이징*/
+    @GetMapping("/size")
+    public ResponseEntity<?> socialSize() {
+        List<Social> socialList = socialService.readAllSocialSize();
+        return ResponseEntity.ok().body(socialList.size());
     }
 
 }
