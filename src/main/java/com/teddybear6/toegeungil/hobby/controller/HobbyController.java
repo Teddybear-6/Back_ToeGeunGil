@@ -440,7 +440,7 @@ public class HobbyController {
 
         if (hobbyReviews.size() == 0) {
             List<String> error = new ArrayList<>();
-            error.add("아직 후기가 없습니다.");
+            error.add(null);
             return ResponseEntity.ok().body(error);
         }
 
