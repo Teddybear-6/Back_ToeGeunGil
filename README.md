@@ -63,7 +63,7 @@ https://github.com/Teddybear-6/Front_ToeGeunGil
 |소셜 수정|PUT|socials|
 |소셜 게시글 별 참여 리스트|GET|participate/{socialNum}|
 |공지사항 전체 조회|GET|notices|
-|공지사항 단일 조회|GET|notices{noticeNum}|
+|공지사항 단일 조회|GET|notices/{noticeNum}|
 |공지사항 등록|POST|notices|
 |공지사항 수정|PUT|notices/{noticeNum}|
 |공지사항 삭제|DELETE|notices/{noticeNum}|
