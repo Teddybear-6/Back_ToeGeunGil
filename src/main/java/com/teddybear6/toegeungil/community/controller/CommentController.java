@@ -40,9 +40,11 @@ public class CommentController {
     }
     @PostMapping("/comments/{communityNum}")
     @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
-    public ResponseEntity<?> registCommentForCommunity(@PathVariable int communityNum, @RequestBody CommentDTO commentDTO){
+    public ResponseEntity<?> registCommentForCommunity(@PathVariable int communityNum, @RequestBody CommentDTO commentDTO, @AuthenticationPrincipal AuthUserDetail userDetail){
 
         commentDTO.setCommentWriteDate(new Date());
+
+        commentDTO.setUserNum(userDetail.getUserEntity().getUserNo());
 
         int result = 0;
         System.out.println(commentDTO);
