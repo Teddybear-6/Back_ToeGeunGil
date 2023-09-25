@@ -299,15 +299,19 @@ public class socialController {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
         //받아온 카테고리 코드로 해당 게시글 리스트로 받아오기
-        List<Social> socialList = socialService.readSocialPostWhereCategoryCode(categoryCode);
+        List<Social> socialList = socialService.readSocialPostWhereCategoryCode(categoryCode, pageable);
 
         return ResponseEntity.ok().body(socialList);
     }
 
     @GetMapping("/category/{categoryCode}/size") //30_1_카테고리 사이즈 필터
     public ResponseEntity<?> readSocialPostCategorySize(@PathVariable int categoryCode, final Pageable pageable) {
+        //카테고리 코드 받아오기
+        Category category = socialService.readSocialPostCategory(categoryCode);
+        //받아온 카테고리 코드로 해당 게시글 리스트로 받아오기
+        List<Social> socialList = socialService.readSocialPostWhereCategoryCode(categoryCode, pageable);
 
-        return ResponseEntity.ok().body("");
+        return ResponseEntity.ok().body(socialList.size());
     }
 
     @GetMapping("local/{localCode}") //31_지역 코드 필터
@@ -321,7 +325,7 @@ public class socialController {
     }
 
     @GetMapping("/category/{categoryCode}/local/{localCode}") //32_지역 AND 카테고리 필터
-    public ResponseEntity<List<?>> readSocialFilterCategoryAndLocal(@PathVariable int categoryCode, @PathVariable int localCode) {
+    public ResponseEntity<List<?>> readSocialFilterCategoryAndLocal(@PathVariable int categoryCode, @PathVariable int localCode, final Pageable pageable) {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
         System.out.println("Category : " + category);

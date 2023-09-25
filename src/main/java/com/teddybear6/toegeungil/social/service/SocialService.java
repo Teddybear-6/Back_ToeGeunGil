@@ -347,9 +347,9 @@ public class SocialService {
         return local;
     }
 
-    public List<Social> readSocialPostWhereCategoryCode(int categoryCode) {
+    public List<Social> readSocialPostWhereCategoryCode(int categoryCode, Pageable pageable) {
         //30_카테고리 코드 필터 (받아온 카테고리 코드로 소셜 게시글 리스트로 조회)
-        List<Social> social = socialRepository.findByCategoryCode(categoryCode);
+        List<Social> social = socialRepository.findByCategoryCode(categoryCode, pageable);
 
         return social;
     }
