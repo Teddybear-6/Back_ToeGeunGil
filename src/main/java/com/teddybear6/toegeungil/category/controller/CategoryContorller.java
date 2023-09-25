@@ -1,15 +1,18 @@
 package com.teddybear6.toegeungil.category.controller;
 
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
 import com.teddybear6.toegeungil.category.dto.CategoryDTO;
 import com.teddybear6.toegeungil.category.entity.Category;
 import com.teddybear6.toegeungil.category.service.CategoryService;
+import com.teddybear6.toegeungil.user.entity.UserEntity;
+import com.teddybear6.toegeungil.user.sevice.UserViewService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -18,14 +21,24 @@ import java.util.stream.Collectors;
 public class CategoryContorller {
 
     private final CategoryService categoryService;
+    private final UserViewService userViewService;
 
-    public CategoryContorller(CategoryService categoryService) {
+    public CategoryContorller(CategoryService categoryService, UserViewService userViewService) {
         this.categoryService = categoryService;
+        this.userViewService = userViewService;
     }
 
-
     @PostMapping
-    public ResponseEntity<?> regist(CategoryDTO categoryDTO) {
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> regist(@AuthenticationPrincipal AuthUserDetail userDetails,@RequestBody CategoryDTO categoryDTO) {
+        System.out.println(userDetails);
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
+
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "관리자가 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
 
         //중복검사
         List<Category> categoryList = categoryService.findCategoryByName(categoryDTO.getCategoryName());
@@ -76,7 +89,18 @@ public class CategoryContorller {
 
 
     @PutMapping("/{categoryCode}")
-    public ResponseEntity<?> updateCategory(@PathVariable int categoryCode, @RequestBody CategoryDTO categoryDTO) {
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> updateCategory(@AuthenticationPrincipal AuthUserDetail userDetails,@PathVariable int categoryCode, @RequestBody CategoryDTO categoryDTO) {
+        System.out.println(userDetails);
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
+
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "관리자가 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
+
+        System.out.println(categoryDTO);
         Category findcategory = categoryService.findCategoryByCode(categoryCode);
 
         if (Objects.isNull(findcategory)) {
@@ -95,7 +119,17 @@ public class CategoryContorller {
 
 
     @DeleteMapping("/{categoryCode}")
-    public ResponseEntity<?> delete(@PathVariable int categoryCode) {
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> delete(@AuthenticationPrincipal AuthUserDetail userDetails, @PathVariable int categoryCode) {
+        System.out.println(userDetails);
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
+
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "관리자가 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
+
         Category category = categoryService.findCategoryByCode(categoryCode);
 
         if (Objects.isNull(category)) {

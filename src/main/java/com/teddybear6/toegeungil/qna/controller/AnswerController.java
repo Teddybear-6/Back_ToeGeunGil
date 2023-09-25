@@ -39,7 +39,7 @@ public class AnswerController {
         return ResponseEntity.ok().body(answerList);
     }
     @PostMapping("/regist")
-    public ResponseEntity<?> regist(Answer answer){
+    public ResponseEntity<?> regist(@RequestBody Answer answer){
         System.out.println("cnt: " + answer);
         int result = ansService.registAnswer(answer);
 

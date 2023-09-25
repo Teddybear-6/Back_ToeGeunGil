@@ -1,15 +1,16 @@
 package com.teddybear6.toegeungil.community.controller;
-
 import com.teddybear6.toegeungil.community.dto.CommunityDTO;
+import com.teddybear6.toegeungil.community.dto.CommunityKeywordDTO;
 import com.teddybear6.toegeungil.community.entity.Community;
 import com.teddybear6.toegeungil.community.service.CommunityService;
+import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/communitys")
@@ -22,33 +23,43 @@ public class CommunityController {
         this.communityService = communityService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<?>> findAllCommunity(){
-        List<Community> communityList = communityService.findAllCommunity();
-        if(communityList.size() == 0){
-            List<String> error = new ArrayList<>();
-            error.add("커뮤니티 글이 존재하지 않습니다.");
-            return ResponseEntity.status(404).body(error);
-        }
+    @GetMapping // 커뮤니티 전체 조회
+    public ResponseEntity<List<?>> findAllCommunity() {
+        List<CommunityDTO> communityList = communityService.findAllCommunity();
 
-        return ResponseEntity.ok().body(communityList);
+        if (communityList.isEmpty()) {
+            return ResponseEntity.status(404).body(Collections.singletonList("error"));
+        } else {
+            return ResponseEntity.ok().body(communityList);
+        }
     }
 
-    @GetMapping("/{communityNum}") // 커뮤니티 번호로 조회
+
+    @GetMapping("/{communityNum}") // 커뮤니티 번호로 부분 조회
     public ResponseEntity<Object> findByCommunityCode(@PathVariable int communityNum){
         Community community = communityService.findByCommunityCode(communityNum);
 
-        if(Objects.isNull(community)){
+        if(Objects.isNull(community)) {
             return ResponseEntity.status(404).body(new String("잘못된 코드 입력"));
+        }else {
+            CommunityDTO communityDTO = new CommunityDTO(community);
+            List<Keyword> keywordList = new ArrayList<>();
+            for (int i = 0; i < community.getCommunityKeywordList().size(); i++) {
+                keywordList.add(community.getCommunityKeywordList().get(i).getKeyword());
+            }
+            List<CommunityKeywordDTO> communityKeywordDTOList = keywordList.stream().map(m -> new CommunityKeywordDTO(m)).collect(Collectors.toList());
+            communityDTO.setCommunityKeywordDTOList(communityKeywordDTOList);
+
+            return ResponseEntity.ok().body(communityDTO);
         }
-
-        CommunityDTO communityDTO = new CommunityDTO(community);
-
-        return ResponseEntity.ok().body(communityDTO);
     }
 
     @PostMapping // 커뮤니티 등록하기
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR', 'USER')")
     public ResponseEntity<?> registCommunity(@RequestBody CommunityDTO communityDTO) {
+
+        System.out.println((communityDTO));
+        communityDTO.setPostWriteDate(new Date());
         System.out.println(communityDTO);
         int result = 0;
         try {
@@ -64,19 +75,22 @@ public class CommunityController {
         }
     }
 
-    @PutMapping("/{communityNum}") // 커뮤니티 수정
-    public ResponseEntity<?> updateCommunity(@PathVariable int communityNum, @RequestBody CommunityDTO communityDTO){
+    @PutMapping("/{communityNum}")// 커뮤니티 수정
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR', 'USER')")
+    public ResponseEntity<?> updateCommunity(@RequestBody CommunityDTO communityDTO){
 
         // 유효성 검사 체크 (RequestParam)으로 코드만 받아오고 나머지는 service 로직에서 찾아오기 .,...
 
-        Community findCommunity = communityService.findByCommunityCode(communityNum);
+        Community findCommunity = communityService.findByCommunityCode(communityDTO.getCommunityNum());
 
         if(Objects.isNull(findCommunity)){
             return ResponseEntity.status(404).body("커뮤니티 카테고리가 존재하지 않습니다.");
         }
 
+        CommunityDTO community = communityDTO;
+
         // 직접 각 필드의 값을 전달하여 communityUpdate 메서드를 호출한다.
-        int result = communityService.communityUpdate(findCommunity, communityDTO);
+        int result = communityService.communityUpdate(findCommunity, community);
 
         if(result > 0){
             return ResponseEntity.ok().body("커뮤니티 수정에 성공했습니다.");
@@ -86,6 +100,7 @@ public class CommunityController {
     }
 
     @DeleteMapping("/{communityNum}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR', 'USER')")
     public ResponseEntity<?> deleteCommunity(@PathVariable int communityNum){
 
         Community community = communityService.findByCommunityCode(communityNum);
@@ -104,16 +119,13 @@ public class CommunityController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<CommunityDTO>> CommunityList(@RequestParam(name = "categoryNum", required = false) Integer categoryNum,
-                                                            @RequestParam(name = "locationNum", required = false) Integer locationNum){
+    public ResponseEntity<List<CommunityDTO>> CommunityList(@RequestParam(name = "categoryCode", required = false) Integer categoryCode,
+                                                            @RequestParam(name = "locationCode", required = false) Integer localCode){
 
-        List<CommunityDTO> communityList = communityService.CommunityListFilters(categoryNum,locationNum);
+        List<CommunityDTO> communityList = communityService.CommunityListFilters(categoryCode,localCode);
 
         return ResponseEntity.ok(communityList);
     }
 
 
 }
-
-
-

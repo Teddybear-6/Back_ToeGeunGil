@@ -7,8 +7,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "community_keyword")
 public class CommunityKeyword {
+
     @EmbeddedId
-    private CommunityPK communityPk;
+    private CommunityPK communityPK;
 
     @MapsId("communityNum")
     @ManyToOne
@@ -23,18 +24,18 @@ public class CommunityKeyword {
     public CommunityKeyword() {
     }
 
-    public CommunityKeyword(CommunityPK communityPk, Community community, Keyword keyword) {
-        this.communityPk = communityPk;
+    public CommunityKeyword(CommunityPK communityPK, Community community, Keyword keyword) {
+        this.communityPK = communityPK;
         this.community = community;
         this.keyword = keyword;
     }
 
-    public CommunityPK getCommunityPk() {
-        return communityPk;
+    public CommunityPK getCommunityPK() {
+        return communityPK;
     }
 
-    public void setCommunityPk(CommunityPK communityPk) {
-        this.communityPk = communityPk;
+    public void setCommunityPK(CommunityPK communityPK) {
+        this.communityPK = communityPK;
     }
 
     public Community getCommunity() {
@@ -56,9 +57,10 @@ public class CommunityKeyword {
     @Override
     public String toString() {
         return "CommunityKeyword{" +
-                "communityPk=" + communityPk +
-                ", community=" + community +
+                "communityPK=" + communityPK +
                 ", keyword=" + keyword +
                 '}';
     }
 }
+
+
