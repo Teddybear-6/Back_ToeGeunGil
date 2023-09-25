@@ -1,4 +1,5 @@
 package com.teddybear6.toegeungil.community.controller;
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
 import com.teddybear6.toegeungil.community.dto.CommunityDTO;
 import com.teddybear6.toegeungil.community.dto.CommunityKeywordDTO;
 import com.teddybear6.toegeungil.community.entity.Community;
@@ -6,6 +7,7 @@ import com.teddybear6.toegeungil.community.service.CommunityService;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -56,8 +58,9 @@ public class CommunityController {
 
     @PostMapping // 커뮤니티 등록하기
     @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR', 'USER')")
-    public ResponseEntity<?> registCommunity(@RequestBody CommunityDTO communityDTO) {
+    public ResponseEntity<?> registCommunity(@RequestBody CommunityDTO communityDTO, @AuthenticationPrincipal AuthUserDetail userDetail) {
 
+        communityDTO.setUserNum(userDetail.getUserEntity().getUserNo());
         System.out.println((communityDTO));
         communityDTO.setPostWriteDate(new Date());
         System.out.println(communityDTO);
