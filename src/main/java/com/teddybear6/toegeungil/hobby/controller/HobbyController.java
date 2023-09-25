@@ -406,10 +406,13 @@ public class HobbyController {
 
         Hobby hobby = hobbyService.findById(hobbyCode);
 
-        HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, hobbyReviewDTO.getUserNo());
+
+        HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, userDetails.getUserEntity().getUserNo());
+        System.out.println(hobbyJoin);
         if (Objects.isNull(hobby) || hobby.getClose().equals("N") || Objects.isNull(hobbyJoin)) {
             return ResponseEntity.status(500).body("후기를 작성할 수 없습니다.");
         }
+
         hobbyReviewDTO.setUserNo(userDetails.getUserEntity().getUserNo());
         HobbyReview findHobbyReview = hobbyService.findByIdReview(hobbyCode, hobbyReviewDTO.getUserNo());
 
@@ -437,7 +440,7 @@ public class HobbyController {
 
         if (hobbyReviews.size() == 0) {
             List<String> error = new ArrayList<>();
-            error.add("아직 후기가 없습니다.");
+            error.add(null);
             return ResponseEntity.ok().body(error);
         }
 

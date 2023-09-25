@@ -347,11 +347,21 @@ public class SocialService {
         return local;
     }
 
-    public List<Social> readSocialPostWhereCategoryCode(int categoryCode) {
+    public List<Social> readSocialPostWhereCategoryCode(int categoryCode, Pageable pageable) {
         //30_카테고리 코드 필터 (받아온 카테고리 코드로 소셜 게시글 리스트로 조회)
-        List<Social> social = socialRepository.findByCategoryCode(categoryCode);
+        List<Social> socialList = socialRepository.findByCategoryCode(categoryCode, pageable);
 
-        return social;
+        for (int i = 0; i < socialList.size(); i++) {
+            List<Keyword> keywordList = new ArrayList<>();
+            List<SocialKeywordDTO> keywordDTOList = new ArrayList<>();
+            for (int j = 0; j < socialList.get(i).getSocialKeywordList().size(); j++) {
+                keywordList.add(socialList.get(i).getSocialKeywordList().get(j).getKeyword());
+                keywordDTOList = keywordList.stream().map(m -> new SocialKeywordDTO(m)).collect(Collectors.toList());
+            }
+//            socialDTOList.get(i).setKeywordDTOList(keywordDTOList);
+        }
+
+        return socialList;
     }
 
     public List<Social> readSocialPostWhereLocalCode(int localCode) {
