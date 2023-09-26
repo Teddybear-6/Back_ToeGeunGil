@@ -504,6 +504,7 @@ public class HobbyController {
         ReviewAnswer frindReviewAnswer = hobbyService.reviewAnswerFindByRevieCode(reviewCode);
         if (!Objects.isNull(frindReviewAnswer)) {
             return ResponseEntity.status(404).body("이미 작성된 후기입니다.");
+            //message
         }
 
 

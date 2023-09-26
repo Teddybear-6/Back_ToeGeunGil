@@ -224,30 +224,7 @@ public class socialController {
     }
 
 
-    /*
-    사진 https://velog.io/@mooh2jj/SpringBoot-File-uploaddownload-%EA%B5%AC%ED%98%84*/
-    @PostMapping("/image") //10_사진 업로드
-    public ResponseEntity<?> uploadSocialImage(@RequestParam(name = "image"/*key*/) MultipartFile image) throws IOException {
-        String uploadImage = socialService.uploadSocialImage(image);
-        return ResponseEntity.ok().body(uploadImage);
-    }
 
-//    @GetMapping("/image/{imageName}") //11_사진 다운로드
-//    public ResponseEntity<?> downloadSocialImage(@PathVariable("imageName") String imageName) {
-//        byte[] downloadImage = socialService.downloadSocialImage(imageName);
-//        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(downloadImage);
-//    }
-
-    @GetMapping("/image/{imageId}")
-    public ResponseEntity<?> downloadSocialImgeId(@PathVariable("imageId") Long imageId) {
-        //사진 번호로 이미지 가져오기
-        byte[] downloadImage = socialService.downloadSocialImgeId(imageId);
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(downloadImage);
-    }
-
-
-    /*
-    참여하기*/
     @GetMapping("/participate/{socialNum}") //20_소셜 참여 회원 조회(/participate/{게시글 번호})
     public ResponseEntity<List<?>> readSocialParticipateUser(@PathVariable int socialNum) {
         //소셜
