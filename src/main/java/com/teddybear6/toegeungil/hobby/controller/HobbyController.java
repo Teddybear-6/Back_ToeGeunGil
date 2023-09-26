@@ -271,21 +271,7 @@ public class HobbyController {
     }
 
 
-    //디테일 사진보기
-//    @GetMapping("/image/{imageId}")
-//    public ResponseEntity<?> detailImage(@PathVariable int imageId) {
-//
-//        HobbyImage image = hobbyService.detailImage(imageId);
-//        return ResponseEntity.ok().contentType(MediaType.valueOf(image.getType())).body(ImageUtils.decompressImage(image.getImageDate()));
-//    }
 
-
-//    @GetMapping("/image/{hobbyCode}")
-//    public ResponseEntity<?> detailImage(@PathVariable int hobbyCode)  throws IOException {
-//        List<String> encodedImages = hobbyService.findEncodedImages(hobbyCode);
-//
-//        return ResponseEntity.ok().body(encodedImages);
-//    }
     //참여하기
     /* 포스트?
      * api 어떻게 하지
@@ -353,6 +339,7 @@ public class HobbyController {
             return ResponseEntity.ok().body(true);
         }
     }
+
 
     //참여자 리스트
     @GetMapping("/joinuser/{hobbyCode}")
