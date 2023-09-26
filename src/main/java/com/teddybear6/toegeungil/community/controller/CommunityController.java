@@ -61,9 +61,7 @@ public class CommunityController {
     public ResponseEntity<?> registCommunity(@RequestBody CommunityDTO communityDTO, @AuthenticationPrincipal AuthUserDetail userDetail) {
 
         communityDTO.setUserNum(userDetail.getUserEntity().getUserNo());
-        System.out.println((communityDTO));
         communityDTO.setPostWriteDate(new Date());
-        System.out.println(communityDTO);
         int result = 0;
         try {
             result = communityService.registCommunity(communityDTO);

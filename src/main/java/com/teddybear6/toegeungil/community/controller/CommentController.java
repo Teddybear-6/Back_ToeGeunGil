@@ -47,7 +47,7 @@ public class CommentController {
         commentDTO.setUserNum(userDetail.getUserEntity().getUserNo());
 
         int result = 0;
-        System.out.println(commentDTO);
+
         try {
             result = commentService.registCommentForCommunity(communityNum, commentDTO);
         }catch (IOException e){
