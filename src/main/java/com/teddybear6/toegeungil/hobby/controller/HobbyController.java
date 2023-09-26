@@ -271,21 +271,7 @@ public class HobbyController {
     }
 
 
-    //디테일 사진보기
-//    @GetMapping("/image/{imageId}")
-//    public ResponseEntity<?> detailImage(@PathVariable int imageId) {
-//
-//        HobbyImage image = hobbyService.detailImage(imageId);
-//        return ResponseEntity.ok().contentType(MediaType.valueOf(image.getType())).body(ImageUtils.decompressImage(image.getImageDate()));
-//    }
 
-
-//    @GetMapping("/image/{hobbyCode}")
-//    public ResponseEntity<?> detailImage(@PathVariable int hobbyCode)  throws IOException {
-//        List<String> encodedImages = hobbyService.findEncodedImages(hobbyCode);
-//
-//        return ResponseEntity.ok().body(encodedImages);
-//    }
     //참여하기
     /* 포스트?
      * api 어떻게 하지
@@ -354,6 +340,7 @@ public class HobbyController {
         }
     }
 
+
     //참여자 리스트
     @GetMapping("/joinuser/{hobbyCode}")
     public ResponseEntity<List<?>> joinList(@PathVariable int hobbyCode) {
@@ -406,10 +393,13 @@ public class HobbyController {
 
         Hobby hobby = hobbyService.findById(hobbyCode);
 
-        HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, hobbyReviewDTO.getUserNo());
+
+        HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, userDetails.getUserEntity().getUserNo());
+        System.out.println(hobbyJoin);
         if (Objects.isNull(hobby) || hobby.getClose().equals("N") || Objects.isNull(hobbyJoin)) {
             return ResponseEntity.status(500).body("후기를 작성할 수 없습니다.");
         }
+
         hobbyReviewDTO.setUserNo(userDetails.getUserEntity().getUserNo());
         HobbyReview findHobbyReview = hobbyService.findByIdReview(hobbyCode, hobbyReviewDTO.getUserNo());
 
@@ -437,7 +427,7 @@ public class HobbyController {
 
         if (hobbyReviews.size() == 0) {
             List<String> error = new ArrayList<>();
-            error.add("아직 후기가 없습니다.");
+            error.add(null);
             return ResponseEntity.ok().body(error);
         }
 

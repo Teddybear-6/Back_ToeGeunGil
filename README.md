@@ -33,18 +33,11 @@ https://github.com/Teddybear-6/Back_ToeGeunGil
 ### 퇴근길 - FRONTEND REPOSITORY
 https://github.com/Teddybear-6/Front_ToeGeunGil
 
-## 개발 환경
-- 개발환경   
-  1-1. 백 : java (springboot ,  Spring Security, JPA)   
-  1-2 프론트: html. css, js(리액트)
-- DB : MYSQL
-- 개발도구 : 인텔리제이, VScode
-- 협업도구 :  피그마, 미로, 깃허브, 노션
-
+## 기술스택 및 개발 환경
+<img width="550" alt="기술스택" src="https://github.com/Teddybear-6/Front_ToeGeunGil/assets/130436427/c1cbd604-2176-42fb-8825-923338e1c1d7">
 
 ## 시스템 아키텍처
-![image](https://github.com/Teddybear-6/Back_ToeGeunGil/assets/130436427/4a0d5d15-319c-46ae-90e0-44129acc4647)
-
+<img width="550" alt="아키텍처" src="https://github.com/Teddybear-6/Front_ToeGeunGil/assets/130436427/6815e56d-7b35-4048-9c20-ea882c8cafd0">
 
 ## API 설계
 |기능|Method|URL|
@@ -70,7 +63,7 @@ https://github.com/Teddybear-6/Front_ToeGeunGil
 |소셜 수정|PUT|socials|
 |소셜 게시글 별 참여 리스트|GET|participate/{socialNum}|
 |공지사항 전체 조회|GET|notices|
-|공지사항 단일 조회|GET|notices{noticeNum}|
+|공지사항 단일 조회|GET|notices/{noticeNum}|
 |공지사항 등록|POST|notices|
 |공지사항 수정|PUT|notices/{noticeNum}|
 |공지사항 삭제|DELETE|notices/{noticeNum}|

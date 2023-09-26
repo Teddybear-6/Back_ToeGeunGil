@@ -57,7 +57,6 @@ public class CommentService {
 
         Comment savedComment = commentRepository.save(comment);
 
-        System.out.println(savedComment);
         if(savedComment != null){
             return 1;
         }else {

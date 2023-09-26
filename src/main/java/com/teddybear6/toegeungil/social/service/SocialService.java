@@ -8,15 +8,11 @@ import com.teddybear6.toegeungil.keyword.repository.KeywordRepository;
 import com.teddybear6.toegeungil.local.entity.Local;
 import com.teddybear6.toegeungil.local.repository.LocalRepository;
 import com.teddybear6.toegeungil.social.dto.SocialDTO;
-import com.teddybear6.toegeungil.social.dto.SocialImageDTO;
 import com.teddybear6.toegeungil.social.dto.SocialKeywordDTO;
 import com.teddybear6.toegeungil.social.entity.*;
 import com.teddybear6.toegeungil.social.repository.*;
-import com.teddybear6.toegeungil.common.utils.ImageUtils;
-import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,8 +21,6 @@ import org.json.simple.parser.JSONParser;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -242,52 +236,6 @@ public class SocialService {
     }
 
 
-    /*
-    사진*/
-    @Transactional
-    public String uploadSocialImage(MultipartFile image) throws IOException {
-        //10_사진 업로드
-        //image_name을 새로 부여하기 위한 현재 시간 가져오기
-        LocalDateTime now = LocalDateTime.now();
-        int year = now.getYear();
-        int month = now.getMonthValue();
-        int day = now.getDayOfMonth();
-        int hour = now.getHour();
-        int minute = now.getMinute();
-        int second = now.getSecond();
-        int millis = now.get(ChronoField.MILLI_OF_SECOND);
-        //새로 부여하는 image_name
-        String newFileName = "image" + year + month + day + hour + minute + second + millis;
-
-        Image imageData = imageRepository.save(
-                new Image()
-                        .imageName(newFileName/*시간으로 저장*/)
-                        .imageOriName(image.getOriginalFilename())
-                        .imageType(image.getContentType())
-                        .imageData(ImageUtils.compressImage(image.getBytes()))
-                        .builder()
-        );
-
-        if (imageData != null) {
-            return "uploadSocialImage : " + image.getOriginalFilename();
-        }
-        return null;
-    }
-
-
-    public byte[] downloadSocialImage(String imageName) {
-        //11_사진 다운로드(보여주기)
-        Image imageData = imageRepository.findByImageName(imageName)
-                .orElseThrow(RuntimeException::new);
-        return ImageUtils.decompressImage(imageData.getImageData());
-    }
-
-    public byte[] downloadSocialImgeId(Long imageId) {
-        //사진 번호로 이미지 다운로드!!
-        Image imageData = imageRepository.findByImageId(imageId)
-                .orElseThrow(RuntimeException::new);
-        return ImageUtils.decompressImage(imageData.getImageData());
-    }
 
 
     /*
@@ -347,11 +295,22 @@ public class SocialService {
         return local;
     }
 
-    public List<Social> readSocialPostWhereCategoryCode(int categoryCode) {
+    public List<SocialDTO> readSocialPostWhereCategoryCode(int categoryCode, Pageable pageable) {
         //30_카테고리 코드 필터 (받아온 카테고리 코드로 소셜 게시글 리스트로 조회)
-        List<Social> social = socialRepository.findByCategoryCode(categoryCode);
+        List<Social> socialList = socialRepository.findByCategoryCode(categoryCode, pageable);
+        List<SocialDTO> socialDTOList = socialList.stream().map(m -> new SocialDTO(m)).collect(Collectors.toList());
 
-        return social;
+        for (int i = 0; i < socialList.size(); i++) {
+            List<Keyword> keywordList = new ArrayList<>();
+            List<SocialKeywordDTO> keywordDTOList = new ArrayList<>();
+            for (int j = 0; j < socialList.get(i).getSocialKeywordList().size(); j++) {
+                keywordList.add(socialList.get(i).getSocialKeywordList().get(j).getKeyword());
+                keywordDTOList = keywordList.stream().map(m -> new SocialKeywordDTO(m)).collect(Collectors.toList());
+            }
+            socialDTOList.get(i).setKeywordDTOList(keywordDTOList);
+        }
+
+        return socialDTOList;
     }
 
     public List<Social> readSocialPostWhereLocalCode(int localCode) {

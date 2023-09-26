@@ -4,7 +4,6 @@ import com.teddybear6.toegeungil.common.utils.ImageApi;
 import com.teddybear6.toegeungil.hobby.dto.*;
 import com.teddybear6.toegeungil.hobby.entity.*;
 import com.teddybear6.toegeungil.hobby.repository.*;
-import com.teddybear6.toegeungil.common.utils.ImageUtils;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.keyword.repository.KeywordRepository;
 
@@ -13,7 +12,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -436,18 +433,7 @@ public class HobbyService {
         return reviewAnswer;
     }
 
-//    public List<String> findEncodedImages(int hobbyCode) throws IOException{
-//        List<String> images = new ArrayList<>();
-//
-//        List<HobbyImage> hobbyImage = storageRepository.findByhobbyCode(hobbyCode);
-//
-//        for(int i =0 ; i<hobbyImage.size();i++){
-//            byte[] fileContent = ImageUtils.decompressImage(hobbyImage.get(i).getImageDate()); // file을 byte로 변경
-//            String encodedString = Base64.getEncoder().encodeToString(fileContent);  // byte를 base64로 encode
-//            images.add(encodedString);
-//        }
-//        return images;
-//    }
+
 
     public List<Hobby> findByAll() {
         List<Hobby> hobbyList = hobbyRepository.findAll();
