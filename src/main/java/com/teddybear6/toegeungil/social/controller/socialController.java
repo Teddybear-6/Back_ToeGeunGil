@@ -299,9 +299,9 @@ public class socialController {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
         //받아온 카테고리 코드로 해당 게시글 리스트로 받아오기
-        List<Social> socialList = socialService.readSocialPostWhereCategoryCode(categoryCode, pageable);
+        List<SocialDTO> socialDTOList = socialService.readSocialPostWhereCategoryCode(categoryCode, pageable);
 
-        return ResponseEntity.ok().body(socialList);
+        return ResponseEntity.ok().body(socialDTOList);
     }
 
     @GetMapping("/category/{categoryCode}/size") //30_1_카테고리 사이즈 필터
@@ -309,7 +309,7 @@ public class socialController {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
         //받아온 카테고리 코드로 해당 게시글 리스트로 받아오기
-        List<Social> socialList = socialService.readSocialPostWhereCategoryCode(categoryCode, pageable);
+        List<SocialDTO> socialList = socialService.readSocialPostWhereCategoryCode(categoryCode, pageable);
 
         return ResponseEntity.ok().body(socialList.size());
     }
