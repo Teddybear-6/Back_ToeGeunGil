@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 public class SocialService {
 
     private final SocialRepository socialRepository; //소셜
-    private final ImageRepository imageRepository; //파일
     private final ParticipateRepository participateRepository; //소셜참여
     private final CategoryRepository categoryRepository; //카테고리
     private final LocalRepository localRepository; //지역
@@ -39,9 +38,8 @@ public class SocialService {
     private final KeywordRepository keywordRepository;
     private final SocialImageRepository socialImageRepository;
 
-    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository, SocialKeywordRepository socialKeywordRepository, KeywordRepository keywordRepository, SocialImageRepository socialImageRepository) {
+    public SocialService(SocialRepository socialRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository, SocialKeywordRepository socialKeywordRepository, KeywordRepository keywordRepository, SocialImageRepository socialImageRepository) {
         this.socialRepository = socialRepository;
-        this.imageRepository = imageRepository;
         this.participateRepository = participateRepository;
         this.categoryRepository = categoryRepository;
         this.localRepository = localRepository;
