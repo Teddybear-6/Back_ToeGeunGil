@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,6 +49,8 @@ public class NoticeService {
     public int updateNotice(Notice findnotice, NoticeDetailDTO noticeDetailDTO) {
         findnotice.setNoticeTitle(noticeDetailDTO.getNoticeTitle());
         findnotice.setNoticeContent(noticeDetailDTO.getNoticeContent());
+
+        findnotice.setNoticeDate(new Date());
 
         Notice result = noticeRepository.save(findnotice);
 
