@@ -488,4 +488,16 @@ public class HobbyService {
         List<Hobby> hobbyList = hobbyRepository.findByHobbyTitleContaining(name);
         return hobbyList;
     }
+
+    public List<Hobby> findByCategoryCodeSize(int categoryCode) {
+        List<Hobby> hobbies = hobbyRepository.findByCategoryCode(categoryCode);
+        return hobbies;
+
+    }
+
+    public List<Hobby> findByLocalCodesize(int localCode) {
+        List<Hobby> hobbies = hobbyRepository.findByLocalCode(localCode);
+
+        return hobbies;
+    }
 }
