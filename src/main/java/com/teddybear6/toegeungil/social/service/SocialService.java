@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 public class SocialService {
 
     private final SocialRepository socialRepository; //소셜
-    private final ImageRepository imageRepository; //파일
     private final ParticipateRepository participateRepository; //소셜참여
     private final CategoryRepository categoryRepository; //카테고리
     private final LocalRepository localRepository; //지역
@@ -39,9 +38,8 @@ public class SocialService {
     private final KeywordRepository keywordRepository;
     private final SocialImageRepository socialImageRepository;
 
-    public SocialService(SocialRepository socialRepository, ImageRepository imageRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository, SocialKeywordRepository socialKeywordRepository, KeywordRepository keywordRepository, SocialImageRepository socialImageRepository) {
+    public SocialService(SocialRepository socialRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository, SocialKeywordRepository socialKeywordRepository, KeywordRepository keywordRepository, SocialImageRepository socialImageRepository) {
         this.socialRepository = socialRepository;
-        this.imageRepository = imageRepository;
         this.participateRepository = participateRepository;
         this.categoryRepository = categoryRepository;
         this.localRepository = localRepository;
@@ -295,11 +293,22 @@ public class SocialService {
         return local;
     }
 
-    public List<Social> readSocialPostWhereCategoryCode(int categoryCode) {
+    public List<SocialDTO> readSocialPostWhereCategoryCode(int categoryCode, Pageable pageable) {
         //30_카테고리 코드 필터 (받아온 카테고리 코드로 소셜 게시글 리스트로 조회)
-        List<Social> social = socialRepository.findByCategoryCode(categoryCode);
+        List<Social> socialList = socialRepository.findByCategoryCode(categoryCode, pageable);
+        List<SocialDTO> socialDTOList = socialList.stream().map(m -> new SocialDTO(m)).collect(Collectors.toList());
 
-        return social;
+        for (int i = 0; i < socialList.size(); i++) {
+            List<Keyword> keywordList = new ArrayList<>();
+            List<SocialKeywordDTO> keywordDTOList = new ArrayList<>();
+            for (int j = 0; j < socialList.get(i).getSocialKeywordList().size(); j++) {
+                keywordList.add(socialList.get(i).getSocialKeywordList().get(j).getKeyword());
+                keywordDTOList = keywordList.stream().map(m -> new SocialKeywordDTO(m)).collect(Collectors.toList());
+            }
+            socialDTOList.get(i).setKeywordDTOList(keywordDTOList);
+        }
+
+        return socialDTOList;
     }
 
     public List<Social> readSocialPostWhereLocalCode(int localCode) {
