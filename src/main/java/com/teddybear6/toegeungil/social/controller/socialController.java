@@ -329,20 +329,32 @@ public class socialController {
 
     /*
     검색 기능*/
-    @GetMapping("/serch")
+    @GetMapping("/search")
     public ResponseEntity<List<?>> socialSearch(@RequestParam(name = "socialName") String socialName, final Pageable pageable) {
 
         System.out.println(socialName + ": 확인");
 
-        List<SocialDTO> socialDTOList = socialService.findSocialSearchCosntatining(pageable, socialName);
+        List<SocialDTO> socialDTOList = socialService.findSocialBySocialNameContaining(pageable, socialName);
 
         if (socialDTOList.size() == 0) {
             List<String> error = new ArrayList<>();
             error.add(null);
-
             return ResponseEntity.status(500).body(error);
         } else {
             return ResponseEntity.ok().body(socialDTOList);
+        }
+    }
+
+    @GetMapping("/search/size")
+    public ResponseEntity<?> socialSearchSize(@RequestParam(name = "socialName") String socialName) {
+        List<Social> socialList = socialService.findBySocialNameContaining(socialName);
+
+        if (socialList.size() == 0) {
+            List<String> error = new ArrayList<>();
+            error.add(null);
+            return ResponseEntity.status(500).body(error);
+        } else {
+            return ResponseEntity.ok().body(socialList.size());
         }
     }
 }

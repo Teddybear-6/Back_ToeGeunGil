@@ -378,7 +378,7 @@ public class SocialService {
         return socialList;
     }
 
-    public List<SocialDTO> findSocialSearchCosntatining(Pageable pageable, String socialName) {
+    public List<SocialDTO> findSocialBySocialNameContaining(Pageable pageable, String socialName) {
         List<Social> socialList = socialRepository.findSocialBySocialNameContaining(socialName, pageable);
         List<SocialDTO> socialDTOList = socialList.stream().map(m -> new SocialDTO(m)).collect(Collectors.toList());
 
@@ -393,5 +393,10 @@ public class SocialService {
         }
 
         return socialDTOList;
+    }
+
+    public List<Social> findBySocialNameContaining(String socialName) {
+        List<Social> socialList = socialRepository.findBySocialNameContaining(socialName);
+        return socialList;
     }
 }
