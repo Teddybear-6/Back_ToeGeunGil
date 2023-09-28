@@ -377,4 +377,11 @@ public class SocialService {
         List<Social> socialList = socialRepository.findAll();
         return socialList;
     }
+
+    public List<SocialDTO> findSocialSearchCosntatining(Pageable pageable, String socialTitle) {
+        List<Social> socialList = null;
+        List<SocialDTO> socialDTOList = socialList.stream().map(m -> new SocialDTO(m)).collect(Collectors.toList());
+
+        return socialDTOList;
+    }
 }

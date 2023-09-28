@@ -326,4 +326,23 @@ public class socialController {
         return ResponseEntity.ok().body(socialList.size());
     }
 
+
+    /*
+    검색 기능*/
+    @GetMapping("/serch")
+    public ResponseEntity<List<?>> socialSearch(@RequestParam(name = "socialTitle") String socialTitle, final Pageable pageable) {
+
+        System.out.println(socialTitle + ": 확인");
+
+        List<SocialDTO> socialDTOList = socialService.findSocialSearchCosntatining(pageable, socialTitle);
+
+        if (socialDTOList.size() == 0) {
+            List<String> error = new ArrayList<>();
+            error.add(null);
+
+            return ResponseEntity.status(500).body(error);
+        } else {
+            return ResponseEntity.ok().body(socialDTOList);
+        }
+    }
 }
