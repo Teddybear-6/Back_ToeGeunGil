@@ -330,11 +330,11 @@ public class socialController {
     /*
     검색 기능*/
     @GetMapping("/serch")
-    public ResponseEntity<List<?>> socialSearch(@RequestParam(name = "socialTitle") String socialTitle, final Pageable pageable) {
+    public ResponseEntity<List<?>> socialSearch(@RequestParam(name = "socialName") String socialName, final Pageable pageable) {
 
-        System.out.println(socialTitle + ": 확인");
+        System.out.println(socialName + ": 확인");
 
-        List<SocialDTO> socialDTOList = socialService.findSocialSearchCosntatining(pageable, socialTitle);
+        List<SocialDTO> socialDTOList = socialService.findSocialSearchCosntatining(pageable, socialName);
 
         if (socialDTOList.size() == 0) {
             List<String> error = new ArrayList<>();
