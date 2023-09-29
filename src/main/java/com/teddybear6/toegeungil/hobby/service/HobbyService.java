@@ -500,4 +500,11 @@ public class HobbyService {
 
         return hobbies;
     }
+
+    public List<Hobby> findByCategoryCodeAndLocalCode(int categoryCode, int localCode) {
+        List<Hobby> hobbies = hobbyRepository.findByCategoryCodeAndLocalCode(categoryCode, localCode);
+
+        return hobbies;
+
+    }
 }

@@ -604,11 +604,30 @@ public class HobbyController {
 
         if (hobbies.size() == 0) {
             List<String> error = new ArrayList<>();
-            error.add("해당되는 취미가 없습니다.");
+            error.add(null);
             return ResponseEntity.status(404).body(error);
         }
         return ResponseEntity.ok().body(hobbies);
     }
+
+    @GetMapping("/loacal/size/{localCode}/category/{categoryCode}")
+    public ResponseEntity<?> localAndCategoryFiltersize(@PathVariable int localCode, @PathVariable int categoryCode) {
+
+
+        List<Hobby> hobbies = hobbyService.findByCategoryCodeAndLocalCode(categoryCode, localCode);
+
+        if (hobbies.size() == 0) {
+            return ResponseEntity.status(404).body(0);
+        }
+        return ResponseEntity.ok().body(hobbies.size());
+    }
+
+
+
+
+
+
+
     @GetMapping("/search")
     public ResponseEntity<List<?>> hobbyfindsearch(final Pageable pageable,  @RequestParam(name="hobbytitle")  String hobbyTitle) {
 
