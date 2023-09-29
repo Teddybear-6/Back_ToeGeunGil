@@ -25,8 +25,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("스웨거 제목")
-                .description("스웨거 설명")
+                .title("퇴근길 (Toe-Geun-Gil)") //스웨거 제목
+                .description("퇴근 후 직장인들의 취미 플랫폼\n") //스웨거 설명
                 .version("1.0")
                 .build();
     }
