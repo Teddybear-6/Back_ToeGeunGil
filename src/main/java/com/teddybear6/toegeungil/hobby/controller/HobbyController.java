@@ -432,6 +432,7 @@ public class HobbyController {
         }
 
         List<HobbyReviewDTO> hobbyReviewDTOS = hobbyReviews.stream().map(m -> new HobbyReviewDTO(m)).collect(Collectors.toList());
+        System.out.println(hobbyReviewDTOS);
         return ResponseEntity.ok().body(hobbyReviewDTOS);
 
     }
@@ -489,7 +490,7 @@ public class HobbyController {
         HobbyReview hobbyReview = hobbyService.findByReviewCode(reviewCode);
 
         if (Objects.isNull(hobbyReview)) {
-            return ResponseEntity.status(404).body("존재하지 않는 후기입니다.");
+            return ResponseEntity.status(404).body(null);
         }
         ReviewAnswer frindReviewAnswer = hobbyService.reviewAnswerFindByRevieCode(reviewCode);
         if (!Objects.isNull(frindReviewAnswer)) {
@@ -531,7 +532,7 @@ public class HobbyController {
     //localhost:8001/hobbys/category/1?page=0&size=5
     @GetMapping("/category/{categoryCode}")
     public ResponseEntity<List<?>> categoryHobby(@PathVariable int categoryCode, final Pageable pageable) {
-        List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCode(categoryCode, pageable);
+        List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCode(categoryCode,pageable);
 
         if (hobbies.size() == 0) {
             List<String> error = new ArrayList<>();
@@ -542,8 +543,8 @@ public class HobbyController {
         return ResponseEntity.ok().body(hobbies);
     }
     @GetMapping("/category/size/{categoryCode}")
-    public ResponseEntity<?> categoryHobbysize(@PathVariable int categoryCode, final Pageable pageable) {
-        List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCode(categoryCode, pageable);
+    public ResponseEntity<?> categoryHobbysize(@PathVariable int categoryCode) {
+        List<Hobby> hobbies = hobbyService.findByCategoryCodeSize(categoryCode);
 
         if (hobbies.size() == 0) {
             List<String> error = new ArrayList<>();
@@ -564,11 +565,27 @@ public class HobbyController {
 
         if (hobbyGetDTOS.size() == 0) {
             List<String> error = new ArrayList<>();
-            error.add("해당되는 취미가 없습니다.");
+            error.add(null);
             return ResponseEntity.status(404).body(error);
         }
         return ResponseEntity.ok().body(hobbyGetDTOS);
     }
+
+    @GetMapping("/local/size/{localCode}")
+    public ResponseEntity<?> localHobbysize(@PathVariable int localCode) {
+        List<Hobby> hobbyGetDTOS = hobbyService.findByLocalCodesize(localCode);
+
+        if (hobbyGetDTOS.size() == 0) {
+            List<String> error = new ArrayList<>();
+            error.add("해당되는 취미가 없습니다.");
+            return ResponseEntity.status(404).body(error);
+        }
+        return ResponseEntity.ok().body(hobbyGetDTOS.size());
+    }
+
+
+
+
 
 
     //지역별 카테고리 취미 조회
@@ -588,11 +605,30 @@ public class HobbyController {
 
         if (hobbies.size() == 0) {
             List<String> error = new ArrayList<>();
-            error.add("해당되는 취미가 없습니다.");
+            error.add(null);
             return ResponseEntity.status(404).body(error);
         }
         return ResponseEntity.ok().body(hobbies);
     }
+
+    @GetMapping("/loacal/size/{localCode}/category/{categoryCode}")
+    public ResponseEntity<?> localAndCategoryFiltersize(@PathVariable int localCode, @PathVariable int categoryCode) {
+
+
+        List<Hobby> hobbies = hobbyService.findByCategoryCodeAndLocalCode(categoryCode, localCode);
+
+        if (hobbies.size() == 0) {
+            return ResponseEntity.status(404).body(0);
+        }
+        return ResponseEntity.ok().body(hobbies.size());
+    }
+
+
+
+
+
+
+
     @GetMapping("/search")
     public ResponseEntity<List<?>> hobbyfindsearch(final Pageable pageable,  @RequestParam(name="hobbytitle")  String hobbyTitle) {
 

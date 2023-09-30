@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -51,6 +52,7 @@ public class HobbyService {
 
     @Transactional
     public int registHobby(HobbyDTO hobbyDTO, MultipartFile[] files) throws IOException, ParseException {
+        hobbyDTO.setCrateDate(new Date());
         Hobby hobby = new Hobby(hobbyDTO);
         List<HobbyKeywordDTO> keyword = hobbyDTO.getKeywordDTOList();
         List<HobbyKeyword> hobbyKeywordList = new ArrayList<>();
@@ -122,11 +124,6 @@ public class HobbyService {
 
     }
 
-    public HobbyImage detailImage(int hobbyCode) {
-        HobbyImage hobbyImages = storageRepository.findById(hobbyCode);
-
-        return hobbyImages;
-    }
 
     public int deleteById(Hobby hobby) {
         hobby.setHobbyStatus("N");
@@ -142,8 +139,6 @@ public class HobbyService {
 
     @Transactional
     public int updateHobby(Hobby hobby, HobbyDTO hobbyDTO, MultipartFile[] files, List<ImageUrlsDTO> urls) {
-
-
 
         List<HobbyKeyword> hobbyKeywordList = new ArrayList<>();
         List<HobbyImage> hobbyImages = new ArrayList<>();
@@ -163,7 +158,7 @@ public class HobbyService {
         hobby.setEndTime(hobbyDTO.getEndTime());           //끝나는 시간
         hobby.setClosingDate(hobbyDTO.getClosingDate());   //마감날짜
         hobby.setHobbyPlace(hobbyDTO.getHobbyPlace());        //상세지역
-
+        hobby.setUpdateDate(new Date());
 
 //
 
@@ -287,6 +282,7 @@ public class HobbyService {
     }
 
     public int registReview(HobbyReview hobbyReview) {
+        hobbyReview.setCrateDate(new Date());
         HobbyReview findReview = hobbyReviewRepository.save(hobbyReview);
 
         if (Objects.isNull(findReview)) {
@@ -312,6 +308,7 @@ public class HobbyService {
     public List<HobbyReview> findAllReview(int hobbyCode) {
 
         List<HobbyReview> hobbyReviews = hobbyReviewRepository.findAllByHobbyCode(hobbyCode);
+        System.out.println(hobbyReviews+"서비스");
 
         return hobbyReviews;
     }
@@ -343,6 +340,7 @@ public class HobbyService {
 
     @Transactional
     public int updateReview(HobbyReviewDTO hobbyReviewDTO) {
+        hobbyReviewDTO.setUpdateDate(new Date());
         HobbyReview findReview = hobbyReviewRepository.findById(hobbyReviewDTO.getReviewCode());
 
         findReview.setContent(hobbyReviewDTO.getContent());
@@ -487,5 +485,24 @@ public class HobbyService {
     public List<Hobby> findByHobbyTitleContatining(String name) {
         List<Hobby> hobbyList = hobbyRepository.findByHobbyTitleContaining(name);
         return hobbyList;
+    }
+
+    public List<Hobby> findByCategoryCodeSize(int categoryCode) {
+        List<Hobby> hobbies = hobbyRepository.findByCategoryCode(categoryCode);
+        return hobbies;
+
+    }
+
+    public List<Hobby> findByLocalCodesize(int localCode) {
+        List<Hobby> hobbies = hobbyRepository.findByLocalCode(localCode);
+
+        return hobbies;
+    }
+
+    public List<Hobby> findByCategoryCodeAndLocalCode(int categoryCode, int localCode) {
+        List<Hobby> hobbies = hobbyRepository.findByCategoryCodeAndLocalCode(categoryCode, localCode);
+
+        return hobbies;
+
     }
 }
