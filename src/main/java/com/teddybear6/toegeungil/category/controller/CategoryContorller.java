@@ -6,6 +6,10 @@ import com.teddybear6.toegeungil.category.entity.Category;
 import com.teddybear6.toegeungil.category.service.CategoryService;
 import com.teddybear6.toegeungil.user.entity.UserEntity;
 import com.teddybear6.toegeungil.user.sevice.UserViewService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +22,12 @@ import java.util.stream.Collectors;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/category")
+@Api(value = "카테고리 Api", tags = {"10. Category Info"}, description = "카테고리 Api")
+@ApiResponses({
+        @ApiResponse(code = 200,message = "성공"),
+        @ApiResponse(code = 404,message = "잘못된 접근") ,
+        @ApiResponse(code = 500,message = "서버에러")
+})
 public class CategoryContorller {
 
     private final CategoryService categoryService;
@@ -28,8 +38,9 @@ public class CategoryContorller {
         this.userViewService = userViewService;
     }
 
-    @PostMapping
+    @PostMapping //카테고리 등록
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "카테고리 등록 Api", notes = "새로운 카테고리를 등록한다.")
     public ResponseEntity<?> regist(@AuthenticationPrincipal AuthUserDetail userDetails,@RequestBody CategoryDTO categoryDTO) {
         System.out.println(userDetails);
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
@@ -57,7 +68,8 @@ public class CategoryContorller {
         }
     }
 
-    @GetMapping
+    @GetMapping //전체 조회
+    @ApiOperation(value = "카테고리 전체 조회 Api", notes = "카테고리 전체 목록을 조회한다.")
     public ResponseEntity<List<?>> findAllCategory() {
         List<Category> categoryList = categoryService.findAll();
 
@@ -75,7 +87,8 @@ public class CategoryContorller {
     }
 
 
-    @GetMapping("/{categoryCode}")
+    @GetMapping("/{categoryCode}") //단일 조회
+    @ApiOperation(value = "카테고리 단일 조회 Api", notes = "카테고리 번호로 해당 카테고리 목록을 조회한다.")
     public ResponseEntity<Object> findCategoryByCode(@PathVariable int categoryCode) {
         Category category = categoryService.findCategoryByCode(categoryCode);
         if (Objects.isNull(category)) {
@@ -88,8 +101,9 @@ public class CategoryContorller {
     }
 
 
-    @PutMapping("/{categoryCode}")
+    @PutMapping("/{categoryCode}") //카테고리 수정
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "카테고리 수정 Api", notes = "카테고리 번호로 해당 카테고리 정보를 수정한다.")
     public ResponseEntity<?> updateCategory(@AuthenticationPrincipal AuthUserDetail userDetails,@PathVariable int categoryCode, @RequestBody CategoryDTO categoryDTO) {
         System.out.println(userDetails);
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
@@ -118,8 +132,9 @@ public class CategoryContorller {
     }
 
 
-    @DeleteMapping("/{categoryCode}")
+    @DeleteMapping("/{categoryCode}") //카테고리 삭제
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "카테고리 삭제 Api", notes = "카테고리 번호로 해당 카테고리 정보를 삭제한다.")
     public ResponseEntity<?> delete(@AuthenticationPrincipal AuthUserDetail userDetails, @PathVariable int categoryCode) {
         System.out.println(userDetails);
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
