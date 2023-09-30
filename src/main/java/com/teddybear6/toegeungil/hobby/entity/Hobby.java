@@ -134,6 +134,7 @@ public class Hobby {
         this.hobbyKeywordList = hobbyKeywordList;
         this.hobbyImages = hobbyImages;
         this.hobbyReviews = hobbyReviews;
+
     }
 
     public Hobby(HobbyDTO hobbyDTO) {
@@ -151,6 +152,8 @@ public class Hobby {
         this.localCode= hobbyDTO.getLocalCode();
         this.hobbyPlace =hobbyDTO.getHobbyPlace();
         this.closingDate =hobbyDTO.getClosingDate();
+        this.crateDate = hobbyDTO.getCrateDate();
+        this.updateDate = hobbyDTO.getUpdateDate();
     }
 
     public int getHobbyCode() {
