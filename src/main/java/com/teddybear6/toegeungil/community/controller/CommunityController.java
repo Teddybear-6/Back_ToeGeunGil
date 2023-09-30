@@ -34,7 +34,7 @@ public class CommunityController {
     }
 
     @GetMapping // 커뮤니티 전체 조회
-    @ApiOperation(value = "커뮤니티 전체 조회 Api")
+    @ApiOperation(value = "커뮤니티 전체 조회 Api", notes = "커뮤니티 전체 목록을 조회한다.")
     public ResponseEntity<List<?>> findAllCommunity() {
         List<CommunityDTO> communityList = communityService.findAllCommunity();
 
@@ -47,7 +47,7 @@ public class CommunityController {
 
 
     @GetMapping("/{communityNum}") // 커뮤니티 번호로 부분 조회
-    @ApiOperation(value = "커뮤니티 단일 조회 Api")
+    @ApiOperation(value = "커뮤니티 단일 조회 Api", notes = "커뮤니티 게시글 번호로 해당 게시글을 조회한다.")
     public ResponseEntity<Object> findByCommunityCode(@PathVariable int communityNum){
         Community community = communityService.findByCommunityCode(communityNum);
 
@@ -68,7 +68,7 @@ public class CommunityController {
 
     @PostMapping // 커뮤니티 등록하기
     @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR', 'USER')")
-    @ApiOperation(value = "커뮤니티 작성 Api")
+    @ApiOperation(value = "커뮤니티 작성 Api", notes = "커뮤니티 게시글을 작성한다.")
     public ResponseEntity<?> registCommunity(@RequestBody CommunityDTO communityDTO) {
 
         System.out.println((communityDTO));
@@ -90,7 +90,7 @@ public class CommunityController {
 
     @PutMapping("/{communityNum}")// 커뮤니티 수정
     @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR', 'USER')")
-    @ApiOperation(value = "커뮤니티 수정 Api")
+    @ApiOperation(value = "커뮤니티 수정 Api", notes = "커뮤니티 게시글을 수정한다.")
     public ResponseEntity<?> updateCommunity(@RequestBody CommunityDTO communityDTO){
 
         // 유효성 검사 체크 (RequestParam)으로 코드만 받아오고 나머지는 service 로직에서 찾아오기 .,...
@@ -115,7 +115,7 @@ public class CommunityController {
 
     @DeleteMapping("/{communityNum}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR', 'USER')")
-    @ApiOperation(value = "커뮤니티 삭제 Api")
+    @ApiOperation(value = "커뮤니티 삭제 Api", notes = "커뮤니티 게시글을 삭제한다.")
     public ResponseEntity<?> deleteCommunity(@PathVariable int communityNum){
 
         Community community = communityService.findByCommunityCode(communityNum);

@@ -74,7 +74,7 @@ public class HobbyController {
 
     //findall
     @GetMapping
-    @ApiOperation(value = "취미 전체 조회 Api")
+    @ApiOperation(value = "취미 전체 조회 Api", notes = "취미 전체 목록을 조회한다.")
     public ResponseEntity<List<?>> hobbyfindAll(final Pageable pageable) {
         List<HobbyGetDTO> hobbyList = hobbyService.findAll(pageable);
         if (hobbyList.size() == 0) {
@@ -87,7 +87,7 @@ public class HobbyController {
 
     @GetMapping("/tutor")
     @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
-    @ApiOperation(value = "강사별 취미 조회 Api")
+    @ApiOperation(value = "강사별 취미 조회 Api", notes = "강사별 소셜 목록을 조회한다.")
     public ResponseEntity<List<?>> hobbyfindTutir( @AuthenticationPrincipal AuthUserDetail userDetails, final Pageable pageable) {
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
 
@@ -109,7 +109,7 @@ public class HobbyController {
 
     //취미 메인사진 조사
     @GetMapping("/mainimages/{hobbyCode}")
-    @ApiOperation(value = "취미별 메인 이미지 조회 Api")
+    @ApiOperation(value = "취미별 대표 이미지 조회 Api", notes = "취미 게시글 번호로 해당 게시글의 대표 이미지를 조회한다.")
     public ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode ) {
         List<HobbyImage> hobbyImages = hobbyService.findMainImage(hobbyCode);
 
@@ -128,7 +128,7 @@ public class HobbyController {
     //등록
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
-    @ApiOperation(value = "취미 작성 Api")
+    @ApiOperation(value = "취미 작성 Api", notes = "취미 게시글을 작성한다.")
     public ResponseEntity<?> registHobby(@RequestPart(value = "hobby") HobbyDTO hobbyDTO, @RequestPart(value = "hobbyImage", required = false) MultipartFile[] files, @AuthenticationPrincipal AuthUserDetail userDetails) {
 
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
@@ -162,7 +162,7 @@ public class HobbyController {
     //수정
     @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
     @PutMapping
-    @ApiOperation(value = "취미 수정 Api")
+    @ApiOperation(value = "취미 수정 Api", notes = "취미 게시글을 수정한다.")
     public ResponseEntity<?> updateHobby( @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart(value = "hobbyImage" ,required = false) MultipartFile[] files , @RequestPart(value = "urls",required = false) List<ImageUrlsDTO> urls  , @AuthenticationPrincipal AuthUserDetail userDetails ) {
         System.out.println(hobbyDTO.getKeywordDTOList());
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
@@ -200,7 +200,7 @@ public class HobbyController {
     //삭제
     @DeleteMapping("/{hobbyCode}")
     @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
-    @ApiOperation(value = "취미 삭제 Api")
+    @ApiOperation(value = "취미 삭제 Api", notes = "취미 게시글을 삭제한다.")
     public ResponseEntity<?> hobbyDelete(@PathVariable int hobbyCode,  @AuthenticationPrincipal AuthUserDetail userDetails ) {
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
         Map<String, String> respose = new HashMap<>();
@@ -235,7 +235,7 @@ public class HobbyController {
 
     //디테일보기
     @GetMapping("/{hobbyCode}")
-    @ApiOperation(value = "취미 단일 조회 Api")
+    @ApiOperation(value = "취미 단일 조회 Api", notes = "취미 게시글 번호로 해당 게시글을 조회한다.")
     public ResponseEntity<Object> detailFindById(@PathVariable int hobbyCode) {
 
         Hobby hobby = hobbyService.findById(hobbyCode);
@@ -266,14 +266,14 @@ public class HobbyController {
     }
 
     @GetMapping("/size")
-    @ApiOperation(value = "취미 전체 사이즈 조회 Api")
+    @ApiOperation(value = "취미 전체 사이즈 조회 Api", notes = "취미 전체 목록의 사이즈를 조회한다.")
     public ResponseEntity<?> hobbySize() {
         List<Hobby> hobbyList = hobbyService.findByAll();
         return ResponseEntity.ok().body(hobbyList.size());
     }
 
     @GetMapping("/tutorlist/size/{tutorCode}")
-    @ApiOperation(value = "강사별 리스트 사이즈 조회 Api")
+    @ApiOperation(value = "강사별 리스트 사이즈 조회 Api", notes = "강사별 취미 목록의 사이즈를 조회한다.")
     public ResponseEntity<?> tutorHobbySize(@PathVariable int tutorCode) {
         List<Hobby> hobbyList = hobbyService.findByTutorCode(tutorCode);
         return ResponseEntity.ok().body(hobbyList.size());
@@ -301,7 +301,7 @@ public class HobbyController {
 
     //참가하기
     @PostMapping("/join/{hobbyCode}/{userNo}")
-    @ApiOperation(value = "취미 참여 등록 Api")
+    @ApiOperation(value = "취미 참여 등록 Api", notes = "취미 게시글 번호와 유저 번호로 해당 게시글에 참여 등록한다.")
     public ResponseEntity<?> joinHobby(@PathVariable int hobbyCode, @PathVariable int userNo) {
 
         Hobby hobby = hobbyService.findById(hobbyCode);
@@ -340,7 +340,7 @@ public class HobbyController {
 
     //참가여부
     @GetMapping("/join/{hobbyCode}/{userNo}")
-    @ApiOperation(value = "취미 참여 여부 조회 Api")
+    @ApiOperation(value = "취미 참여 여부 조회 Api", notes = "취미 게시글 번호와 유저 번호로 해당 게시글의 참여 여부를 조회한다.")
     public ResponseEntity<?> join(@PathVariable int hobbyCode, @PathVariable int userNo) {
         HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, userNo);
 
@@ -354,7 +354,7 @@ public class HobbyController {
 
     //참여자 리스트
     @GetMapping("/joinuser/{hobbyCode}")
-    @ApiOperation(value = "취미 참여 회원 조회 Api")
+    @ApiOperation(value = "취미 참여 회원 조회 Api", notes = "취미 게시글 번호로 해당 게시글을 참여 회원을 조회한다.")
     public ResponseEntity<List<?>> joinList(@PathVariable int hobbyCode) {
         List<HobbyJoin> hobbyJoins = hobbyService.findByJoin(hobbyCode);
 
@@ -368,7 +368,7 @@ public class HobbyController {
 
     //마감하기
     @PutMapping("/close/{hobbyCode}")
-    @ApiOperation(value = "취미 참여 마감 Api")
+    @ApiOperation(value = "취미 참여 마감 Api", notes = "취미 게시글 번호로 해당 게시글의 참여를 마감한다.")
     public ResponseEntity<?> closeHobby(@PathVariable int hobbyCode) {
         int result = hobbyService.closeHobby(hobbyCode);
 
@@ -401,7 +401,7 @@ public class HobbyController {
     //후기등록
     @PostMapping("/review/{hobbyCode}")
     @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
-    @ApiOperation(value = "취미 후기 작성 Api")
+    @ApiOperation(value = "취미 후기 작성 Api", notes = "소셜 게시글 번호로 해당 게시글의 참여 후기를 작성한다.")
     public ResponseEntity<?> hobbyReview(@PathVariable int hobbyCode, @RequestBody HobbyReviewDTO hobbyReviewDTO, @AuthenticationPrincipal AuthUserDetail userDetails) {
 
         Hobby hobby = hobbyService.findById(hobbyCode);
@@ -435,7 +435,7 @@ public class HobbyController {
 
     //취미별 후기보기
     @GetMapping("/review/{hobbyCode}")
-    @ApiOperation(value = "취미별 후기 조회 Api")
+    @ApiOperation(value = "취미별 후기 조회 Api", notes = "소셜 게시글 번호로 해당 게시글의 참여 후기 목록을 조회한다.")
     public ResponseEntity<List<?>> hobbyReviewAll(@PathVariable int hobbyCode) {
         List<HobbyReview> hobbyReviews = hobbyService.findAllReview(hobbyCode);
 
@@ -454,7 +454,7 @@ public class HobbyController {
 
     //후기 삭제
     @DeleteMapping("/review/{reviewCode}")
-    @ApiOperation(value = "취미 후기 삭제 Api")
+    @ApiOperation(value = "취미 후기 삭제 Api", notes = "취미 리뷰 번호로 해당 게시글의 참여 후기를 삭제한다.")
     public ResponseEntity<?> removeReview(@PathVariable int reviewCode) {
         HobbyReview hobbyReview = hobbyService.findByReviewCode(reviewCode);
         if (Objects.isNull(hobbyReview)) {
@@ -473,7 +473,7 @@ public class HobbyController {
 
     //후기 수정
     @PutMapping("/review/{reviewCode}")
-    @ApiOperation(value = "취미 후기 수정 Api")
+    @ApiOperation(value = "취미 후기 수정 Api", notes = "취미 리뷰 번호로 해당 게시글의 참여 후기를 수정한다.")
     public ResponseEntity<?> modifyReview(@PathVariable int reviewCode, @RequestBody HobbyReviewDTO hobbyReviewDTO) {
         hobbyReviewDTO.setReviewCode(reviewCode);
         HobbyReview hobbyReview = hobbyService.findByReviewCode(reviewCode);
@@ -502,7 +502,7 @@ public class HobbyController {
      *
      * */
     @PostMapping("/review/answer/{reviewCode}")
-    @ApiOperation(value = "취미 후기 답변 작성 Api")
+    @ApiOperation(value = "취미 후기 답변 작성 Api", notes = "취미 리뷰 번호로 해당 참여 후기의 답변을 작성한다.")
     public ResponseEntity<?> reviewAnswer(@PathVariable int reviewCode, @RequestBody ReviewAnswerDTO reviewAnswerDTO) {
         HobbyReview hobbyReview = hobbyService.findByReviewCode(reviewCode);
 
@@ -526,7 +526,7 @@ public class HobbyController {
 
     //후기 답변 보기
     @GetMapping("/review/answer/{reviewCode}")
-    @ApiOperation(value = "취미 후기 답변 조회 Api")
+    @ApiOperation(value = "취미 후기 답변 조회 Api", notes = "취미 리뷰 번호로 해당 참여 후기의 답변을 조회한다.")
     public ResponseEntity<?> reviewAnswerFind(@PathVariable int reviewCode) {
 
         ReviewAnswer reviewAnswer = hobbyService.reviewAnswerFindByRevieCode(reviewCode);
@@ -545,7 +545,7 @@ public class HobbyController {
     //카테고리 별 취미 조회
     //localhost:8001/hobbys/category/1?page=0&size=5
     @GetMapping("/category/{categoryCode}")
-    @ApiOperation(value = "카테고리별 취미 조회 Api")
+    @ApiOperation(value = "카테고리별 취미 조회 Api", notes = "카테고리 번호로 카테고리별 해당 취미 게시글 목록을 조회한다.")
     public ResponseEntity<List<?>> categoryHobby(@PathVariable int categoryCode, final Pageable pageable) {
         List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCode(categoryCode,pageable);
 
@@ -558,7 +558,7 @@ public class HobbyController {
         return ResponseEntity.ok().body(hobbies);
     }
     @GetMapping("/category/size/{categoryCode}")
-    @ApiOperation(value = "카테고리별 취미 사이즈 조회 Api")
+    @ApiOperation(value = "카테고리별 취미 사이즈 조회 Api", notes = "카테고리 번호로 카테고리별 해당 취미 게시글들의 사이즈를 조회한다.")
     public ResponseEntity<?> categoryHobbysize(@PathVariable int categoryCode) {
         List<Hobby> hobbies = hobbyService.findByCategoryCodeSize(categoryCode);
 
@@ -576,7 +576,7 @@ public class HobbyController {
     //지역별 취미 조회
     //localhost:8001/hobbys/local/1?page=0&size=5
     @GetMapping("/local/{localCode}")
-    @ApiOperation(value = "지역별 취미 조회 Api")
+    @ApiOperation(value = "지역별 취미 조회 Api", notes = "지역 번호로 지역별 해당 취미 게시글 목록을 조회한다.")
     public ResponseEntity<List<?>> localHobby(@PathVariable int localCode, final Pageable pageable) {
         List<HobbyGetDTO> hobbyGetDTOS = hobbyService.findByLocalCode(localCode, pageable);
 
@@ -589,7 +589,7 @@ public class HobbyController {
     }
 
     @GetMapping("/local/size/{localCode}")
-    @ApiOperation(value = "지역별 취미 사이즈 조회 Api")
+    @ApiOperation(value = "지역별 취미 사이즈 조회 Api", notes = "지역 번호로 지역별 해당 취미 게시글들의 사이즈를 조회한다.")
     public ResponseEntity<?> localHobbysize(@PathVariable int localCode) {
         List<Hobby> hobbyGetDTOS = hobbyService.findByLocalCodesize(localCode);
 
@@ -606,7 +606,7 @@ public class HobbyController {
     //지역별 카테고리 취미 조회
     //localhost:8001/hobbys/loacal/1/category/1?page=0&size=5
     @GetMapping("/loacal/{localCode}/category/{categoryCode}")
-    @ApiOperation(value = "카테고리 AND 지역 취미 조회 Api")
+    @ApiOperation(value = "카테고리 AND 지역 취미 조회 Api", notes = "카테고리 번호와 지역 번호로 두 조건에 모두 해당되는 취미 게시글 목록을 조회한다.")
     public ResponseEntity<List<?>> localAndCategoryFilter(@PathVariable int localCode, @PathVariable int categoryCode, final Pageable pageable) {
 
         if (localCode == 0) {
@@ -628,7 +628,7 @@ public class HobbyController {
     }
 
     @GetMapping("/loacal/size/{localCode}/category/{categoryCode}")
-    @ApiOperation(value = "카테고리 AND 지역 취미 사이즈 조회 Api")
+    @ApiOperation(value = "카테고리 AND 지역 취미 사이즈 조회 Api", notes = "카테고리 번호와 지역 번호로 두 조건에 모두 해당되는 취미 게시들의 사이즈를 조회한다.")
     public ResponseEntity<?> localAndCategoryFiltersize(@PathVariable int localCode, @PathVariable int categoryCode) {
 
 
@@ -647,7 +647,7 @@ public class HobbyController {
 
 
     @GetMapping("/search")
-    @ApiOperation(value = "취미 검색 Api")
+    @ApiOperation(value = "취미 검색 Api", notes = "검색어를 통해 해당되는 취미의 제목을 조회한다.")
     public ResponseEntity<List<?>> hobbyfindsearch(final Pageable pageable,  @RequestParam(name="hobbytitle")  String hobbyTitle) {
 
         System.out.println(hobbyTitle+"확인");
@@ -661,7 +661,7 @@ public class HobbyController {
     }
 
     @GetMapping("/search/size")
-    @ApiOperation(value = "취미 검색 사이즈 Api")
+    @ApiOperation(value = "취미 검색 사이즈 Api", notes = "검색어를 통해 해당되는 취미들을 사이즈를 조회한다.")
     public ResponseEntity<?> hobbyfindsearchSize(@RequestParam(name="hobbytitle") String hobbyTitle) {
         List<Hobby> hobbyList = hobbyService.findByHobbyTitleContatining(hobbyTitle);
         if (hobbyList.size() == 0) {

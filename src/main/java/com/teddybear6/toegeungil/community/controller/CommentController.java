@@ -38,7 +38,7 @@ public class CommentController {
     }
 
     @GetMapping("/comments/{communityNum}")
-    @ApiOperation(value = "커뮤니티별 댓글 목록 조회 Api")
+    @ApiOperation(value = "커뮤니티별 댓글 목록 조회 Api", notes = "커뮤니티별 댓글 전체 목록을 조회한다.")
     public ResponseEntity<List<?>> CommentByCommunityNum(@PathVariable int communityNum){
         List<CommentDTO> commentDTOList = commentService.CommentByCommunityNum(communityNum);
 
@@ -51,7 +51,7 @@ public class CommentController {
     }
     @PostMapping("/comments/{communityNum}")
     @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
-    @ApiOperation(value = "커뮤니티 댓글 작성 Api")
+    @ApiOperation(value = "커뮤니티 댓글 작성 Api", notes = "커뮤니티 게시글 번호로 해당 게시글의 댓글 목록을 조회한다.")
     public ResponseEntity<?> registCommentForCommunity(@PathVariable int communityNum, @RequestBody CommentDTO commentDTO){
 
         commentDTO.setCommentWriteDate(new Date());
@@ -73,7 +73,7 @@ public class CommentController {
     }
     @PutMapping("/comments/{communityNum}/{commentNum}")
     @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
-    @ApiOperation(value = "커뮤니티 댓글 수정 Api")
+    @ApiOperation(value = "커뮤니티 댓글 수정 Api", notes = "커뮤니티 게시글 번호와 댓글 번호로 해당 댓글을 수정한다.")
     public ResponseEntity<?> updateComment(@PathVariable int communityNum, @PathVariable int commentNum, @RequestBody CommentDTO commentDTO, @AuthenticationPrincipal AuthUserDetail userDetail){
 
         int result = commentService.updateCommentByCommunity(communityNum, commentNum, commentDTO);
@@ -90,7 +90,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/comments/{communityNum}/{commentNum}")
-    @ApiOperation(value = "커뮤니티 댓글 삭제 Api")
+    @ApiOperation(value = "커뮤니티 댓글 삭제 Api", notes = "커뮤니티 게시글 번호와 댓글 번호로 해당 댓글을 삭제한다.")
     public ResponseEntity<?> deleteComment(@PathVariable int communityNum, @PathVariable int commentNum){
 
         int result = commentService.deleteCommentByCommunity(communityNum, commentNum);
