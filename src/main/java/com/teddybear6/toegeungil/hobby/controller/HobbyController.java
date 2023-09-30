@@ -432,6 +432,7 @@ public class HobbyController {
         }
 
         List<HobbyReviewDTO> hobbyReviewDTOS = hobbyReviews.stream().map(m -> new HobbyReviewDTO(m)).collect(Collectors.toList());
+        System.out.println(hobbyReviewDTOS);
         return ResponseEntity.ok().body(hobbyReviewDTOS);
 
     }
@@ -489,7 +490,7 @@ public class HobbyController {
         HobbyReview hobbyReview = hobbyService.findByReviewCode(reviewCode);
 
         if (Objects.isNull(hobbyReview)) {
-            return ResponseEntity.status(404).body("존재하지 않는 후기입니다.");
+            return ResponseEntity.status(404).body(null);
         }
         ReviewAnswer frindReviewAnswer = hobbyService.reviewAnswerFindByRevieCode(reviewCode);
         if (!Objects.isNull(frindReviewAnswer)) {
