@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/socials") //도메인
-@Api(value = "소셜 Api")
+@Api(value = "소셜 Api", tags = {"02. Social Info"}, description = "소셜 Api")
 @ApiResponses({
         @ApiResponse(code = 200,message = "성공"),
         @ApiResponse(code = 404,message = "잘못된 접근") ,
@@ -91,7 +91,7 @@ public class socialController {
 //    }
 
     @GetMapping //01_소셜 전체 조회(/social)
-    @ApiOperation(value = "소셜 전체 조회 Api")
+    @ApiOperation(value = "소셜 전체 조회 Api", notes = "소셜 전체 목록을 조회한다")
     public ResponseEntity<List<?>> readAllSocial(final Pageable pageable) {
         List<SocialDTO> socialList = socialService.readAllSocial(pageable);
 

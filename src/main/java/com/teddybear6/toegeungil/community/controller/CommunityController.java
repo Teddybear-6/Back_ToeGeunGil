@@ -4,6 +4,10 @@ import com.teddybear6.toegeungil.community.dto.CommunityKeywordDTO;
 import com.teddybear6.toegeungil.community.entity.Community;
 import com.teddybear6.toegeungil.community.service.CommunityService;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +19,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/communitys")
 @CrossOrigin(origins = "http://localhost:3000")
+@Api(value = "커뮤니티' Api", tags = {"03. Community Info"}, description = "커뮤니티 Api")
+@ApiResponses({
+        @ApiResponse(code = 200,message = "성공"),
+        @ApiResponse(code = 404,message = "잘못된 접근") ,
+        @ApiResponse(code = 500,message = "서버에러")
+})
 public class CommunityController {
 
     private final CommunityService communityService;
@@ -24,6 +34,7 @@ public class CommunityController {
     }
 
     @GetMapping // 커뮤니티 전체 조회
+    @ApiOperation(value = "커뮤니티 전체 조회 Api")
     public ResponseEntity<List<?>> findAllCommunity() {
         List<CommunityDTO> communityList = communityService.findAllCommunity();
 
@@ -36,6 +47,7 @@ public class CommunityController {
 
 
     @GetMapping("/{communityNum}") // 커뮤니티 번호로 부분 조회
+    @ApiOperation(value = "커뮤니티 단일 조회 Api")
     public ResponseEntity<Object> findByCommunityCode(@PathVariable int communityNum){
         Community community = communityService.findByCommunityCode(communityNum);
 
@@ -56,6 +68,7 @@ public class CommunityController {
 
     @PostMapping // 커뮤니티 등록하기
     @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR', 'USER')")
+    @ApiOperation(value = "커뮤니티 작성 Api")
     public ResponseEntity<?> registCommunity(@RequestBody CommunityDTO communityDTO) {
 
         System.out.println((communityDTO));
@@ -77,6 +90,7 @@ public class CommunityController {
 
     @PutMapping("/{communityNum}")// 커뮤니티 수정
     @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR', 'USER')")
+    @ApiOperation(value = "커뮤니티 수정 Api")
     public ResponseEntity<?> updateCommunity(@RequestBody CommunityDTO communityDTO){
 
         // 유효성 검사 체크 (RequestParam)으로 코드만 받아오고 나머지는 service 로직에서 찾아오기 .,...
@@ -101,6 +115,7 @@ public class CommunityController {
 
     @DeleteMapping("/{communityNum}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR', 'USER')")
+    @ApiOperation(value = "커뮤니티 삭제 Api")
     public ResponseEntity<?> deleteCommunity(@PathVariable int communityNum){
 
         Community community = communityService.findByCommunityCode(communityNum);

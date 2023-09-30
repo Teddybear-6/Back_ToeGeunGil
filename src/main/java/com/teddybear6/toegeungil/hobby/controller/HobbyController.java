@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/hobbys")
-@Api(value = "취미 Api")
+@Api(value = "취미 Api", tags = {"01. Hobby Info"}, description = "취미 Api")
 @ApiResponses({
         @ApiResponse(code = 200,message = "성공"),
         @ApiResponse(code = 404,message = "잘못된 접근") ,
