@@ -17,10 +17,8 @@ import java.util.List;
 
 @Entity(name = "hobby")
 @Table(name = "hobby")
-@EntityListeners(AuditingEntityListener.class)
 @DynamicInsert
 @Where(clause = "hobby_status='Y'")
-
 public class Hobby {
 
     @Id
@@ -85,7 +83,6 @@ public class Hobby {
 
 
     @Column(name = "create_date")
-    @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date crateDate;
 
@@ -93,7 +90,6 @@ public class Hobby {
 
     @Column(name = "update_date")
     @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
     private Date updateDate;
 
     @JsonIgnore

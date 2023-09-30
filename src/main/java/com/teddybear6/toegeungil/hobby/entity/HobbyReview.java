@@ -14,7 +14,6 @@ import java.util.Date;
 
 @Entity(name = "hobby_review")
 @Table(name = "hobby_review")
-@EntityListeners(AuditingEntityListener.class)
 @DynamicInsert
 @Where(clause = "review_status='Y'")
 public class HobbyReview {
@@ -41,13 +40,11 @@ public class HobbyReview {
     private int score;      // 점수
 
     @Column(name = "create_date")
-    @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date crateDate;
 
     @Column(name = "update_date")
     @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
     private Date updateDate;
 
     @Column(name = "review_status",columnDefinition = "varchar(1)" )

@@ -52,6 +52,7 @@ public class HobbyService {
 
     @Transactional
     public int registHobby(HobbyDTO hobbyDTO, MultipartFile[] files) throws IOException, ParseException {
+        hobbyDTO.setCrateDate(new Date());
         Hobby hobby = new Hobby(hobbyDTO);
         List<HobbyKeywordDTO> keyword = hobbyDTO.getKeywordDTOList();
         List<HobbyKeyword> hobbyKeywordList = new ArrayList<>();
@@ -139,8 +140,6 @@ public class HobbyService {
     @Transactional
     public int updateHobby(Hobby hobby, HobbyDTO hobbyDTO, MultipartFile[] files, List<ImageUrlsDTO> urls) {
 
-
-
         List<HobbyKeyword> hobbyKeywordList = new ArrayList<>();
         List<HobbyImage> hobbyImages = new ArrayList<>();
 
@@ -159,7 +158,7 @@ public class HobbyService {
         hobby.setEndTime(hobbyDTO.getEndTime());           //끝나는 시간
         hobby.setClosingDate(hobbyDTO.getClosingDate());   //마감날짜
         hobby.setHobbyPlace(hobbyDTO.getHobbyPlace());        //상세지역
-
+        hobby.setUpdateDate(new Date());
 
 //
 
