@@ -295,7 +295,7 @@ public class socialController {
     /*
     필터*/
     @GetMapping("/category/{categoryCode}") //30_카테고리 코드 필터
-    @ApiOperation(value = "카테고리 별 소셜 조회 Api")
+    @ApiOperation(value = "카테고리별 소셜 조회 Api")
     public ResponseEntity<List<?>> readSocialPostCategory(@PathVariable int categoryCode, final Pageable pageable) {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
@@ -306,7 +306,7 @@ public class socialController {
     }
 
     @GetMapping("/category/{categoryCode}/size") //30_1_카테고리 사이즈 필터
-    @ApiOperation(value = "카테고리 별 소셜 사이즈 조회 Api")
+    @ApiOperation(value = "카테고리별 소셜 사이즈 조회 Api")
     public ResponseEntity<?> readSocialPostCategorySize(@PathVariable int categoryCode, final Pageable pageable) {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
@@ -317,7 +317,7 @@ public class socialController {
     }
 
     @GetMapping("local/{localCode}") //31_지역 코드 필터
-    @ApiOperation(value = "지역 별 소셜 조회 Api")
+    @ApiOperation(value = "지역별 소셜 조회 Api")
     public ResponseEntity<List<?>> readSocialPostLocal(@PathVariable int localCode) {
         //지역 코드
         Local local = socialService.readSocialPostLocal(localCode);
