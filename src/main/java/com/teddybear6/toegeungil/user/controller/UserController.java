@@ -102,20 +102,20 @@ public class UserController {
 
     }
 
-    /* 비밀번호 찾기
-     * */
-    @PostMapping("/findPass")
-    @ApiOperation(value = "비밀번호 찾기 Api", notes = "이름, 닉네임, 이메일을 통해 비밀번호를 조회한다.")
-    //이름, 닉네임 이메일
-    public ResponseEntity<?> findpass(@RequestBody FindPassDTO passDTO /*이름 닉네임 이메일 받기*/){
-        String pass = userViewService.finduserpass(passDTO /*이름 닉네임 이메일 넣기*/);
-
-        System.out.println(pass);
-//        if(!Objects.isNull(userViewService)){
-//            return ResponseEntity.ok().body(false);
-//        }
-        return ResponseEntity.ok().body(true);
-    }
+//    /* 비밀번호 찾기
+//     * */
+//    @PostMapping("/findPass")
+//    @ApiOperation(value = "비밀번호 찾기 Api", notes = "이름, 닉네임, 이메일을 통해 비밀번호를 조회한다.")
+//    //이름, 닉네임 이메일
+//    public ResponseEntity<?> findpass(@RequestBody FindPassDTO passDTO /*이름 닉네임 이메일 받기*/){
+//        String pass = userViewService.finduserpass(passDTO /*이름 닉네임 이메일 넣기*/);
+//
+//        System.out.println(pass);
+////        if(!Objects.isNull(userViewService)){
+////            return ResponseEntity.ok().body(false);
+////        }
+//        return ResponseEntity.ok().body(true);
+//    }
 
 //    @PostMapping("/sendtemppwd")
 //    public boolean sendTemPwd(@RequestParam("email")String email, @RequestParam("randnum")String randnum){
@@ -173,7 +173,7 @@ public class UserController {
 //    }
 
 
-    //이메일
+    //이메일 임시 비밀번호 발송
     @ResponseBody
     @PostMapping("/mailConfirm")
     @ApiOperation(value = "임시 비밀번호 발송 Api", notes = "이메일을 통해 임시 비밀번호를 발송한다.")

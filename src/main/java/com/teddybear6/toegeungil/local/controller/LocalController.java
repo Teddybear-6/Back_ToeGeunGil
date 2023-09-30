@@ -7,6 +7,10 @@ import com.teddybear6.toegeungil.local.entity.Local;
 import com.teddybear6.toegeungil.local.service.LocalService;
 import com.teddybear6.toegeungil.user.entity.UserEntity;
 import com.teddybear6.toegeungil.user.sevice.UserViewService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +23,12 @@ import java.util.stream.Collectors;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/local")
+@Api(value = "지역 Api", tags = {"11. Local Info"}, description = "지역 Api")
+@ApiResponses({
+        @ApiResponse(code = 200,message = "성공"),
+        @ApiResponse(code = 404,message = "잘못된 접근") ,
+        @ApiResponse(code = 500,message = "서버에러")
+})
 public class LocalController {
 
     private final LocalService  localService;
@@ -29,7 +39,8 @@ public class LocalController {
         this.userViewService = userViewService;
     }
 
-    @GetMapping
+    @GetMapping //전체 조회
+    @ApiOperation(value = "지역 전체 조회 Api", notes = "지역 전체 목록을 조회한다.")
     public ResponseEntity<List<?>> findAllLocal(){
         List<Local> localList = localService.findAll();
 
@@ -45,8 +56,9 @@ public class LocalController {
 
     }
 
-    @PostMapping
+    @PostMapping //지역 등록
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "지역 등록 Api", notes = "새로운 지역을 등록한다.")
     public ResponseEntity<?> registLocal(@AuthenticationPrincipal AuthUserDetail userDetails,@RequestBody LocalDTO localDTO){
         System.out.println(userDetails);
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
@@ -73,7 +85,8 @@ public class LocalController {
 
     }
 
-    @GetMapping("/{localCode}")
+    @GetMapping("/{localCode}") //단일 조회
+    @ApiOperation(value = "지역 단일 조회 Api", notes = "지역 번호로 해당 지역 목록을 조회한다.")
     public ResponseEntity<Object> findLocalByCode(@PathVariable int localCode){
 
         Local local = localService.findById(localCode);
@@ -87,8 +100,9 @@ public class LocalController {
     }
 
 
-    @PutMapping("/{localCode}")
+    @PutMapping("/{localCode}") //지역 수정
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "지역 수정 Api", notes = "지역 번호로 해당 지역 정보를 수정한다.")
     public ResponseEntity<?>  updateLocal(@AuthenticationPrincipal AuthUserDetail userDetails,@PathVariable int localCode, @RequestBody LocalDTO localDTO){
         System.out.println(userDetails);
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
@@ -116,8 +130,9 @@ public class LocalController {
     }
 
 
-    @DeleteMapping("/{localCode}")
+    @DeleteMapping("/{localCode}") //지역 삭제
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "카테고리 삭제 Api", notes = "지역 번호로 해당 지역 정보를 삭제한다.")
     public ResponseEntity<?> deleteLocal(@AuthenticationPrincipal AuthUserDetail userDetails,@PathVariable int localCode){
         System.out.println(userDetails);
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
