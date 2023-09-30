@@ -17,7 +17,6 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 @DynamicInsert
 @Where(clause = "review_status='Y'")
-
 public class HobbyReview {
 
 

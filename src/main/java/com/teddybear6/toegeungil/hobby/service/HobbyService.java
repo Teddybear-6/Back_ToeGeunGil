@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -122,11 +123,6 @@ public class HobbyService {
 
     }
 
-    public HobbyImage detailImage(int hobbyCode) {
-        HobbyImage hobbyImages = storageRepository.findById(hobbyCode);
-
-        return hobbyImages;
-    }
 
     public int deleteById(Hobby hobby) {
         hobby.setHobbyStatus("N");
@@ -287,6 +283,7 @@ public class HobbyService {
     }
 
     public int registReview(HobbyReview hobbyReview) {
+        hobbyReview.setCrateDate(new Date());
         HobbyReview findReview = hobbyReviewRepository.save(hobbyReview);
 
         if (Objects.isNull(findReview)) {
@@ -312,6 +309,7 @@ public class HobbyService {
     public List<HobbyReview> findAllReview(int hobbyCode) {
 
         List<HobbyReview> hobbyReviews = hobbyReviewRepository.findAllByHobbyCode(hobbyCode);
+        System.out.println(hobbyReviews+"서비스");
 
         return hobbyReviews;
     }
@@ -343,6 +341,7 @@ public class HobbyService {
 
     @Transactional
     public int updateReview(HobbyReviewDTO hobbyReviewDTO) {
+        hobbyReviewDTO.setUpdateDate(new Date());
         HobbyReview findReview = hobbyReviewRepository.findById(hobbyReviewDTO.getReviewCode());
 
         findReview.setContent(hobbyReviewDTO.getContent());
