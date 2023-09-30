@@ -377,4 +377,26 @@ public class SocialService {
         List<Social> socialList = socialRepository.findAll();
         return socialList;
     }
+
+    public List<SocialDTO> findSocialBySocialNameContaining(Pageable pageable, String socialName) {
+        List<Social> socialList = socialRepository.findSocialBySocialNameContaining(socialName, pageable);
+        List<SocialDTO> socialDTOList = socialList.stream().map(m -> new SocialDTO(m)).collect(Collectors.toList());
+
+        for (int i = 0; i < socialList.size(); i++) {
+            List<Keyword> keywordList = new ArrayList<>();
+            List<SocialKeywordDTO> socialKeywordDTOList = new ArrayList<>();
+            for (int j = 0; j < socialList.get(i).getSocialKeywordList().size(); j++) {
+                keywordList.add(socialList.get(i).getSocialKeywordList().get(j).getKeyword());
+                socialKeywordDTOList = keywordList.stream().map(m -> new SocialKeywordDTO(m)).collect(Collectors.toList());
+            }
+            socialDTOList.get(i).setKeywordDTOList(socialKeywordDTOList);
+        }
+
+        return socialDTOList;
+    }
+
+    public List<Social> findBySocialNameContaining(String socialName) {
+        List<Social> socialList = socialRepository.findBySocialNameContaining(socialName);
+        return socialList;
+    }
 }
