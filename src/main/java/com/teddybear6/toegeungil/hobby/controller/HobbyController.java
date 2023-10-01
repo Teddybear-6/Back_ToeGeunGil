@@ -15,7 +15,7 @@ import com.teddybear6.toegeungil.user.sevice.UserViewService;
 import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Pageable;
 
-import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -64,14 +64,16 @@ public class HobbyController {
 
     //findall
     @GetMapping
-    public ResponseEntity<List<?>> hobbyfindAll(final Pageable pageable) {
-        List<HobbyGetDTO> hobbyList = hobbyService.findAll(pageable);
-        if (hobbyList.size() == 0) {
-            List<String> error = new ArrayList<>();
-            error.add("취미가 존재하지 않습니다.");
+    public ResponseEntity< Map<String, Object>> hobbyfindAll(final Pageable pageable) {
+        Map<String, Object> allhobbyMap = hobbyService.findAll(pageable);
+        List<HobbyGetDTO> hobbyGetDTOS = (List<HobbyGetDTO>) allhobbyMap.get("value");
+        if (hobbyGetDTOS.size() == 0) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("error", "취미가 존재하지 않습니다.");
             return ResponseEntity.status(500).body(error);
         }
-        return ResponseEntity.ok().body(hobbyList);
+
+        return ResponseEntity.ok().body(allhobbyMap);
     }
 
     @GetMapping("/tutor")
@@ -258,11 +260,6 @@ public class HobbyController {
 
     }
 
-    @GetMapping("/size")
-    public ResponseEntity<?> hobbySize() {
-        List<Hobby> hobbyList = hobbyService.findByAll();
-        return ResponseEntity.ok().body(hobbyList.size());
-    }
 
     @GetMapping("/tutorlist/size/{tutorCode}")
     public ResponseEntity<?> tutorHobbySize(@PathVariable int tutorCode) {

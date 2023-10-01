@@ -11,6 +11,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -92,9 +90,12 @@ public class HobbyService {
 
     }
 
-    public List<HobbyGetDTO> findAll(final Pageable pageable) {
 
-        List<Hobby> hobbyList = hobbyRepository.findAllByOrderByHobbyCodeDesc(pageable);
+    public Map<String, Object> findAll(final Pageable pageable) {
+
+        Page<Hobby> hobbyListPage = hobbyRepository.findAllByOrderByHobbyCodeDesc(pageable);
+
+        List<Hobby> hobbyList =hobbyListPage.getContent();
         List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
         for (int i = 0; i < hobbyList.size(); i++) {
@@ -106,9 +107,16 @@ public class HobbyService {
             }
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
-
-        return hobbyGetDTOS;
+        Map allhobbyMap = new HashMap<>();
+        allhobbyMap.put("value",hobbyGetDTOS);
+        allhobbyMap.put("size", hobbyListPage.getTotalElements());
+        return allhobbyMap;
     }
+
+
+
+
+
 
     public List<HobbyImage> findMainImage(int hobbyCode) {
         List<HobbyImage> hobbyImage = storageRepository.findByhobbyCode(hobbyCode);
