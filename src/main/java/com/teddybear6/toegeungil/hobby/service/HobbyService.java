@@ -364,22 +364,26 @@ public class HobbyService {
 
     }
 
-    public List<HobbyGetDTO> findByCategoryCode(int categoryCode, Pageable pageable) {
-        List<Hobby> hobbies = hobbyRepository.findByCategoryCode(categoryCode, pageable);
+    public Map<String,Object> findByCategoryCode(int categoryCode, Pageable pageable) {
+        Page<Hobby> hobbyListPage = hobbyRepository.findByCategoryCode(categoryCode, pageable);
+        List<Hobby> hobbyList =hobbyListPage.getContent();
 
-        List<HobbyGetDTO> hobbyGetDTOS = hobbies.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
-        for (int i = 0; i < hobbies.size(); i++) {
+        List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
+
+        for (int i = 0; i < hobbyList.size(); i++) {
             List<Keyword> keyword = new ArrayList<>();
             List<HobbyKeywordDTO> keywordDTOList = new ArrayList<>();
-            for (int j = 0; j < hobbies.get(i).getHobbyKeywordList().size(); j++) {
-                keyword.add(hobbies.get(i).getHobbyKeywordList().get(j).getKeyword());
+            for (int j = 0; j < hobbyList.get(i).getHobbyKeywordList().size(); j++) {
+                keyword.add(hobbyList.get(i).getHobbyKeywordList().get(j).getKeyword());
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
-
-        return hobbyGetDTOS;
+        Map<String,Object> categotyHoobby = new HashMap<>();
+        categotyHoobby.put("value",hobbyGetDTOS);
+        categotyHoobby.put("size",hobbyListPage.getTotalElements());
+        return categotyHoobby;
     }
 
     public List<HobbyJoin> findByJoin(int hobbyCode) {

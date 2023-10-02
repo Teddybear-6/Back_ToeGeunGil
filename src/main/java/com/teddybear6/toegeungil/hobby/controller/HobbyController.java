@@ -508,29 +508,18 @@ public class HobbyController {
     //카테고리 별 취미 조회
     //localhost:8001/hobbys/category/1?page=0&size=5
     @GetMapping("/category/{categoryCode}")
-    public ResponseEntity<List<?>> categoryHobby(@PathVariable int categoryCode, final Pageable pageable) {
-        List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCode(categoryCode,pageable);
-
+    public ResponseEntity<Map<String,Object>> categoryHobby(@PathVariable int categoryCode, final Pageable pageable) {
+        Map<String,Object> categotyHoobby = hobbyService.findByCategoryCode(categoryCode,pageable);
+        List<HobbyGetDTO> hobbies = (List<HobbyGetDTO>) categotyHoobby.get("value");
         if (hobbies.size() == 0) {
-            List<String> error = new ArrayList<>();
-            error.add(null);
+            Map<String,Object> error = new HashMap<>();
+            error.put("error",null);
             return ResponseEntity.status(404).body(error);
         }
 
-        return ResponseEntity.ok().body(hobbies);
+        return ResponseEntity.ok().body(categotyHoobby);
     }
-    @GetMapping("/category/size/{categoryCode}")
-    public ResponseEntity<?> categoryHobbysize(@PathVariable int categoryCode) {
-        List<Hobby> hobbies = hobbyService.findByCategoryCodeSize(categoryCode);
 
-        if (hobbies.size() == 0) {
-            List<String> error = new ArrayList<>();
-            error.add(null);
-            return ResponseEntity.status(404).body(error);
-        }
-
-        return ResponseEntity.ok().body(hobbies.size());
-    }
 
 
 
@@ -570,13 +559,6 @@ public class HobbyController {
     @GetMapping("/loacal/{localCode}/category/{categoryCode}")
     public ResponseEntity<List<?>> localAndCategoryFilter(@PathVariable int localCode, @PathVariable int categoryCode, final Pageable pageable) {
 
-        if (localCode == 0) {
-            List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCode(categoryCode, pageable);
-        }
-
-        if (categoryCode == 0) {
-            List<HobbyGetDTO> hobbies = hobbyService.findByLocalCode(localCode, pageable);
-        }
 
         List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCodeAndLocalCode(categoryCode, localCode, pageable);
 
