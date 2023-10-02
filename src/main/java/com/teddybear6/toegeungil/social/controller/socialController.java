@@ -14,6 +14,10 @@ import com.teddybear6.toegeungil.social.entity.SocialImage;
 import com.teddybear6.toegeungil.social.service.SocialService;
 import com.teddybear6.toegeungil.user.entity.UserEntity;
 import com.teddybear6.toegeungil.user.sevice.UserViewService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -46,6 +50,12 @@ import java.util.stream.Collectors;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/socials") //도메인
+@Api(value = "소셜 Api", tags = {"02. Social Info"}, description = "소셜 Api")
+@ApiResponses({
+        @ApiResponse(code = 200,message = "성공"),
+        @ApiResponse(code = 404,message = "잘못된 접근") ,
+        @ApiResponse(code = 500,message = "서버에러")
+})
 public class socialController {
     
     /*
@@ -72,14 +82,16 @@ public class socialController {
     - <PUT> /social/{socialID} : 소셜 수정
     - <DELETE> /social/{socialID} : 소셜 삭제 */
 
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        System.out.println("안녕 난 테스트");
-
-        return ResponseEntity.status(200).body("안녕 나 포스트맨에서 보여?");
-    }
+//    @GetMapping("/test")
+//    @ApiOperation(value = "test Api")
+//    public ResponseEntity<String> test() {
+//        System.out.println("안녕 난 테스트");
+//
+//        return ResponseEntity.status(200).body("안녕 나 포스트맨에서 보여?");
+//    }
 
     @GetMapping //01_소셜 전체 조회(/social)
+    @ApiOperation(value = "소셜 전체 조회 Api", notes = "소셜 전체 목록을 조회한다.")
     public ResponseEntity<List<?>> readAllSocial(final Pageable pageable) {
         List<SocialDTO> socialList = socialService.readAllSocial(pageable);
 
@@ -93,6 +105,7 @@ public class socialController {
     }
 
     @GetMapping("{socialNum}") //02_소셜 부분 조회(/social/{socialNum})
+    @ApiOperation(value = "소셜 단일 조회 Api", notes = "소셜 게시글 번호로 해당 게시글을 조회한다.")
     public ResponseEntity<?> readSocialPostNum(@PathVariable int socialNum) {
         Social social = socialService.readSocialPostNum(socialNum);
 
@@ -113,6 +126,7 @@ public class socialController {
 
     @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @PostMapping //03_소셜 등록(/social)
+    @ApiOperation(value = "소셜 작성 Api", notes = "소셜 게시글을 작성한다.")
     public ResponseEntity<?> SocialPostRegistration(@RequestPart("social") SocialDTO socialDTO, @RequestPart("image") MultipartFile file, @AuthenticationPrincipal AuthUserDetail userDetails) { //@RequestBody -> Json으로 넘기기위해 필요한 친구
 
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
@@ -144,6 +158,7 @@ public class socialController {
 
     @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @PutMapping //04_소셜 수정(/social{socialNum})
+    @ApiOperation(value = "소셜 수정 Api", notes = "소셜 게시글 번호로 해당 게시글을 수정한다.")
     public ResponseEntity<?> updateSocialPostNum(@RequestPart("social") SocialDTO socialDTO, @RequestPart(value = "image", required = false) MultipartFile file, SocialImage socialImage) {
         /*
         update 과정
@@ -172,6 +187,7 @@ public class socialController {
 
     @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @DeleteMapping("/{socialNum}")
+    @ApiOperation(value = "소셜 삭제 Api", notes = "소셜 게시글 번호로 해당 게시글을 삭제한다.")
     public ResponseEntity<?> deleteScoailPostNum(@PathVariable int socialNum) {
 
         Social findSocial = socialService.readSocialPostNum(socialNum);
@@ -192,6 +208,7 @@ public class socialController {
     /*
     이미지 (수정) 2023.09.18*/
 //    @PostMapping("/img") //이미지 업로드 (소셜 게시글 등록과 합침)
+//    @ApiOperation(value = "소셜 이미지 업로드 Api")
 //    public ResponseEntity<?> uploadImage(@RequestPart("img") MultipartFile file, SocialImageDTO socialImageDTO) {
 //        int result = 0;
 //        try {
@@ -211,6 +228,7 @@ public class socialController {
 //    }
 
     @GetMapping("/img/{socialNum}") //사진 다운로드(최종)
+    @ApiOperation(value = "소셜 이미지 다운로드 Api", notes = "소셜 게시글 번호로 해당 게시글의 이미지를 조회한다.")
     public ResponseEntity<?> downloadImage(@PathVariable int socialNum) {
         SocialImage socialImage = socialService.downloadImage(socialNum);
 
@@ -227,6 +245,7 @@ public class socialController {
     /*
     참여하기*/
     @GetMapping("/participate/{socialNum}") //20_소셜 참여 회원 조회(/participate/{게시글 번호})
+    @ApiOperation(value = "소셜 참여 회원 조회 Api", notes = "소셜 게시글 번호로 해당 게시글을 참여 회원을 조회한다.")
     public ResponseEntity<List<?>> readSocialParticipateUser(@PathVariable int socialNum) {
         //소셜
         List<Participate> participateList = socialService.readSocialParticipateUser(socialNum);
@@ -236,6 +255,7 @@ public class socialController {
     }
 
     @PostMapping("/participate/{socialNum}/{userNum}") //21_소셜 참여(/participate)
+    @ApiOperation(value = "소셜 참여 등록 Api", notes = "소셜 게시글 번호와 유저 번호로 해당 게시글에 참여 등록한다.")
     public ResponseEntity<?> SocialParticipateRegistration(@PathVariable int socialNum, ParticipateDTO participateDTO, @PathVariable int userNum) {
         //참여하기(게시글번호 AND 회원번호)가 존재하는지 확인하기
         Participate findSocialParticipateRegistration = socialService.findSocialParticipateRegistration(participateDTO.getSocialNum(), participateDTO.getUserNum());
@@ -259,7 +279,9 @@ public class socialController {
     }
 
     @GetMapping("/participate/{socialNum}/{userNum}")
+    @ApiOperation(value = "소셜 참여 여부 조회 Api", notes = "소셜 게시글 번호와 유저 번호로 해당 게시글의 참여 여부를 조회한다.")
     public ResponseEntity<?> SocialParticipateRead(@PathVariable int socialNum, ParticipateDTO participateDTO, @PathVariable int userNum) {
+        //회원AND참가여부 true false 조회
         Participate findSocialParticipateRegistration = socialService.findSocialParticipateRegistration(participateDTO.getSocialNum(), participateDTO.getUserNum());
 
         if (Objects.isNull(findSocialParticipateRegistration)) {
@@ -273,6 +295,7 @@ public class socialController {
     /*
     필터*/
     @GetMapping("/category/{categoryCode}") //30_카테고리 코드 필터
+    @ApiOperation(value = "카테고리별 소셜 조회 Api", notes = "카테고리 번호로 카테고리별 해당 소셜 게시글 목록을 조회한다.")
     public ResponseEntity<List<?>> readSocialPostCategory(@PathVariable int categoryCode, final Pageable pageable) {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
@@ -283,6 +306,7 @@ public class socialController {
     }
 
     @GetMapping("/category/{categoryCode}/size") //30_1_카테고리 사이즈 필터
+    @ApiOperation(value = "카테고리별 소셜 사이즈 조회 Api", notes = "카테고리 번호로 카테고리별 해당 소셜 게시글들의 사이즈를 조회한다.")
     public ResponseEntity<?> readSocialPostCategorySize(@PathVariable int categoryCode, final Pageable pageable) {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
@@ -293,6 +317,7 @@ public class socialController {
     }
 
     @GetMapping("local/{localCode}") //31_지역 코드 필터
+    @ApiOperation(value = "지역별 소셜 조회 Api", notes = "지역 번호로 지역별 해당 소셜 게시글 목록을 조회한다.")
     public ResponseEntity<List<?>> readSocialPostLocal(@PathVariable int localCode) {
         //지역 코드
         Local local = socialService.readSocialPostLocal(localCode);
@@ -302,7 +327,10 @@ public class socialController {
         return ResponseEntity.ok().body(socialList);
     }
 
+//    @ApiOperation(value = "카테고리 별 소셜 사이즈 조회 Api")
+
     @GetMapping("/category/{categoryCode}/local/{localCode}") //32_지역 AND 카테고리 필터
+    @ApiOperation(value = "카테고리 AND 지역 소셜 조회 Api", notes = "카테고리 번호와 지역 번호로 두 조건에 모두 해당되는 소셜 게시글 목록을 조회한다.")
     public ResponseEntity<List<?>> readSocialFilterCategoryAndLocal(@PathVariable int categoryCode, @PathVariable int localCode, final Pageable pageable) {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
@@ -321,9 +349,43 @@ public class socialController {
     /*
     페이징*/
     @GetMapping("/size")
+    @ApiOperation(value = "소셜 전체 사이즈 조회 Api", notes = "소셜 전체 목록의 사이즈를 조회한다.")
     public ResponseEntity<?> socialSize() {
         List<Social> socialList = socialService.readAllSocialSize();
         return ResponseEntity.ok().body(socialList.size());
     }
 
+
+    /*
+    검색 기능*/
+    @GetMapping("/search")
+    @ApiOperation(value = "소셜 검색 Api", notes = "검색어를 통해 해당되는 소셜의 제목을 조회한다.")
+    public ResponseEntity<List<?>> socialSearch(@RequestParam(name = "socialName") String socialName, final Pageable pageable) {
+
+        System.out.println(socialName + ": 확인");
+
+        List<SocialDTO> socialDTOList = socialService.findSocialBySocialNameContaining(pageable, socialName);
+
+        if (socialDTOList.size() == 0) {
+            List<String> error = new ArrayList<>();
+            error.add(null);
+            return ResponseEntity.status(500).body(error);
+        } else {
+            return ResponseEntity.ok().body(socialDTOList);
+        }
+    }
+
+    @GetMapping("/search/size")
+    @ApiOperation(value = "소셜 검색 사이즈 Api", notes = "검색어를 통해 해당되는 소셜들을 사이즈를 조회한다.")
+    public ResponseEntity<?> socialSearchSize(@RequestParam(name = "socialName") String socialName) {
+        List<Social> socialList = socialService.findBySocialNameContaining(socialName);
+
+        if (socialList.size() == 0) {
+            List<String> error = new ArrayList<>();
+            error.add(null);
+            return ResponseEntity.status(500).body(error);
+        } else {
+            return ResponseEntity.ok().body(socialList.size());
+        }
+    }
 }

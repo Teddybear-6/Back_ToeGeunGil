@@ -9,6 +9,10 @@ import com.teddybear6.toegeungil.user.dto.InsertUserDTO;
 import com.teddybear6.toegeungil.user.entity.UserEntity;
 import com.teddybear6.toegeungil.user.sevice.EmailService;
 import com.teddybear6.toegeungil.user.sevice.UserViewService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +24,12 @@ import java.util.List;
 import java.util.Objects;
 @RestController
 @RequestMapping("/user")
+@Api(value = "회원 Api", tags = {"00. User Info"}, description = "회원 Api")
+@ApiResponses({
+        @ApiResponse(code = 200,message = "성공"),
+        @ApiResponse(code = 404,message = "잘못된 접근") ,
+        @ApiResponse(code = 500,message = "서버에러")
+})
 public class UserController {
     private final UserViewService userViewService;
     private final EmailService emailService;
@@ -41,6 +51,7 @@ public class UserController {
     //2. 널이면 존재하지 않는 회원이라고 알려주고
     //3. 널이 아니면 비밀번호 복호화를 해서 담아서 리턴
     @PostMapping("/regist") // 회원가입
+    @ApiOperation(value = "회원 등록 Api", notes = "회원가입을 통해 회원을 등록한다.")
     public ResponseEntity<?> regist(@RequestBody InsertUserDTO user) {
         System.out.println(user);
         UserEntity userEntity = userViewService.findUserEmail(user.getUserEmail());
@@ -59,6 +70,7 @@ public class UserController {
 
 
     @GetMapping("/{userNo}")
+    @ApiOperation(value = "회원 단일 조회 Api", notes = "회원 번호로 해당 회원을 조회한다.")
     public ResponseEntity<?> findUser(@PathVariable int userNo) {
         UserEntity result = userViewService.findById(userNo);
 
@@ -76,6 +88,7 @@ public class UserController {
     }
 
     @PostMapping("/findEmail")
+    @ApiOperation(value = "이메일 중복 확인 Api", notes = "이메일 중복 확인을 통해 사용 가능한 이메일을 등록한다.")
     public ResponseEntity<?> findEmail(@RequestBody String  email){
         System.out.println("email : " + email);
         UserEntity user = userViewService.findUserEmail(email);
@@ -89,20 +102,20 @@ public class UserController {
 
     }
 
-    /* 비밀번호 찾기
-     * */
-    @PostMapping("/findPass")
-    //이름, 닉네임 이메일 
-    // 
-    public ResponseEntity<?> findpass(@RequestBody FindPassDTO passDTO /*이름 닉네임 이메일 받기*/){
-        String pass = userViewService.finduserpass(passDTO /*이름 닉네임 이메일 넣기*/);
-
-        System.out.println(pass);
-//        if(!Objects.isNull(userViewService)){
-//            return ResponseEntity.ok().body(false);
-//        }
-        return ResponseEntity.ok().body(true);
-    }
+//    /* 비밀번호 찾기
+//     * */
+//    @PostMapping("/findPass")
+//    @ApiOperation(value = "비밀번호 찾기 Api", notes = "이름, 닉네임, 이메일을 통해 비밀번호를 조회한다.")
+//    //이름, 닉네임 이메일
+//    public ResponseEntity<?> findpass(@RequestBody FindPassDTO passDTO /*이름 닉네임 이메일 받기*/){
+//        String pass = userViewService.finduserpass(passDTO /*이름 닉네임 이메일 넣기*/);
+//
+//        System.out.println(pass);
+////        if(!Objects.isNull(userViewService)){
+////            return ResponseEntity.ok().body(false);
+////        }
+//        return ResponseEntity.ok().body(true);
+//    }
 
 //    @PostMapping("/sendtemppwd")
 //    public boolean sendTemPwd(@RequestParam("email")String email, @RequestParam("randnum")String randnum){
@@ -160,9 +173,10 @@ public class UserController {
 //    }
 
 
-    //이메일
+    //이메일 임시 비밀번호 발송
     @ResponseBody
     @PostMapping("/mailConfirm")
+    @ApiOperation(value = "임시 비밀번호 발송 Api", notes = "이메일을 통해 임시 비밀번호를 발송한다.")
     public ResponseEntity<?> mailConfirm(@RequestBody EmailAuthDTO emailAuthDTO) throws MessagingException, UnsupportedEncodingException {
         System.out.println(emailAuthDTO);
 

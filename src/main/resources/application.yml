@@ -26,6 +26,9 @@ spring:
     web:
       resources:
         static-locations: classpath:/static/upload/
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 
 

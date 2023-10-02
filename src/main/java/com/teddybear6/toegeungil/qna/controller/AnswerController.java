@@ -2,6 +2,10 @@ package com.teddybear6.toegeungil.qna.controller;
 
 import com.teddybear6.toegeungil.qna.entity.Answer;
 import com.teddybear6.toegeungil.qna.service.AnsService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +15,12 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/answer")
+@Api(value = "QnA 답변 Api", tags = {"05.1. QnA_Answer Info"}, description = "QnA_답변 Api")
+@ApiResponses({
+        @ApiResponse(code = 200,message = "성공"),
+        @ApiResponse(code = 404,message = "잘못된 접근") ,
+        @ApiResponse(code = 500,message = "서버에러")
+})
 public class AnswerController {
 
     private final AnsService ansService;
@@ -19,6 +29,7 @@ public class AnswerController {
     }
 
     @GetMapping("/{ansNum}")
+    @ApiOperation(value = "QnA 답변 단일 조회 Api", notes = "QnA 답변 번호로 해당 게시글을 조회한다.")
     public ResponseEntity<Object> findAnswerByCode(@PathVariable int ansNum){
         Answer answer = ansService.findAnswerByCode(ansNum);
 
@@ -29,6 +40,7 @@ public class AnswerController {
     }
 
     @GetMapping("/list")
+    @ApiOperation(value = "QnA 답변 전체 조회 Api", notes = "QnA 답변 전체 목록을 조회한다.")
     public ResponseEntity<List<?>> findAllAnswer(){
         List<Answer> answerList = ansService.findAllAnswer();
         if(answerList.size() < 0){
@@ -39,6 +51,7 @@ public class AnswerController {
         return ResponseEntity.ok().body(answerList);
     }
     @PostMapping("/regist")
+    @ApiOperation(value = "QnA 답변 작성 Api", notes = "QnA 답변 게시글을 작성한다.")
     public ResponseEntity<?> regist(@RequestBody Answer answer){
         System.out.println("cnt: " + answer);
         int result = ansService.registAnswer(answer);
@@ -47,6 +60,7 @@ public class AnswerController {
     }  //글 생성
 
     @PutMapping("/update")
+    @ApiOperation(value = "QnA 답변 수정 Api", notes = "QnA 답변 게시글을 수정한다.")
     public ResponseEntity<?> update(Answer answer){
         Answer findAnswer = ansService.findAnswerByCode(answer.getAnswerNum());
 
@@ -62,6 +76,7 @@ public class AnswerController {
     }
 
     @DeleteMapping("/{delete}")
+    @ApiOperation(value = "QnA 답변 삭제 Api", notes = "QnA 답변 게시글을 삭제한다.")
     public ResponseEntity<?> delete(@PathVariable int delete){
         ansService.deleteCode(delete);
         return ResponseEntity.ok().body("삭제 완료");

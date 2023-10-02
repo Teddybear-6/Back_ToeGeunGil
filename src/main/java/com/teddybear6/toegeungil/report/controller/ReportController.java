@@ -2,6 +2,10 @@ package com.teddybear6.toegeungil.report.controller;
 
 import com.teddybear6.toegeungil.report.entity.Report;
 import com.teddybear6.toegeungil.report.service.ReportService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +15,12 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/reports")
+@Api(value = "신고하기 Api", tags = {"06. Report Info"}, description = "신고하기 Api")
+@ApiResponses({
+        @ApiResponse(code = 200,message = "성공"),
+        @ApiResponse(code = 404,message = "잘못된 접근") ,
+        @ApiResponse(code = 500,message = "서버에러")
+})
 public class ReportController {
 
     private final ReportService reportService;
@@ -21,6 +31,7 @@ public class ReportController {
 
     /* <GET> /reports: 신고 목록 조회 */
     @GetMapping
+    @ApiOperation(value = "신고하기 전체 조회 Api", notes = "신고하기 전체 목록을 조회한다.")
     public ResponseEntity<List<?>> findAllReport(){
         List<Report> reportList = reportService.findAllReport();
 
@@ -34,6 +45,7 @@ public class ReportController {
 
     /* <GET> /reports/{reportID} : 신고 상세 조회 */
     @GetMapping("/{reportNum}")
+    @ApiOperation(value = "신고하기 단일 조회 Api", notes = "신고 번호로 해당 게시글을 조회한다.")
     public ResponseEntity<Object> findReportByCode(@PathVariable int reportNum){
         Report report = reportService.findReportByCode(reportNum);
 
@@ -46,6 +58,7 @@ public class ReportController {
 
     /* <POST> /reports: 신고 등록 */
     @PostMapping
+    @ApiOperation(value = "신고하기 작성 Api", notes = "신고하기 게시글을 작성한다.")
     private ResponseEntity<?> registReport(Report report){
         int result = reportService.registReport(report);
 
@@ -58,6 +71,7 @@ public class ReportController {
 
     /* <DELETE> /reports/{reportID} : 신고 삭제 */
     @DeleteMapping("/{reportNum}")
+    @ApiOperation(value = "신고 삭제 Api", notes = "신고 번호로 해당 게시글을 삭제한다.")
     private ResponseEntity<?> deleteReport(@PathVariable int reportNum){
         Report report = reportService.findReportByCode(reportNum);
 
