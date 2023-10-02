@@ -67,7 +67,6 @@ public class HobbyController {
     public ResponseEntity< Map<String, Object>> hobbyfindAll(final Pageable pageable) {
         Map<String, Object> allhobbyMap = hobbyService.findAll(pageable);
         List<HobbyGetDTO> hobbyGetDTOS = (List<HobbyGetDTO>) allhobbyMap.get("value");
-        System.out.println(hobbyGetDTOS.size());
         if (hobbyGetDTOS.size() == 0) {
             Map<String, Object> error = new HashMap<>();
             error.put("error",null);
@@ -149,7 +148,6 @@ public class HobbyController {
             return ResponseEntity.ok().body(respose);
         } else {
             respose.put("value", "등록 실패했습니다.");
-            System.out.println(respose);
             return ResponseEntity.status(500).body(respose);
         }
 
@@ -159,7 +157,6 @@ public class HobbyController {
     @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
     @PutMapping
     public ResponseEntity<?> updateHobby( @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart(value = "hobbyImage" ,required = false) MultipartFile[] files , @RequestPart(value = "urls",required = false) List<ImageUrlsDTO> urls  , @AuthenticationPrincipal AuthUserDetail userDetails ) {
-        System.out.println(hobbyDTO.getKeywordDTOList());
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
         Map<String, String> respose = new HashMap<>();
 
@@ -377,7 +374,6 @@ public class HobbyController {
 
 
         HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, userDetails.getUserEntity().getUserNo());
-        System.out.println(hobbyJoin);
         if (Objects.isNull(hobby) || hobby.getClose().equals("N") || Objects.isNull(hobbyJoin)) {
             return ResponseEntity.status(500).body("후기를 작성할 수 없습니다.");
         }
@@ -414,7 +410,6 @@ public class HobbyController {
         }
 
         List<HobbyReviewDTO> hobbyReviewDTOS = hobbyReviews.stream().map(m -> new HobbyReviewDTO(m)).collect(Collectors.toList());
-        System.out.println(hobbyReviewDTOS);
         return ResponseEntity.ok().body(hobbyReviewDTOS);
 
     }
@@ -612,27 +607,17 @@ public class HobbyController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<List<?>> hobbyfindsearch(final Pageable pageable,  @RequestParam(name="hobbytitle")  String hobbyTitle) {
+    public ResponseEntity<Map<String,Object>> hobbyfindsearch(final Pageable pageable,  @RequestParam(name="hobbytitle")  String hobbyTitle) {
 
-        System.out.println(hobbyTitle+"확인");
-        List<HobbyGetDTO> hobbyList = hobbyService.findHobbyTitleContatining(pageable ,hobbyTitle);
-        if (hobbyList.size() == 0) {
-            List<String> error = new ArrayList<>();
-            error.add(null);
+        Map<String ,Object> searchHobby = hobbyService.findHobbyTitleContatining(pageable ,hobbyTitle);
+        List<HobbyGetDTO> hobbyGetDTOS = (List<HobbyGetDTO>) searchHobby.get("value");
+        if (hobbyGetDTOS.size() == 0) {
+           Map<String ,Object> error = new HashMap<>();
+            error.put("error",null);
             return ResponseEntity.status(500).body(error);
         }
-        return ResponseEntity.ok().body(hobbyList);
+        return ResponseEntity.ok().body(searchHobby);
     }
 
-    @GetMapping("/search/size")
-    public ResponseEntity<?> hobbyfindsearchSize(@RequestParam(name="hobbytitle") String hobbyTitle) {
-        List<Hobby> hobbyList = hobbyService.findByHobbyTitleContatining(hobbyTitle);
-        if (hobbyList.size() == 0) {
-            List<String> error = new ArrayList<>();
-            error.add(null);
-            return ResponseEntity.status(500).body(error);
-        }
-        return ResponseEntity.ok().body(hobbyList.size());
-    }
 
 }

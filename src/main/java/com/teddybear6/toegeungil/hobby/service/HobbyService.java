@@ -467,9 +467,10 @@ public class HobbyService {
 
 
 
-    public List<HobbyGetDTO> findHobbyTitleContatining(final Pageable pageable , String name) {
+    public Map<String, Object>  findHobbyTitleContatining(final Pageable pageable , String name) {
 
-        List<Hobby> hobbyList = hobbyRepository.findHobbyByHobbyTitleContaining(pageable, name);
+        Page<Hobby> hobbyListPage = hobbyRepository.findHobbyByHobbyTitleContaining(pageable, name);
+        List<Hobby> hobbyList =hobbyListPage.getContent();
         List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
         for (int i = 0; i < hobbyList.size(); i++) {
@@ -481,8 +482,10 @@ public class HobbyService {
             }
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
-
-        return hobbyGetDTOS;
+        Map searchHobby = new HashMap<>();
+        searchHobby.put("value",hobbyGetDTOS);
+        searchHobby.put("size",hobbyListPage.getTotalElements());
+        return searchHobby;
     }
 
 
