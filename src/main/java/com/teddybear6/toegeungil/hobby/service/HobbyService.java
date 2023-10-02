@@ -96,6 +96,9 @@ public class HobbyService {
         Page<Hobby> hobbyListPage = hobbyRepository.findAllByOrderByHobbyCodeDesc(pageable);
 
         List<Hobby> hobbyList =hobbyListPage.getContent();
+
+
+
         List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
         for (int i = 0; i < hobbyList.size(); i++) {
@@ -316,8 +319,6 @@ public class HobbyService {
     public List<HobbyReview> findAllReview(int hobbyCode) {
 
         List<HobbyReview> hobbyReviews = hobbyReviewRepository.findAllByHobbyCode(hobbyCode);
-        System.out.println(hobbyReviews+"서비스");
-
         return hobbyReviews;
     }
 
@@ -441,15 +442,12 @@ public class HobbyService {
 
 
 
-    public List<Hobby> findByAll() {
-        List<Hobby> hobbyList = hobbyRepository.findAll();
 
-        return hobbyList;
-    }
+    public Map<String,Object> findByTutorCode(Pageable pageable, int userNo) {
 
-    public List<HobbyGetDTO> findByTutorCode(Pageable pageable, int userNo) {
+        Page<Hobby> hobbyListPage = hobbyRepository.findByTutorCodeOrderByHobbyCodeDesc(userNo,pageable);
+        List<Hobby> hobbyList =hobbyListPage.getContent();
 
-        List<Hobby> hobbyList = hobbyRepository.findByTutorCodeOrderByHobbyCodeDesc(userNo,pageable);
         List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
         for (int i = 0; i < hobbyList.size(); i++) {
@@ -461,15 +459,13 @@ public class HobbyService {
             }
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
-
-        return hobbyGetDTOS;
+        Map<String, Object> tutorhobbyMap = new HashMap<>();
+        tutorhobbyMap.put("value",hobbyGetDTOS);
+        tutorhobbyMap.put("size",hobbyListPage.getTotalElements());
+        return tutorhobbyMap;
     }
 
-    public List<Hobby> findByTutorCode(int tutorCode) {
-        List<Hobby> hobbyList = hobbyRepository.findByTutorCode(tutorCode);
 
-        return hobbyList;
-    }
 
     public List<HobbyGetDTO> findHobbyTitleContatining(final Pageable pageable , String name) {
 

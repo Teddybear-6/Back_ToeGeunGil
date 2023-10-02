@@ -67,9 +67,10 @@ public class HobbyController {
     public ResponseEntity< Map<String, Object>> hobbyfindAll(final Pageable pageable) {
         Map<String, Object> allhobbyMap = hobbyService.findAll(pageable);
         List<HobbyGetDTO> hobbyGetDTOS = (List<HobbyGetDTO>) allhobbyMap.get("value");
+        System.out.println(hobbyGetDTOS.size());
         if (hobbyGetDTOS.size() == 0) {
             Map<String, Object> error = new HashMap<>();
-            error.put("error", "취미가 존재하지 않습니다.");
+            error.put("error",null);
             return ResponseEntity.status(500).body(error);
         }
 
@@ -78,22 +79,24 @@ public class HobbyController {
 
     @GetMapping("/tutor")
     @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
-    public ResponseEntity<List<?>> hobbyfindTutir( @AuthenticationPrincipal AuthUserDetail userDetails, final Pageable pageable) {
+    public ResponseEntity< Map<String, Object>> hobbyfindTutor( @AuthenticationPrincipal AuthUserDetail userDetails, final Pageable pageable) {
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
 
         if (Objects.isNull(userEntity)) {
-            List<String> error = new ArrayList<>();
-            error.add("유저가 아닙니다.");
+            Map<String, Object> error = new HashMap<>();
+            error.put("user","회원이 아닙니다.");
             return ResponseEntity.status(500).body(error);
         }
 
-        List<HobbyGetDTO> hobbyList = hobbyService.findByTutorCode(pageable , userEntity.getUserNo() );
-        if (hobbyList.size() == 0) {
-            List<String> error = new ArrayList<>();
-
-            return ResponseEntity.status(500).body(hobbyList);
+        Map<String, Object> tutorhobbyMap = hobbyService.findByTutorCode(pageable , userEntity.getUserNo() );
+        List<HobbyGetDTO> hobbyGetDTOS = (List<HobbyGetDTO>) tutorhobbyMap.get("value");
+        if (hobbyGetDTOS.size() == 0) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("error",null);
+            return ResponseEntity.status(500).body(error);
         }
-        return ResponseEntity.ok().body(hobbyList);
+
+        return ResponseEntity.ok().body(tutorhobbyMap);
 
     }
 
@@ -261,13 +264,6 @@ public class HobbyController {
     }
 
 
-    @GetMapping("/tutorlist/size/{tutorCode}")
-    public ResponseEntity<?> tutorHobbySize(@PathVariable int tutorCode) {
-        List<Hobby> hobbyList = hobbyService.findByTutorCode(tutorCode);
-        return ResponseEntity.ok().body(hobbyList.size());
-    }
-
-
 
     //참여하기
     /* 포스트?
@@ -365,23 +361,12 @@ public class HobbyController {
 
     }
 
-    //참가자 get요청
-    /*
-     * 취미번호로 참가자 조회하기
-     * 참가자 회원번호 리턴
-     *
-     *
-     *
-     * */
-
 
     //찜하기
-    /*
-     * 참여하기랑 비슷한 로직
-     * */
 
 
-    //찜리스트 보기?
+
+    //찜리스트 보기
 
     //후기등록
     @PostMapping("/review/{hobbyCode}")
