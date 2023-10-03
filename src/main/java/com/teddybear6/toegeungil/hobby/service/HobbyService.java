@@ -102,6 +102,7 @@ public class HobbyService {
 
         List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
+
         for (int i = 0; i < hobbyList.size(); i++) {
             List<Keyword> keyword = new ArrayList<>();
             List<HobbyKeywordDTO> keywordDTOList = new ArrayList<>();
@@ -109,6 +110,12 @@ public class HobbyService {
                 keyword.add(hobbyList.get(i).getHobbyKeywordList().get(j).getKeyword());
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
+
+            List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
+
+            ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
+            hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
+
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
         Map allhobbyMap = new HashMap<>();
@@ -380,6 +387,10 @@ public class HobbyService {
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
+            List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
+
+            ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
+            hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
         }
         Map<String,Object> categotyHobby = new HashMap<>();
         categotyHobby.put("value",hobbyGetDTOS);
@@ -405,6 +416,10 @@ public class HobbyService {
                 keyword.add(hobbyList.get(i).getHobbyKeywordList().get(j).getKeyword());
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
+            List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
+
+            ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
+            hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
         Map<String,Object> localHobby = new HashMap<>();
@@ -425,6 +440,10 @@ public class HobbyService {
                 keyword.add(hobbies.get(i).getHobbyKeywordList().get(j).getKeyword());
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
+            List<HobbyImage> hobbyImages = hobbies.get(i).getHobbyImages();
+
+            ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
+            hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
 
@@ -465,6 +484,10 @@ public class HobbyService {
                 keyword.add(hobbyList.get(i).getHobbyKeywordList().get(j).getKeyword());
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
+            List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
+
+            ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
+            hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
         Map<String, Object> tutorhobbyMap = new HashMap<>();
@@ -488,6 +511,10 @@ public class HobbyService {
                 keyword.add(hobbyList.get(i).getHobbyKeywordList().get(j).getKeyword());
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
+            List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
+
+            ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
+            hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
         Map searchHobby = new HashMap<>();

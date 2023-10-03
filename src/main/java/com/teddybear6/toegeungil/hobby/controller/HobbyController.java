@@ -112,23 +112,6 @@ public class HobbyController {
 
     }
 
-    //취미 메인사진 조사
-    @GetMapping("/mainimages/{hobbyCode}")
-    @ApiOperation(value = "취미별 대표 이미지 조회 Api", notes = "취미 게시글 번호로 해당 게시글의 대표 이미지를 조회한다.")
-    public ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode ) {
-        List<HobbyImage> hobbyImages = hobbyService.findMainImage(hobbyCode);
-
-
-        if (hobbyImages.size() == 0) {
-            return ResponseEntity.status(404).body(null);
-        }
-        ImageIdDTO imageIdDTO = new ImageIdDTO();
-        imageIdDTO.setHobbyCode(hobbyCode);
-        imageIdDTO.setId(hobbyImages.get(0).getId());
-        imageIdDTO.setPath(hobbyImages.get(0).getPath());
-
-        return ResponseEntity.ok().body(imageIdDTO);
-    }
 
     //등록
     @PostMapping

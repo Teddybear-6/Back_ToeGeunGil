@@ -35,7 +35,7 @@ public class HobbyGetDTO {
 
     private List<HobbyKeywordDTO> keyword;
 
-
+    private ImageIdDTO imageIdDTO;
     private Date crateDate;
 
 
@@ -52,7 +52,7 @@ public class HobbyGetDTO {
     }
 
 
-    public HobbyGetDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, String hobbyPlace, Date date, Date startTime, Date endTime, int categoryCode, String close, List<HobbyKeywordDTO> keyword, Date crateDate, Date updateDate, String hobbyStats, int localCode) {
+    public HobbyGetDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, String hobbyPlace, Date date, Date startTime, Date endTime, int categoryCode, String close, List<HobbyKeywordDTO> keyword, ImageIdDTO imageIdDTO, Date crateDate, Date updateDate, String hobbyStats, int localCode, Date closingDate) {
         this.hobbyCode = hobbyCode;
         this.hobbyTitle = hobbyTitle;
         this.tutorCode = tutorCode;
@@ -67,10 +67,12 @@ public class HobbyGetDTO {
         this.categoryCode = categoryCode;
         this.close = close;
         this.keyword = keyword;
+        this.imageIdDTO = imageIdDTO;
         this.crateDate = crateDate;
         this.updateDate = updateDate;
         this.hobbyStats = hobbyStats;
         this.localCode = localCode;
+        this.closingDate = closingDate;
     }
 
     public HobbyGetDTO(Hobby hobby) {
@@ -98,6 +100,14 @@ public class HobbyGetDTO {
 
     public int getHobbyCode() {
         return hobbyCode;
+    }
+
+    public ImageIdDTO getImageIdDTO() {
+        return imageIdDTO;
+    }
+
+    public void setImageIdDTO(ImageIdDTO imageIdDTO) {
+        this.imageIdDTO = imageIdDTO;
     }
 
     public void setHobbyCode(int hobbyCode) {
@@ -266,6 +276,7 @@ public class HobbyGetDTO {
                 ", categoryCode=" + categoryCode +
                 ", close='" + close + '\'' +
                 ", keyword=" + keyword +
+                ", imageIdDTO=" + imageIdDTO +
                 ", crateDate=" + crateDate +
                 ", updateDate=" + updateDate +
                 ", hobbyStats='" + hobbyStats + '\'' +
