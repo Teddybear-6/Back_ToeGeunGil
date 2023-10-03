@@ -19,6 +19,9 @@ ext {
     set('springCloudVersion', "2021.0.8")
 }
 dependencies {
+    //스웨거
+    implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'

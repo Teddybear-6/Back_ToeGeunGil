@@ -11,6 +11,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,10 +50,12 @@ public class HobbyService {
 
     @Transactional
     public int registHobby(HobbyDTO hobbyDTO, MultipartFile[] files) throws IOException, ParseException {
+        hobbyDTO.setCrateDate(new Date());
         Hobby hobby = new Hobby(hobbyDTO);
         List<HobbyKeywordDTO> keyword = hobbyDTO.getKeywordDTOList();
         List<HobbyKeyword> hobbyKeywordList = new ArrayList<>();
         List<HobbyImage> hobbyImages = new ArrayList<>();
+
 
         for (int i = 0; i < keyword.size(); i++) {
             Keyword findKeyword = keywordRepository.findById(keyword.get(i).getKeywordCode());
@@ -90,10 +91,17 @@ public class HobbyService {
 
     }
 
-    public List<HobbyGetDTO> findAll(final Pageable pageable) {
 
-        List<Hobby> hobbyList = hobbyRepository.findAllByOrderByHobbyCodeDesc(pageable);
+    public Map<String, Object> findAll(final Pageable pageable) {
+
+        Page<Hobby> hobbyListPage = hobbyRepository.findAllByOrderByHobbyCodeDesc(pageable);
+
+        List<Hobby> hobbyList =hobbyListPage.getContent();
+
+
+
         List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
+
 
         for (int i = 0; i < hobbyList.size(); i++) {
             List<Keyword> keyword = new ArrayList<>();
@@ -102,11 +110,24 @@ public class HobbyService {
                 keyword.add(hobbyList.get(i).getHobbyKeywordList().get(j).getKeyword());
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
+
+            List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
+
+            ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
+            hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
+
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
-
-        return hobbyGetDTOS;
+        Map allhobbyMap = new HashMap<>();
+        allhobbyMap.put("value",hobbyGetDTOS);
+        allhobbyMap.put("size", hobbyListPage.getTotalElements());
+        return allhobbyMap;
     }
+
+
+
+
+
 
     public List<HobbyImage> findMainImage(int hobbyCode) {
         List<HobbyImage> hobbyImage = storageRepository.findByhobbyCode(hobbyCode);
@@ -122,11 +143,6 @@ public class HobbyService {
 
     }
 
-    public HobbyImage detailImage(int hobbyCode) {
-        HobbyImage hobbyImages = storageRepository.findById(hobbyCode);
-
-        return hobbyImages;
-    }
 
     public int deleteById(Hobby hobby) {
         hobby.setHobbyStatus("N");
@@ -142,8 +158,6 @@ public class HobbyService {
 
     @Transactional
     public int updateHobby(Hobby hobby, HobbyDTO hobbyDTO, MultipartFile[] files, List<ImageUrlsDTO> urls) {
-
-
 
         List<HobbyKeyword> hobbyKeywordList = new ArrayList<>();
         List<HobbyImage> hobbyImages = new ArrayList<>();
@@ -163,7 +177,7 @@ public class HobbyService {
         hobby.setEndTime(hobbyDTO.getEndTime());           //끝나는 시간
         hobby.setClosingDate(hobbyDTO.getClosingDate());   //마감날짜
         hobby.setHobbyPlace(hobbyDTO.getHobbyPlace());        //상세지역
-
+        hobby.setUpdateDate(new Date());
 
 //
 
@@ -287,6 +301,7 @@ public class HobbyService {
     }
 
     public int registReview(HobbyReview hobbyReview) {
+        hobbyReview.setCrateDate(new Date());
         HobbyReview findReview = hobbyReviewRepository.save(hobbyReview);
 
         if (Objects.isNull(findReview)) {
@@ -312,7 +327,6 @@ public class HobbyService {
     public List<HobbyReview> findAllReview(int hobbyCode) {
 
         List<HobbyReview> hobbyReviews = hobbyReviewRepository.findAllByHobbyCode(hobbyCode);
-
         return hobbyReviews;
     }
 
@@ -343,6 +357,7 @@ public class HobbyService {
 
     @Transactional
     public int updateReview(HobbyReviewDTO hobbyReviewDTO) {
+        hobbyReviewDTO.setUpdateDate(new Date());
         HobbyReview findReview = hobbyReviewRepository.findById(hobbyReviewDTO.getReviewCode());
 
         findReview.setContent(hobbyReviewDTO.getContent());
@@ -357,22 +372,30 @@ public class HobbyService {
 
     }
 
-    public List<HobbyGetDTO> findByCategoryCode(int categoryCode, Pageable pageable) {
-        List<Hobby> hobbies = hobbyRepository.findByCategoryCode(categoryCode, pageable);
+    public Map<String,Object> findByCategoryCode(int categoryCode, Pageable pageable) {
+        Page<Hobby> hobbyListPage = hobbyRepository.findByCategoryCode(categoryCode, pageable);
+        List<Hobby> hobbyList =hobbyListPage.getContent();
 
-        List<HobbyGetDTO> hobbyGetDTOS = hobbies.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
-        for (int i = 0; i < hobbies.size(); i++) {
+        List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
+
+        for (int i = 0; i < hobbyList.size(); i++) {
             List<Keyword> keyword = new ArrayList<>();
             List<HobbyKeywordDTO> keywordDTOList = new ArrayList<>();
-            for (int j = 0; j < hobbies.get(i).getHobbyKeywordList().size(); j++) {
-                keyword.add(hobbies.get(i).getHobbyKeywordList().get(j).getKeyword());
+            for (int j = 0; j < hobbyList.get(i).getHobbyKeywordList().size(); j++) {
+                keyword.add(hobbyList.get(i).getHobbyKeywordList().get(j).getKeyword());
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
-        }
+            List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
 
-        return hobbyGetDTOS;
+            ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
+            hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
+        }
+        Map<String,Object> categotyHobby = new HashMap<>();
+        categotyHobby.put("value",hobbyGetDTOS);
+        categotyHobby.put("size",hobbyListPage.getTotalElements());
+        return categotyHobby;
     }
 
     public List<HobbyJoin> findByJoin(int hobbyCode) {
@@ -381,22 +404,29 @@ public class HobbyService {
         return hobbyJoins;
     }
 
-    public List<HobbyGetDTO> findByLocalCode(int localCode, Pageable pageable) {
-        List<Hobby> hobbies = hobbyRepository.findByLocalCode(localCode, pageable);
-        List<HobbyGetDTO> hobbyGetDTOS = hobbies.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
+    public Map<String,Object> findByLocalCode(int localCode, Pageable pageable) {
+        Page<Hobby> hobbyListPage = hobbyRepository.findByLocalCode(localCode, pageable);
+        List<Hobby> hobbyList =hobbyListPage.getContent();
+        List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
-        for (int i = 0; i < hobbies.size(); i++) {
+        for (int i = 0; i < hobbyList.size(); i++) {
             List<Keyword> keyword = new ArrayList<>();
             List<HobbyKeywordDTO> keywordDTOList = new ArrayList<>();
-            for (int j = 0; j < hobbies.get(i).getHobbyKeywordList().size(); j++) {
-                keyword.add(hobbies.get(i).getHobbyKeywordList().get(j).getKeyword());
+            for (int j = 0; j < hobbyList.get(i).getHobbyKeywordList().size(); j++) {
+                keyword.add(hobbyList.get(i).getHobbyKeywordList().get(j).getKeyword());
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
+            List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
+
+            ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
+            hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
+        Map<String,Object> localHobby = new HashMap<>();
+        localHobby.put("value",hobbyGetDTOS);
+        localHobby.put("size",hobbyListPage.getTotalElements());
 
-
-        return hobbyGetDTOS;
+        return localHobby;
     }
 
     public List<HobbyGetDTO> findByCategoryCodeAndLocalCode(int categoryCode, int localCode, Pageable pageable) {
@@ -410,6 +440,10 @@ public class HobbyService {
                 keyword.add(hobbies.get(i).getHobbyKeywordList().get(j).getKeyword());
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
+            List<HobbyImage> hobbyImages = hobbies.get(i).getHobbyImages();
+
+            ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
+            hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
 
@@ -435,15 +469,12 @@ public class HobbyService {
 
 
 
-    public List<Hobby> findByAll() {
-        List<Hobby> hobbyList = hobbyRepository.findAll();
 
-        return hobbyList;
-    }
+    public Map<String,Object> findByTutorCode(Pageable pageable, int userNo) {
 
-    public List<HobbyGetDTO> findByTutorCode(Pageable pageable, int userNo) {
+        Page<Hobby> hobbyListPage = hobbyRepository.findByTutorCodeOrderByHobbyCodeDesc(userNo,pageable);
+        List<Hobby> hobbyList =hobbyListPage.getContent();
 
-        List<Hobby> hobbyList = hobbyRepository.findByTutorCodeOrderByHobbyCodeDesc(userNo,pageable);
         List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
         for (int i = 0; i < hobbyList.size(); i++) {
@@ -453,21 +484,24 @@ public class HobbyService {
                 keyword.add(hobbyList.get(i).getHobbyKeywordList().get(j).getKeyword());
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
+            List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
+
+            ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
+            hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
-
-        return hobbyGetDTOS;
+        Map<String, Object> tutorhobbyMap = new HashMap<>();
+        tutorhobbyMap.put("value",hobbyGetDTOS);
+        tutorhobbyMap.put("size",hobbyListPage.getTotalElements());
+        return tutorhobbyMap;
     }
 
-    public List<Hobby> findByTutorCode(int tutorCode) {
-        List<Hobby> hobbyList = hobbyRepository.findByTutorCode(tutorCode);
 
-        return hobbyList;
-    }
 
-    public List<HobbyGetDTO> findHobbyTitleContatining(final Pageable pageable , String name) {
+    public Map<String, Object>  findHobbyTitleContatining(final Pageable pageable , String name) {
 
-        List<Hobby> hobbyList = hobbyRepository.findHobbyByHobbyTitleContaining(pageable, name);
+        Page<Hobby> hobbyListPage = hobbyRepository.findHobbyByHobbyTitleContaining(pageable, name);
+        List<Hobby> hobbyList =hobbyListPage.getContent();
         List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
         for (int i = 0; i < hobbyList.size(); i++) {
@@ -477,15 +511,40 @@ public class HobbyService {
                 keyword.add(hobbyList.get(i).getHobbyKeywordList().get(j).getKeyword());
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
+            List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
+
+            ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
+            hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
-
-        return hobbyGetDTOS;
+        Map searchHobby = new HashMap<>();
+        searchHobby.put("value",hobbyGetDTOS);
+        searchHobby.put("size",hobbyListPage.getTotalElements());
+        return searchHobby;
     }
 
 
     public List<Hobby> findByHobbyTitleContatining(String name) {
         List<Hobby> hobbyList = hobbyRepository.findByHobbyTitleContaining(name);
         return hobbyList;
+    }
+
+    public List<Hobby> findByCategoryCodeSize(int categoryCode) {
+        List<Hobby> hobbies = hobbyRepository.findByCategoryCode(categoryCode);
+        return hobbies;
+
+    }
+
+    public List<Hobby> findByLocalCodesize(int localCode) {
+        List<Hobby> hobbies = hobbyRepository.findByLocalCode(localCode);
+
+        return hobbies;
+    }
+
+    public List<Hobby> findByCategoryCodeAndLocalCode(int categoryCode, int localCode) {
+        List<Hobby> hobbies = hobbyRepository.findByCategoryCodeAndLocalCode(categoryCode, localCode);
+
+        return hobbies;
+
     }
 }

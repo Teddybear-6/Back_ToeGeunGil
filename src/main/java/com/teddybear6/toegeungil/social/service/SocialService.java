@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 public class SocialService {
 
     private final SocialRepository socialRepository; //소셜
-
     private final ParticipateRepository participateRepository; //소셜참여
     private final CategoryRepository categoryRepository; //카테고리
     private final LocalRepository localRepository; //지역
@@ -39,7 +38,8 @@ public class SocialService {
     private final KeywordRepository keywordRepository;
     private final SocialImageRepository socialImageRepository;
 
-    public SocialService(SocialRepository socialRepository , ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository, SocialKeywordRepository socialKeywordRepository, KeywordRepository keywordRepository, SocialImageRepository socialImageRepository) {
+
+    public SocialService(SocialRepository socialRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository, SocialKeywordRepository socialKeywordRepository, KeywordRepository keywordRepository, SocialImageRepository socialImageRepository) {
         this.socialRepository = socialRepository;
         this.participateRepository = participateRepository;
         this.categoryRepository = categoryRepository;
@@ -376,6 +376,28 @@ public class SocialService {
     페이징*/
     public List<Social> readAllSocialSize() {
         List<Social> socialList = socialRepository.findAll();
+        return socialList;
+    }
+
+    public List<SocialDTO> findSocialBySocialNameContaining(Pageable pageable, String socialName) {
+        List<Social> socialList = socialRepository.findSocialBySocialNameContaining(socialName, pageable);
+        List<SocialDTO> socialDTOList = socialList.stream().map(m -> new SocialDTO(m)).collect(Collectors.toList());
+
+        for (int i = 0; i < socialList.size(); i++) {
+            List<Keyword> keywordList = new ArrayList<>();
+            List<SocialKeywordDTO> socialKeywordDTOList = new ArrayList<>();
+            for (int j = 0; j < socialList.get(i).getSocialKeywordList().size(); j++) {
+                keywordList.add(socialList.get(i).getSocialKeywordList().get(j).getKeyword());
+                socialKeywordDTOList = keywordList.stream().map(m -> new SocialKeywordDTO(m)).collect(Collectors.toList());
+            }
+            socialDTOList.get(i).setKeywordDTOList(socialKeywordDTOList);
+        }
+
+        return socialDTOList;
+    }
+
+    public List<Social> findBySocialNameContaining(String socialName) {
+        List<Social> socialList = socialRepository.findBySocialNameContaining(socialName);
         return socialList;
     }
 }

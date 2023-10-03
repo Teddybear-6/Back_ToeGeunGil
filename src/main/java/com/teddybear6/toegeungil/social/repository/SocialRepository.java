@@ -16,4 +16,8 @@ public interface SocialRepository extends JpaRepository<Social, Integer> {
     List<Social> findByLocalCode(int localCode); //31_지역 필터
 
     List<Social> findByCategoryCodeAndLocalCode(int categoryCode, int localCode); //32_카테고리 AND 지역
+
+    List<Social> findSocialBySocialNameContaining(String socialName, Pageable pageable); //검색기능
+
+    List<Social> findBySocialNameContaining(String socialName); //검색기능_size
 }
