@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiResponses;
 import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Pageable;
 
-import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -75,55 +75,43 @@ public class HobbyController {
     //findall
     @GetMapping
     @ApiOperation(value = "취미 전체 조회 Api", notes = "취미 전체 목록을 조회한다.")
-    public ResponseEntity<List<?>> hobbyfindAll(final Pageable pageable) {
-        List<HobbyGetDTO> hobbyList = hobbyService.findAll(pageable);
-        if (hobbyList.size() == 0) {
-            List<String> error = new ArrayList<>();
-            error.add("취미가 존재하지 않습니다.");
+    public ResponseEntity< Map<String, Object>> hobbyfindAll(final Pageable pageable) {
+        Map<String, Object> allhobbyMap = hobbyService.findAll(pageable);
+        List<HobbyGetDTO> hobbyGetDTOS = (List<HobbyGetDTO>) allhobbyMap.get("value");
+        if (hobbyGetDTOS.size() == 0) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("error",null);
+
             return ResponseEntity.status(500).body(error);
         }
-        return ResponseEntity.ok().body(hobbyList);
+
+        return ResponseEntity.ok().body(allhobbyMap);
     }
 
     @GetMapping("/tutor")
     @PreAuthorize("hasAnyRole('ADMIN','TUTOR')")
     @ApiOperation(value = "강사별 취미 조회 Api", notes = "강사별 소셜 목록을 조회한다.")
-    public ResponseEntity<List<?>> hobbyfindTutir( @AuthenticationPrincipal AuthUserDetail userDetails, final Pageable pageable) {
+    public ResponseEntity< Map<String, Object>> hobbyfindTutor( @AuthenticationPrincipal AuthUserDetail userDetails, final Pageable pageable) {
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
 
         if (Objects.isNull(userEntity)) {
-            List<String> error = new ArrayList<>();
-            error.add("유저가 아닙니다.");
+            Map<String, Object> error = new HashMap<>();
+            error.put("user","회원이 아닙니다.");
             return ResponseEntity.status(500).body(error);
         }
 
-        List<HobbyGetDTO> hobbyList = hobbyService.findByTutorCode(pageable , userEntity.getUserNo() );
-        if (hobbyList.size() == 0) {
-            List<String> error = new ArrayList<>();
-
-            return ResponseEntity.status(500).body(hobbyList);
+        Map<String, Object> tutorhobbyMap = hobbyService.findByTutorCode(pageable , userEntity.getUserNo() );
+        List<HobbyGetDTO> hobbyGetDTOS = (List<HobbyGetDTO>) tutorhobbyMap.get("value");
+        if (hobbyGetDTOS.size() == 0) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("error",null);
+            return ResponseEntity.status(500).body(error);
         }
-        return ResponseEntity.ok().body(hobbyList);
+
+        return ResponseEntity.ok().body(tutorhobbyMap);
 
     }
 
-    //취미 메인사진 조사
-    @GetMapping("/mainimages/{hobbyCode}")
-    @ApiOperation(value = "취미별 대표 이미지 조회 Api", notes = "취미 게시글 번호로 해당 게시글의 대표 이미지를 조회한다.")
-    public ResponseEntity<?> hobbyMianImage(@PathVariable int hobbyCode ) {
-        List<HobbyImage> hobbyImages = hobbyService.findMainImage(hobbyCode);
-
-
-        if (hobbyImages.size() == 0) {
-            return ResponseEntity.status(404).body(null);
-        }
-        ImageIdDTO imageIdDTO = new ImageIdDTO();
-        imageIdDTO.setHobbyCode(hobbyCode);
-        imageIdDTO.setId(hobbyImages.get(0).getId());
-        imageIdDTO.setPath(hobbyImages.get(0).getPath());
-
-        return ResponseEntity.ok().body(imageIdDTO);
-    }
 
     //등록
     @PostMapping
@@ -153,7 +141,6 @@ public class HobbyController {
             return ResponseEntity.ok().body(respose);
         } else {
             respose.put("value", "등록 실패했습니다.");
-            System.out.println(respose);
             return ResponseEntity.status(500).body(respose);
         }
 
@@ -164,7 +151,6 @@ public class HobbyController {
     @PutMapping
     @ApiOperation(value = "취미 수정 Api", notes = "취미 게시글을 수정한다.")
     public ResponseEntity<?> updateHobby( @RequestPart("hobby") HobbyDTO hobbyDTO, @RequestPart(value = "hobbyImage" ,required = false) MultipartFile[] files , @RequestPart(value = "urls",required = false) List<ImageUrlsDTO> urls  , @AuthenticationPrincipal AuthUserDetail userDetails ) {
-        System.out.println(hobbyDTO.getKeywordDTOList());
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
         Map<String, String> respose = new HashMap<>();
 
@@ -263,20 +249,6 @@ public class HobbyController {
         hobbyDTO.setKeywordDTOList(hobbyKeywordDTO);
         hobbyDTO.setImageId(imageIdDTOS);
         return ResponseEntity.ok().body(hobbyDTO);
-    }
-
-    @GetMapping("/size")
-    @ApiOperation(value = "취미 전체 사이즈 조회 Api", notes = "취미 전체 목록의 사이즈를 조회한다.")
-    public ResponseEntity<?> hobbySize() {
-        List<Hobby> hobbyList = hobbyService.findByAll();
-        return ResponseEntity.ok().body(hobbyList.size());
-    }
-
-    @GetMapping("/tutorlist/size/{tutorCode}")
-    @ApiOperation(value = "강사별 리스트 사이즈 조회 Api", notes = "강사별 취미 목록의 사이즈를 조회한다.")
-    public ResponseEntity<?> tutorHobbySize(@PathVariable int tutorCode) {
-        List<Hobby> hobbyList = hobbyService.findByTutorCode(tutorCode);
-        return ResponseEntity.ok().body(hobbyList.size());
     }
 
 
@@ -380,23 +352,12 @@ public class HobbyController {
 
     }
 
-    //참가자 get요청
-    /*
-     * 취미번호로 참가자 조회하기
-     * 참가자 회원번호 리턴
-     *
-     *
-     *
-     * */
-
 
     //찜하기
-    /*
-     * 참여하기랑 비슷한 로직
-     * */
 
 
-    //찜리스트 보기?
+
+    //찜리스트 보기
 
     //후기등록
     @PostMapping("/review/{hobbyCode}")
@@ -408,7 +369,6 @@ public class HobbyController {
 
 
         HobbyJoin hobbyJoin = hobbyService.findJoin(hobbyCode, userDetails.getUserEntity().getUserNo());
-        System.out.println(hobbyJoin);
         if (Objects.isNull(hobby) || hobby.getClose().equals("N") || Objects.isNull(hobbyJoin)) {
             return ResponseEntity.status(500).body("후기를 작성할 수 없습니다.");
         }
@@ -446,7 +406,6 @@ public class HobbyController {
         }
 
         List<HobbyReviewDTO> hobbyReviewDTOS = hobbyReviews.stream().map(m -> new HobbyReviewDTO(m)).collect(Collectors.toList());
-        System.out.println(hobbyReviewDTOS);
         return ResponseEntity.ok().body(hobbyReviewDTOS);
 
     }
@@ -546,30 +505,19 @@ public class HobbyController {
     //localhost:8001/hobbys/category/1?page=0&size=5
     @GetMapping("/category/{categoryCode}")
     @ApiOperation(value = "카테고리별 취미 조회 Api", notes = "카테고리 번호로 카테고리별 해당 취미 게시글 목록을 조회한다.")
-    public ResponseEntity<List<?>> categoryHobby(@PathVariable int categoryCode, final Pageable pageable) {
-        List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCode(categoryCode,pageable);
+    public ResponseEntity<Map<String,Object>> categoryHobby(@PathVariable int categoryCode, final Pageable pageable) {
+        Map<String,Object> categotyHoobby = hobbyService.findByCategoryCode(categoryCode,pageable);
+        List<HobbyGetDTO> hobbies = (List<HobbyGetDTO>) categotyHoobby.get("value");
 
         if (hobbies.size() == 0) {
-            List<String> error = new ArrayList<>();
-            error.add(null);
+            Map<String,Object> error = new HashMap<>();
+            error.put("error",null);
             return ResponseEntity.status(404).body(error);
         }
 
-        return ResponseEntity.ok().body(hobbies);
+        return ResponseEntity.ok().body(categotyHoobby);
     }
-    @GetMapping("/category/size/{categoryCode}")
-    @ApiOperation(value = "카테고리별 취미 사이즈 조회 Api", notes = "카테고리 번호로 카테고리별 해당 취미 게시글들의 사이즈를 조회한다.")
-    public ResponseEntity<?> categoryHobbysize(@PathVariable int categoryCode) {
-        List<Hobby> hobbies = hobbyService.findByCategoryCodeSize(categoryCode);
 
-        if (hobbies.size() == 0) {
-            List<String> error = new ArrayList<>();
-            error.add(null);
-            return ResponseEntity.status(404).body(error);
-        }
-
-        return ResponseEntity.ok().body(hobbies.size());
-    }
 
 
 
@@ -577,29 +525,17 @@ public class HobbyController {
     //localhost:8001/hobbys/local/1?page=0&size=5
     @GetMapping("/local/{localCode}")
     @ApiOperation(value = "지역별 취미 조회 Api", notes = "지역 번호로 지역별 해당 취미 게시글 목록을 조회한다.")
-    public ResponseEntity<List<?>> localHobby(@PathVariable int localCode, final Pageable pageable) {
-        List<HobbyGetDTO> hobbyGetDTOS = hobbyService.findByLocalCode(localCode, pageable);
-
+    public ResponseEntity<Map<String,Object>> localHobby(@PathVariable int localCode, final Pageable pageable) {
+        Map<String,Object> localHobby = hobbyService.findByLocalCode(localCode, pageable);
+        List<HobbyGetDTO> hobbyGetDTOS = (List<HobbyGetDTO>) localHobby.get("value");
         if (hobbyGetDTOS.size() == 0) {
-            List<String> error = new ArrayList<>();
-            error.add(null);
+            Map<String,Object> error = new HashMap<>();
+            error.put("error",null);
             return ResponseEntity.status(404).body(error);
         }
-        return ResponseEntity.ok().body(hobbyGetDTOS);
+        return ResponseEntity.ok().body(localHobby);
     }
 
-    @GetMapping("/local/size/{localCode}")
-    @ApiOperation(value = "지역별 취미 사이즈 조회 Api", notes = "지역 번호로 지역별 해당 취미 게시글들의 사이즈를 조회한다.")
-    public ResponseEntity<?> localHobbysize(@PathVariable int localCode) {
-        List<Hobby> hobbyGetDTOS = hobbyService.findByLocalCodesize(localCode);
-
-        if (hobbyGetDTOS.size() == 0) {
-            List<String> error = new ArrayList<>();
-            error.add("해당되는 취미가 없습니다.");
-            return ResponseEntity.status(404).body(error);
-        }
-        return ResponseEntity.ok().body(hobbyGetDTOS.size());
-    }
 
 
 
@@ -609,13 +545,6 @@ public class HobbyController {
     @ApiOperation(value = "카테고리 AND 지역 취미 조회 Api", notes = "카테고리 번호와 지역 번호로 두 조건에 모두 해당되는 취미 게시글 목록을 조회한다.")
     public ResponseEntity<List<?>> localAndCategoryFilter(@PathVariable int localCode, @PathVariable int categoryCode, final Pageable pageable) {
 
-        if (localCode == 0) {
-            List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCode(categoryCode, pageable);
-        }
-
-        if (categoryCode == 0) {
-            List<HobbyGetDTO> hobbies = hobbyService.findByLocalCode(localCode, pageable);
-        }
 
         List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCodeAndLocalCode(categoryCode, localCode, pageable);
 
@@ -648,28 +577,17 @@ public class HobbyController {
 
     @GetMapping("/search")
     @ApiOperation(value = "취미 검색 Api", notes = "검색어를 통해 해당되는 취미의 제목을 조회한다.")
-    public ResponseEntity<List<?>> hobbyfindsearch(final Pageable pageable,  @RequestParam(name="hobbytitle")  String hobbyTitle) {
+    public ResponseEntity<Map<String,Object>> hobbyfindsearch(final Pageable pageable,  @RequestParam(name="hobbytitle")  String hobbyTitle) {
 
-        System.out.println(hobbyTitle+"확인");
-        List<HobbyGetDTO> hobbyList = hobbyService.findHobbyTitleContatining(pageable ,hobbyTitle);
-        if (hobbyList.size() == 0) {
-            List<String> error = new ArrayList<>();
-            error.add(null);
+        Map<String ,Object> searchHobby = hobbyService.findHobbyTitleContatining(pageable ,hobbyTitle);
+        List<HobbyGetDTO> hobbyGetDTOS = (List<HobbyGetDTO>) searchHobby.get("value");
+        if (hobbyGetDTOS.size() == 0) {
+           Map<String ,Object> error = new HashMap<>();
+            error.put("error",null);
             return ResponseEntity.status(500).body(error);
         }
-        return ResponseEntity.ok().body(hobbyList);
+        return ResponseEntity.ok().body(searchHobby);
     }
 
-    @GetMapping("/search/size")
-    @ApiOperation(value = "취미 검색 사이즈 Api", notes = "검색어를 통해 해당되는 취미들을 사이즈를 조회한다.")
-    public ResponseEntity<?> hobbyfindsearchSize(@RequestParam(name="hobbytitle") String hobbyTitle) {
-        List<Hobby> hobbyList = hobbyService.findByHobbyTitleContatining(hobbyTitle);
-        if (hobbyList.size() == 0) {
-            List<String> error = new ArrayList<>();
-            error.add(null);
-            return ResponseEntity.status(500).body(error);
-        }
-        return ResponseEntity.ok().body(hobbyList.size());
-    }
 
 }
