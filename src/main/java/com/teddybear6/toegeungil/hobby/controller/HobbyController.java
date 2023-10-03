@@ -522,7 +522,6 @@ public class HobbyController {
     //localhost:8001/hobbys/category/1?page=0&size=5
     @GetMapping("/category/{categoryCode}")
     @ApiOperation(value = "카테고리별 취미 조회 Api", notes = "카테고리 번호로 카테고리별 해당 취미 게시글 목록을 조회한다.")
-
     public ResponseEntity<Map<String,Object>> categoryHobby(@PathVariable int categoryCode, final Pageable pageable) {
         Map<String,Object> categotyHoobby = hobbyService.findByCategoryCode(categoryCode,pageable);
         List<HobbyGetDTO> hobbies = (List<HobbyGetDTO>) categotyHoobby.get("value");
@@ -543,29 +542,17 @@ public class HobbyController {
     //localhost:8001/hobbys/local/1?page=0&size=5
     @GetMapping("/local/{localCode}")
     @ApiOperation(value = "지역별 취미 조회 Api", notes = "지역 번호로 지역별 해당 취미 게시글 목록을 조회한다.")
-    public ResponseEntity<List<?>> localHobby(@PathVariable int localCode, final Pageable pageable) {
-        List<HobbyGetDTO> hobbyGetDTOS = hobbyService.findByLocalCode(localCode, pageable);
-
+    public ResponseEntity<Map<String,Object>> localHobby(@PathVariable int localCode, final Pageable pageable) {
+        Map<String,Object> localHobby = hobbyService.findByLocalCode(localCode, pageable);
+        List<HobbyGetDTO> hobbyGetDTOS = (List<HobbyGetDTO>) localHobby.get("value");
         if (hobbyGetDTOS.size() == 0) {
-            List<String> error = new ArrayList<>();
-            error.add(null);
+            Map<String,Object> error = new HashMap<>();
+            error.put("error",null);
             return ResponseEntity.status(404).body(error);
         }
-        return ResponseEntity.ok().body(hobbyGetDTOS);
+        return ResponseEntity.ok().body(localHobby);
     }
 
-    @GetMapping("/local/size/{localCode}")
-    @ApiOperation(value = "지역별 취미 사이즈 조회 Api", notes = "지역 번호로 지역별 해당 취미 게시글들의 사이즈를 조회한다.")
-    public ResponseEntity<?> localHobbysize(@PathVariable int localCode) {
-        List<Hobby> hobbyGetDTOS = hobbyService.findByLocalCodesize(localCode);
-
-        if (hobbyGetDTOS.size() == 0) {
-            List<String> error = new ArrayList<>();
-            error.add("해당되는 취미가 없습니다.");
-            return ResponseEntity.status(404).body(error);
-        }
-        return ResponseEntity.ok().body(hobbyGetDTOS.size());
-    }
 
 
 

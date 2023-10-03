@@ -380,10 +380,10 @@ public class HobbyService {
             }
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
-        Map<String,Object> categotyHoobby = new HashMap<>();
-        categotyHoobby.put("value",hobbyGetDTOS);
-        categotyHoobby.put("size",hobbyListPage.getTotalElements());
-        return categotyHoobby;
+        Map<String,Object> categotyHobby = new HashMap<>();
+        categotyHobby.put("value",hobbyGetDTOS);
+        categotyHobby.put("size",hobbyListPage.getTotalElements());
+        return categotyHobby;
     }
 
     public List<HobbyJoin> findByJoin(int hobbyCode) {
@@ -392,22 +392,25 @@ public class HobbyService {
         return hobbyJoins;
     }
 
-    public List<HobbyGetDTO> findByLocalCode(int localCode, Pageable pageable) {
-        List<Hobby> hobbies = hobbyRepository.findByLocalCode(localCode, pageable);
-        List<HobbyGetDTO> hobbyGetDTOS = hobbies.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
+    public Map<String,Object> findByLocalCode(int localCode, Pageable pageable) {
+        Page<Hobby> hobbyListPage = hobbyRepository.findByLocalCode(localCode, pageable);
+        List<Hobby> hobbyList =hobbyListPage.getContent();
+        List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
-        for (int i = 0; i < hobbies.size(); i++) {
+        for (int i = 0; i < hobbyList.size(); i++) {
             List<Keyword> keyword = new ArrayList<>();
             List<HobbyKeywordDTO> keywordDTOList = new ArrayList<>();
-            for (int j = 0; j < hobbies.get(i).getHobbyKeywordList().size(); j++) {
-                keyword.add(hobbies.get(i).getHobbyKeywordList().get(j).getKeyword());
+            for (int j = 0; j < hobbyList.get(i).getHobbyKeywordList().size(); j++) {
+                keyword.add(hobbyList.get(i).getHobbyKeywordList().get(j).getKeyword());
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
+        Map<String,Object> localHobby = new HashMap<>();
+        localHobby.put("value",hobbyGetDTOS);
+        localHobby.put("size",hobbyListPage.getTotalElements());
 
-
-        return hobbyGetDTOS;
+        return localHobby;
     }
 
     public List<HobbyGetDTO> findByCategoryCodeAndLocalCode(int categoryCode, int localCode, Pageable pageable) {
