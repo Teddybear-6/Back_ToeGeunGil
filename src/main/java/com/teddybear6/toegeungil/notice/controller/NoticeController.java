@@ -6,6 +6,10 @@ import com.teddybear6.toegeungil.notice.entity.Notice;
 import com.teddybear6.toegeungil.notice.service.NoticeService;
 import com.teddybear6.toegeungil.user.entity.UserEntity;
 import com.teddybear6.toegeungil.user.sevice.UserViewService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +21,12 @@ import java.util.*;
 @RestController
 @RequestMapping("/notices") // 도메인을 의미
 @CrossOrigin(origins = "http://localhost:3000")
+@Api(value = "공지사항 Api", tags = {"04. Notice Info"}, description = "공지사항 Api")
+@ApiResponses({
+        @ApiResponse(code = 200,message = "성공"),
+        @ApiResponse(code = 404,message = "잘못된 접근") ,
+        @ApiResponse(code = 500,message = "서버에러")
+})
 public class NoticeController {
 
     private final NoticeService noticeService;
@@ -29,6 +39,7 @@ public class NoticeController {
 
     /* <GET> /notices : 공지사항 목록 전체 조회 */
     @GetMapping
+    @ApiOperation(value = "공지사항 전체 조회 Api", notes = "공지사항 전체 목록을 조회한다.")
     public ResponseEntity<List<?>> findAllNotice(final Pageable pageable) {
         List<Notice> noticeList = noticeService.findAllNotice(pageable);
 
@@ -42,6 +53,7 @@ public class NoticeController {
 
     /* <GET> /notices/{noticeNum} : 공지사항 목록 상세 조회 */
     @GetMapping("/{noticeNum}")
+    @ApiOperation(value = "공지사항 단일 조회 Api", notes = "공지사항 게시글 번호로 해당 게시글을 조회한다.")
     public ResponseEntity<Object> findNoticeByCode(@PathVariable int noticeNum) {
         Notice notice = noticeService.findNoticeByCode(noticeNum);
 
@@ -54,6 +66,7 @@ public class NoticeController {
 
     /* <POST> /notices: 공지사항 등록 */
     @PostMapping
+    @ApiOperation(value = "공지사항 작성 Api", notes = "공지사항 게시글을 작성한다.")
     public ResponseEntity<?> registNotice(@RequestBody Notice notice) {
         System.out.println(notice);
         notice.setNoticeDate(new Date());
@@ -70,6 +83,7 @@ public class NoticeController {
     /* <PUT> /notices/{noticeNum} : 공지사항 수정 */
     @PutMapping("/{noticeNum}")
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "공지사항 수정 Api", notes = "공지사항 게시글 번호로 해당 게시글을 수정한다.")
     public ResponseEntity<?> updateNotice(@AuthenticationPrincipal AuthUserDetail userDetails, @PathVariable int noticeNum, @RequestBody NoticeDetailDTO noticeDetailDTO) {
         System.out.println(userDetails);
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
@@ -101,6 +115,7 @@ public class NoticeController {
     /* <DELETE> /notices/{noticeNum} : 공지사항 삭제 */
     @DeleteMapping("/{noticeNum}")
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "공지사항 삭제 Api", notes = "공지사항 게시글 번호로 해당 게시글을 삭제한다.")
     public ResponseEntity<?> deleteNotice(@AuthenticationPrincipal AuthUserDetail userDetails, @PathVariable int noticeNum) {
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
         Map<String, String> respose = new HashMap<>();
@@ -127,6 +142,7 @@ public class NoticeController {
 
     /* paging */
     @GetMapping("/size")
+    @ApiOperation(value = "공지사항 전체 사이즈 조회 Api", notes = "공지사항 전체 목록의 사이즈를 조회한다.")
     public ResponseEntity<?> noticeSize() {
         List<Notice> noticeList = noticeService.readAllNoticeSize();
         return ResponseEntity.ok().body(noticeList.size());

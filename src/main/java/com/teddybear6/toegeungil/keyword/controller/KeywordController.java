@@ -3,6 +3,10 @@ package com.teddybear6.toegeungil.keyword.controller;
 import com.teddybear6.toegeungil.keyword.dto.KeywordDTO;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.keyword.service.KeywordService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +18,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/keyword")
 @CrossOrigin(origins = "http://localhost:3000")
+@Api(value = "키워드 Api", tags = {"12. Keyword Info"}, description = "키워드 Api")
+@ApiResponses({
+        @ApiResponse(code = 200,message = "성공"),
+        @ApiResponse(code = 404,message = "잘못된 접근") ,
+        @ApiResponse(code = 500,message = "서버에러")
+})
 public class KeywordController {
     private final KeywordService keywordService;
 
@@ -23,7 +33,8 @@ public class KeywordController {
     }
 
 
-    @GetMapping
+    @GetMapping //키워드 전체 조회
+    @ApiOperation(value = "키워드 전체 조회 Api", notes = "키워드 전체 목록을 조회한다.")
     public ResponseEntity<List<?>> findAllKeyword() {
         List<Keyword> keywordList = keywordService.findAll();
 
@@ -37,7 +48,8 @@ public class KeywordController {
         return ResponseEntity.ok().body(keywordDTOS);
     }
 
-    @GetMapping("/{keywordCode}")
+    @GetMapping("/{keywordCode}") //단일 조회
+    @ApiOperation(value = "키워드 단일 조회 Api", notes = "키워드 번호로 해당 키워드 목록을 조회한다.")
     public ResponseEntity<Object> findBykeywordCode(@PathVariable int keywordCode){
         Keyword keyword = keywordService.findById(keywordCode);
 
@@ -51,7 +63,8 @@ public class KeywordController {
     }
 
 
-    @PostMapping
+    @PostMapping //키워드 등록
+    @ApiOperation(value = "키워드 등록 Api", notes = "새로운 키워드를 등록한다.")
     public ResponseEntity<?> registKeyword(KeywordDTO keywordDTO) {
 
         List<Keyword> keywordList = keywordService.findBykeywordName(keywordDTO.getKeywordName());
@@ -73,7 +86,8 @@ public class KeywordController {
     }
 
 
-    @PutMapping("/{keywordCode}")
+    @PutMapping("/{keywordCode}") //키워드 수정
+    @ApiOperation(value = "키워드 수정 Api", notes = "키워드 번호로 해당 키워드 정보를 수정한다.")
     public  ResponseEntity<?> updateKeyword(@PathVariable int keywordCode , @RequestBody KeywordDTO keywordDTO){
 
         Keyword findkeyword = keywordService.findById(keywordCode);
@@ -89,7 +103,8 @@ public class KeywordController {
         }
     }
 
-    @DeleteMapping("/{keywordCode}")
+    @DeleteMapping("/{keywordCode}") //키워드 삭제
+    @ApiOperation(value = "키워드 삭제 Api", notes = "키워드 번호로 해당 키워드 정보를 삭제한다.")
     public ResponseEntity<?> deleteKeyword(@PathVariable int keywordCode){
         Keyword keyword = keywordService.findById(keywordCode);
         if(Objects.isNull(keyword)){
