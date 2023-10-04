@@ -429,27 +429,31 @@ public class HobbyService {
         return localHobby;
     }
 
-    public List<HobbyGetDTO> findByCategoryCodeAndLocalCode(int categoryCode, int localCode, Pageable pageable) {
-        List<Hobby> hobbies = hobbyRepository.findByCategoryCodeAndLocalCode(categoryCode, localCode, pageable);
-        List<HobbyGetDTO> hobbyGetDTOS = hobbies.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
+    public Map<String,Object> findByCategoryCodeAndLocalCode(int categoryCode, int localCode, Pageable pageable) {
+        Page<Hobby> hobbyListPage = hobbyRepository.findByCategoryCodeAndLocalCode(categoryCode, localCode, pageable);
+        List<Hobby> hobbyList =hobbyListPage.getContent();
+        List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
-        for (int i = 0; i < hobbies.size(); i++) {
+        for (int i = 0; i < hobbyList.size(); i++) {
             List<Keyword> keyword = new ArrayList<>();
             List<HobbyKeywordDTO> keywordDTOList = new ArrayList<>();
-            for (int j = 0; j < hobbies.get(i).getHobbyKeywordList().size(); j++) {
-                keyword.add(hobbies.get(i).getHobbyKeywordList().get(j).getKeyword());
+            for (int j = 0; j < hobbyList.get(i).getHobbyKeywordList().size(); j++) {
+                keyword.add(hobbyList.get(i).getHobbyKeywordList().get(j).getKeyword());
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
-            List<HobbyImage> hobbyImages = hobbies.get(i).getHobbyImages();
+            List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
 
             ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
             hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
         }
 
-
-        return hobbyGetDTOS;
+        Map<String,Object> categoryLocalHobby = new HashMap<>();
+        categoryLocalHobby.put("value",hobbyGetDTOS);
+        categoryLocalHobby.put("size",hobbyListPage.getTotalElements());
+        return categoryLocalHobby;
     }
+
 
     public ReviewAnswer registReviewAnswer(ReviewAnswerDTO reviewAnswerDTO) {
         ReviewAnswer reviewAnswer = new ReviewAnswer().tutorCode(reviewAnswerDTO.getTutorCode()).reviewCode(reviewAnswerDTO.getReviewCode()).content(reviewAnswerDTO.getContent()).builder();

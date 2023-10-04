@@ -21,7 +21,7 @@ public interface HobbyRepository extends JpaRepository<Hobby,Integer> {
 
     Page<Hobby> findByLocalCode(int localCode, Pageable pageable);
 
-    List<Hobby> findByCategoryCodeAndLocalCode(int categoryCode, int localCode, Pageable pageable);
+    Page<Hobby> findByCategoryCodeAndLocalCode(int categoryCode, int localCode, Pageable pageable);
 
     List<Hobby> findByTutorCode(int userNo, Pageable pageable);
 

@@ -543,31 +543,21 @@ public class HobbyController {
     //localhost:8001/hobbys/loacal/1/category/1?page=0&size=5
     @GetMapping("/loacal/{localCode}/category/{categoryCode}")
     @ApiOperation(value = "카테고리 AND 지역 취미 조회 Api", notes = "카테고리 번호와 지역 번호로 두 조건에 모두 해당되는 취미 게시글 목록을 조회한다.")
-    public ResponseEntity<List<?>> localAndCategoryFilter(@PathVariable int localCode, @PathVariable int categoryCode, final Pageable pageable) {
+    public ResponseEntity<Map<String,Object>> localAndCategoryFilter(@PathVariable int localCode, @PathVariable int categoryCode, final Pageable pageable) {
 
 
-        List<HobbyGetDTO> hobbies = hobbyService.findByCategoryCodeAndLocalCode(categoryCode, localCode, pageable);
+        Map<String,Object> hobbies = hobbyService.findByCategoryCodeAndLocalCode(categoryCode, localCode, pageable);
+        List<HobbyGetDTO> hobbyGetDTOS = (List<HobbyGetDTO>) hobbies.get("value");
 
-        if (hobbies.size() == 0) {
-            List<String> error = new ArrayList<>();
-            error.add(null);
+        if (hobbyGetDTOS.size() == 0) {
+            Map<String,Object> error = new HashMap<>();
+            error.put("error",null);
             return ResponseEntity.status(404).body(error);
         }
         return ResponseEntity.ok().body(hobbies);
     }
 
-    @GetMapping("/loacal/size/{localCode}/category/{categoryCode}")
-    @ApiOperation(value = "카테고리 AND 지역 취미 사이즈 조회 Api", notes = "카테고리 번호와 지역 번호로 두 조건에 모두 해당되는 취미 게시들의 사이즈를 조회한다.")
-    public ResponseEntity<?> localAndCategoryFiltersize(@PathVariable int localCode, @PathVariable int categoryCode) {
 
-
-        List<Hobby> hobbies = hobbyService.findByCategoryCodeAndLocalCode(categoryCode, localCode);
-
-        if (hobbies.size() == 0) {
-            return ResponseEntity.status(404).body(0);
-        }
-        return ResponseEntity.ok().body(hobbies.size());
-    }
 
 
 
