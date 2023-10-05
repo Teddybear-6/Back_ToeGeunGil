@@ -2,6 +2,7 @@ package com.teddybear6.toegeungil.notice.service;
 
 import com.teddybear6.toegeungil.notice.dto.NoticeDetailDTO;
 import com.teddybear6.toegeungil.notice.entity.Notice;
+import com.teddybear6.toegeungil.notice.repository.NoticeImageRepository;
 import com.teddybear6.toegeungil.notice.repository.NoticeRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,9 +16,11 @@ import java.util.Objects;
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
+    private final NoticeImageRepository noticeImageRepository;
 
-    public NoticeService(NoticeRepository noticeRegistory) {
-        this.noticeRepository = noticeRegistory;
+    public NoticeService(NoticeRepository noticeRepository, NoticeImageRepository noticeImageRepository) {
+        this.noticeRepository = noticeRepository;
+        this.noticeImageRepository = noticeImageRepository;
     }
 
     public Notice findNoticeByCode(int noticeNum) {
@@ -79,5 +82,10 @@ public class NoticeService {
     public List<Notice> readAllNoticeSize() {
         List<Notice> noticeList=noticeRepository.findAll();
         return noticeList;
+    }
+
+    public static NoticeImage downloadImage(int noticeNum) {
+        NoticeImage noticeImage = noticeImageRepository.findByNoticeNum(noticeNum);
+        return noticeImage;
     }
 }
