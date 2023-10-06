@@ -38,6 +38,7 @@ public class SocialService {
     private final KeywordRepository keywordRepository;
     private final SocialImageRepository socialImageRepository;
 
+
     public SocialService(SocialRepository socialRepository, ParticipateRepository participateRepository, CategoryRepository categoryRepository, LocalRepository localRepository, SocialKeywordRepository socialKeywordRepository, KeywordRepository keywordRepository, SocialImageRepository socialImageRepository) {
         this.socialRepository = socialRepository;
         this.participateRepository = participateRepository;

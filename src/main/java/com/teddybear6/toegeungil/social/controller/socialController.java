@@ -242,8 +242,10 @@ public class socialController {
     }
 
 
+
     /*
     참여하기*/
+
     @GetMapping("/participate/{socialNum}") //20_소셜 참여 회원 조회(/participate/{게시글 번호})
     @ApiOperation(value = "소셜 참여 회원 조회 Api", notes = "소셜 게시글 번호로 해당 게시글을 참여 회원을 조회한다.")
     public ResponseEntity<List<?>> readSocialParticipateUser(@PathVariable int socialNum) {

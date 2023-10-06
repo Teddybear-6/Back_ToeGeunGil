@@ -51,13 +51,15 @@ public class CommentController {
     }
     @PostMapping("/comments/{communityNum}")
     @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
-    @ApiOperation(value = "커뮤니티 댓글 작성 Api", notes = "커뮤니티 게시글 번호로 해당 게시글의 댓글 목록을 조회한다.")
-    public ResponseEntity<?> registCommentForCommunity(@PathVariable int communityNum, @RequestBody CommentDTO commentDTO){
+    public ResponseEntity<?> registCommentForCommunity(@PathVariable int communityNum, @RequestBody CommentDTO commentDTO, @AuthenticationPrincipal AuthUserDetail userDetail){
+
 
         commentDTO.setCommentWriteDate(new Date());
 
+        commentDTO.setUserNum(userDetail.getUserEntity().getUserNo());
+
         int result = 0;
-        System.out.println(commentDTO);
+
         try {
             result = commentService.registCommentForCommunity(communityNum, commentDTO);
         }catch (IOException e){
