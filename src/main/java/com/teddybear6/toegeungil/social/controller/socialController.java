@@ -329,7 +329,16 @@ public class socialController {
         return ResponseEntity.ok().body(socialList);
     }
 
-//    @ApiOperation(value = "카테고리 별 소셜 사이즈 조회 Api")
+    @GetMapping("local/{localCode}/size") //31_지역 코드 사이즈 필터
+    @ApiOperation(value = "지역별 소셜 사이즈 조회 Api", notes = "지역 번호로 지역별 해당 소셜 게시글들의 사이즈를 조회한다.")
+    public ResponseEntity<?> readSocialPostLocalSize(@PathVariable int localCode) {
+        //지역 코드
+        Local local = socialService.readSocialPostLocal(localCode);
+        //받아온 지역 코드로 해당 게시글 리스트로 받아오기
+        List<Social> socialList = socialService.readSocialPostWhereLocalCode(localCode);
+
+        return ResponseEntity.ok().body(socialList.size());
+    }
 
     @GetMapping("/category/{categoryCode}/local/{localCode}") //32_지역 AND 카테고리 필터
     @ApiOperation(value = "카테고리 AND 지역 소셜 조회 Api", notes = "카테고리 번호와 지역 번호로 두 조건에 모두 해당되는 소셜 게시글 목록을 조회한다.")
@@ -346,6 +355,23 @@ public class socialController {
         System.out.println("controller : " + social);
 
         return ResponseEntity.ok().body(social);
+    }
+
+    @GetMapping("/category/{categoryCode}/local/{localCode}/size") //32_지역 AND 카테고리 필터 사이즈
+    @ApiOperation(value = "카테고리 AND 지역 소셜 조회 Api", notes = "카테고리 번호와 지역 번호로 두 조건에 모두 해당되는 소셜 게시글 목록을 조회한다.")
+    public ResponseEntity<?> readSocialFilterCategoryAndLocalSize(@PathVariable int categoryCode, @PathVariable int localCode, final Pageable pageable) {
+        //카테고리 코드 받아오기
+        Category category = socialService.readSocialPostCategory(categoryCode);
+        System.out.println("Category : " + category);
+        //지역 코드
+        Local local = socialService.readSocialPostLocal(localCode);
+        System.out.println("Local : " + local);
+
+        //카테고리 AND 지역
+        List<Social> social = socialService.readSocialFilterCategoryAndLocal(category, local);
+        System.out.println("controller : " + social);
+
+        return ResponseEntity.ok().body(social.size());
     }
 
     /*
