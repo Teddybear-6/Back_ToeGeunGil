@@ -219,7 +219,7 @@ public class socialController {
 //            throw new RuntimeException(e);
 //        }
 //
-//        if (result == 0) {
+//        if (result == 0) { 
 //            //socialService.SocialPostRegistration에서 반환받은 값이 0일 경우
 //            return ResponseEntity.status(404).body("이미지 등록에 실패하였습니다...");
 //        } else {
@@ -389,9 +389,6 @@ public class socialController {
     @GetMapping("/search")
     @ApiOperation(value = "소셜 검색 Api", notes = "검색어를 통해 해당되는 소셜의 제목을 조회한다.")
     public ResponseEntity<List<?>> socialSearch(@RequestParam(name = "socialName") String socialName, final Pageable pageable) {
-
-        System.out.println(socialName + ": 확인");
-
         List<SocialDTO> socialDTOList = socialService.findSocialBySocialNameContaining(pageable, socialName);
 
         if (socialDTOList.size() == 0) {
@@ -405,15 +402,15 @@ public class socialController {
 
     @GetMapping("/search/size")
     @ApiOperation(value = "소셜 검색 사이즈 Api", notes = "검색어를 통해 해당되는 소셜들을 사이즈를 조회한다.")
-    public ResponseEntity<?> socialSearchSize(@RequestParam(name = "socialName") String socialName) {
-        List<Social> socialList = socialService.findBySocialNameContaining(socialName);
+    public ResponseEntity<?> socialSearchSize(@RequestParam(name = "socialName") String socialName, final Pageable pageable) {
+        List<SocialDTO> socialDTOList = socialService.findSocialBySocialNameContaining(pageable, socialName);
 
-        if (socialList.size() == 0) {
+        if (socialDTOList.size() == 0) {
             List<String> error = new ArrayList<>();
             error.add(null);
             return ResponseEntity.status(500).body(error);
         } else {
-            return ResponseEntity.ok().body(socialList.size());
+            return ResponseEntity.ok().body(socialDTOList.size());
         }
     }
 }
