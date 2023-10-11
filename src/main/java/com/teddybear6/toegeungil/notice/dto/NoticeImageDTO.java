@@ -1,5 +1,7 @@
 package com.teddybear6.toegeungil.notice.dto;
 
+import com.teddybear6.toegeungil.notice.entity.NoticeImage;
+
 public class NoticeImageDTO {
 
     private int id;
@@ -8,6 +10,13 @@ public class NoticeImageDTO {
     private int noticeNum;
 
     public NoticeImageDTO() {
+    }
+
+    public NoticeImageDTO(NoticeImage noticeImage) {
+        this.id = noticeImage.getId();
+        this.name = noticeImage.getName();
+        this.path = noticeImage.getPath();
+        this.noticeNum = noticeImage.getNoticeNum();
     }
 
     public NoticeImageDTO(int id, String name, String path, int noticeNum) {
