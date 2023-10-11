@@ -365,7 +365,7 @@ public class socialController {
         System.out.println(socialName + ": 확인");
 
         List<SocialDTO> socialDTOList = socialService.findSocialBySocialNameContaining(pageable, socialName);
-
+        System.out.println(socialDTOList.size());
         if (socialDTOList.size() == 0) {
             List<String> error = new ArrayList<>();
             error.add(null);

@@ -412,20 +412,28 @@ public class HobbyController {
 
 
     //후기 삭제
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @DeleteMapping("/review/{reviewCode}")
     @ApiOperation(value = "취미 후기 삭제 Api", notes = "취미 리뷰 번호로 해당 게시글의 참여 후기를 삭제한다.")
-    public ResponseEntity<?> removeReview(@PathVariable int reviewCode) {
+    public ResponseEntity<?> removeReview(@PathVariable int reviewCode, @AuthenticationPrincipal AuthUserDetail userDetails) {
+        Map<String, String> respose = new HashMap<>();
+        int result = 0;
         HobbyReview hobbyReview = hobbyService.findByReviewCode(reviewCode);
         if (Objects.isNull(hobbyReview)) {
             return ResponseEntity.status(404).body("후기가 없습니다.");
         }
-        hobbyReview.setReviewStatus("N");
-        int result = hobbyService.deleteByReviewCode(hobbyReview);
+        if(userDetails.getUserEntity().getUserNo()==hobbyReview.getUserNo()){
+            hobbyReview.setReviewStatus("N");
+            result  = hobbyService.deleteByReviewCode(hobbyReview);
+
+        }
 
         if (result > 0) {
-            return ResponseEntity.ok().body("삭제 완료됐습니다.");
+            respose.put("value","삭제되었습니다.");
+            return ResponseEntity.ok().body(respose);
         } else {
-            return ResponseEntity.status(404).body("삭제 실패했습니다.");
+            respose.put("value","삭제 실패했습니다..");
+            return ResponseEntity.status(404).body(respose);
         }
 
     }
