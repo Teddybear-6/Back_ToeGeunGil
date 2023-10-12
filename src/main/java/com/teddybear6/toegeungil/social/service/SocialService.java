@@ -330,12 +330,22 @@ public class SocialService {
         return socialDTOList;
     }
 
-    public List<Social> readSocialFilterCategoryAndLocal(Category category, Local local) {
+    public List<SocialDTO> readSocialFilterCategoryAndLocal(Category category, Local local) {
         //32_카테고리 AND 지역 필터
         List<Social> socialList = socialRepository.findByCategoryCodeAndLocalCode(category.getCategoryCode(), local.getLocalCode());
-        System.out.println("service : " + socialList);
+        List<SocialDTO> socialDTOList = socialList.stream().map(m -> new SocialDTO(m)).collect(Collectors.toList());
 
-        return socialList;
+        for (int i = 0; i < socialList.size(); i++) {
+            List<Keyword> keywordList = new ArrayList<>();
+            List<SocialKeywordDTO> keywordDTOList = new ArrayList<>();
+            for (int j = 0; j < socialList.get(i).getSocialKeywordList().size(); j++) {
+                keywordList.add(socialList.get(i).getSocialKeywordList().get(j).getKeyword());
+                keywordDTOList = keywordList.stream().map(m -> new SocialKeywordDTO(m)).collect(Collectors.toList());
+            }
+            socialDTOList.get(i).setKeywordDTOList(keywordDTOList);
+        }
+
+        return socialDTOList;
     }
 
 //    @Transactional //이미지 업로드 수정 2023.09.18 (소셜 게시글 등록과 합침)

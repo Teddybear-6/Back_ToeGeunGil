@@ -345,14 +345,11 @@ public class socialController {
     public ResponseEntity<List<?>> readSocialFilterCategoryAndLocal(@PathVariable int categoryCode, @PathVariable int localCode, final Pageable pageable) {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
-        System.out.println("Category : " + category);
         //지역 코드
         Local local = socialService.readSocialPostLocal(localCode);
-        System.out.println("Local : " + local);
 
         //카테고리 AND 지역
-        List<Social> social = socialService.readSocialFilterCategoryAndLocal(category, local);
-        System.out.println("controller : " + social);
+        List<SocialDTO> social = socialService.readSocialFilterCategoryAndLocal(category, local);
 
         return ResponseEntity.ok().body(social);
     }
@@ -362,14 +359,11 @@ public class socialController {
     public ResponseEntity<?> readSocialFilterCategoryAndLocalSize(@PathVariable int categoryCode, @PathVariable int localCode, final Pageable pageable) {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
-        System.out.println("Category : " + category);
         //지역 코드
         Local local = socialService.readSocialPostLocal(localCode);
-        System.out.println("Local : " + local);
 
         //카테고리 AND 지역
-        List<Social> social = socialService.readSocialFilterCategoryAndLocal(category, local);
-        System.out.println("controller : " + social);
+        List<SocialDTO> social = socialService.readSocialFilterCategoryAndLocal(category, local);
 
         return ResponseEntity.ok().body(social.size());
     }
