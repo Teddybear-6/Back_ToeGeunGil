@@ -84,7 +84,8 @@ public class NoticeController {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        
+
+
         if (result > 0) {
             return ResponseEntity.ok().body("공지사항 등록 성공입니다");
         } else {
@@ -160,5 +161,17 @@ public class NoticeController {
         List<Notice> noticeList = noticeService.readAllNoticeSize();
         return ResponseEntity.ok().body(noticeList.size());
     }
+    
+    @GetMapping("/img/{noticeNum}")
+    @ApiOperation(value = "공지사항 이미지 다운로드 Api", notes = "공지사항 게시글 번호로 해당 게시글의 이미지를 조회한다.")
+    public ResponseEntity<?> downloadImage(@PathVariable int noticeNum){
+        NoticeImage noticeImage = noticeService.downloadImage(noticeNum);
 
+        if(Objects.isNull(noticeImage)){
+            return ResponseEntity.status(404).body("이미지 조회에 실패하였습니다");
+        }else {
+            NoticeImageDTO noticeImageDTO = new NoticeImageDTO(noticeImage);
+            return ResponseEntity.ok().body(noticeImageDTO);
+        }
+    }
 }
