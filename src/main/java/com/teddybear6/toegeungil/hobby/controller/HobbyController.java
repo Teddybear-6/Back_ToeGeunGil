@@ -440,20 +440,30 @@ public class HobbyController {
 
     //후기 수정
     @PutMapping("/review/{reviewCode}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @ApiOperation(value = "취미 후기 수정 Api", notes = "취미 리뷰 번호로 해당 게시글의 참여 후기를 수정한다.")
-    public ResponseEntity<?> modifyReview(@PathVariable int reviewCode, @RequestBody HobbyReviewDTO hobbyReviewDTO) {
+    public ResponseEntity<?> modifyReview(@PathVariable int reviewCode, @RequestBody HobbyReviewDTO hobbyReviewDTO ,@AuthenticationPrincipal AuthUserDetail userDetails) {
+        Map<String, String> respose = new HashMap<>();
         hobbyReviewDTO.setReviewCode(reviewCode);
         HobbyReview hobbyReview = hobbyService.findByReviewCode(reviewCode);
         if (Objects.isNull(hobbyReview)) {
-            return ResponseEntity.status(404).body("후기가 없습니다.");
+            respose.put("value","후기가 없습니다.");
+            return ResponseEntity.status(404).body(respose);
+        }
+
+        if (hobbyReview.getUserNo()!=userDetails.getUserEntity().getUserNo()) {
+            respose.put("value","작성자가 아닙니다.");
+            return ResponseEntity.status(404).body(respose);
         }
 
         int result = hobbyService.updateReview(hobbyReviewDTO);
 
         if (result > 0) {
-            return ResponseEntity.ok().body("수정 성공했습니다.");
+            respose.put("value","수정 성공했습니다.");
+            return ResponseEntity.ok().body(respose);
         } else {
-            return ResponseEntity.status(500).body("수정 실패했습니다.");
+            respose.put("value","수정 실패했습니다.");
+            return ResponseEntity.status(500).body(respose);
         }
 
 
