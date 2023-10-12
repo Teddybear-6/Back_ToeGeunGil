@@ -324,7 +324,7 @@ public class socialController {
         //지역 코드
         Local local = socialService.readSocialPostLocal(localCode);
         //받아온 지역 코드로 해당 게시글 리스트로 받아오기
-        List<Social> socialList = socialService.readSocialPostWhereLocalCode(localCode);
+        List<SocialDTO> socialList = socialService.readSocialPostWhereLocalCode(localCode);
 
         return ResponseEntity.ok().body(socialList);
     }
@@ -335,7 +335,7 @@ public class socialController {
         //지역 코드
         Local local = socialService.readSocialPostLocal(localCode);
         //받아온 지역 코드로 해당 게시글 리스트로 받아오기
-        List<Social> socialList = socialService.readSocialPostWhereLocalCode(localCode);
+        List<SocialDTO> socialList = socialService.readSocialPostWhereLocalCode(localCode);
 
         return ResponseEntity.ok().body(socialList.size());
     }
@@ -345,14 +345,11 @@ public class socialController {
     public ResponseEntity<List<?>> readSocialFilterCategoryAndLocal(@PathVariable int categoryCode, @PathVariable int localCode, final Pageable pageable) {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
-        System.out.println("Category : " + category);
         //지역 코드
         Local local = socialService.readSocialPostLocal(localCode);
-        System.out.println("Local : " + local);
 
         //카테고리 AND 지역
-        List<Social> social = socialService.readSocialFilterCategoryAndLocal(category, local);
-        System.out.println("controller : " + social);
+        List<SocialDTO> social = socialService.readSocialFilterCategoryAndLocal(category, local);
 
         return ResponseEntity.ok().body(social);
     }
@@ -362,14 +359,11 @@ public class socialController {
     public ResponseEntity<?> readSocialFilterCategoryAndLocalSize(@PathVariable int categoryCode, @PathVariable int localCode, final Pageable pageable) {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
-        System.out.println("Category : " + category);
         //지역 코드
         Local local = socialService.readSocialPostLocal(localCode);
-        System.out.println("Local : " + local);
 
         //카테고리 AND 지역
-        List<Social> social = socialService.readSocialFilterCategoryAndLocal(category, local);
-        System.out.println("controller : " + social);
+        List<SocialDTO> social = socialService.readSocialFilterCategoryAndLocal(category, local);
 
         return ResponseEntity.ok().body(social.size());
     }
@@ -389,9 +383,6 @@ public class socialController {
     @GetMapping("/search")
     @ApiOperation(value = "소셜 검색 Api", notes = "검색어를 통해 해당되는 소셜의 제목을 조회한다.")
     public ResponseEntity<List<?>> socialSearch(@RequestParam(name = "socialName") String socialName, final Pageable pageable) {
-
-        System.out.println(socialName + ": 확인");
-
         List<SocialDTO> socialDTOList = socialService.findSocialBySocialNameContaining(pageable, socialName);
 
         if (socialDTOList.size() == 0) {
@@ -405,15 +396,15 @@ public class socialController {
 
     @GetMapping("/search/size")
     @ApiOperation(value = "소셜 검색 사이즈 Api", notes = "검색어를 통해 해당되는 소셜들을 사이즈를 조회한다.")
-    public ResponseEntity<?> socialSearchSize(@RequestParam(name = "socialName") String socialName) {
-        List<Social> socialList = socialService.findBySocialNameContaining(socialName);
+    public ResponseEntity<?> socialSearchSize(@RequestParam(name = "socialName") String socialName, final Pageable pageable) {
+        List<SocialDTO> socialDTOList = socialService.findSocialBySocialNameContaining(pageable, socialName);
 
-        if (socialList.size() == 0) {
+        if (socialDTOList.size() == 0) {
             List<String> error = new ArrayList<>();
             error.add(null);
             return ResponseEntity.status(500).body(error);
         } else {
-            return ResponseEntity.ok().body(socialList.size());
+            return ResponseEntity.ok().body(socialDTOList.size());
         }
     }
 }
