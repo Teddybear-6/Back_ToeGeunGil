@@ -219,7 +219,7 @@ public class socialController {
 //            throw new RuntimeException(e);
 //        }
 //
-//        if (result == 0) { 
+//        if (result == 0) {
 //            //socialService.SocialPostRegistration에서 반환받은 값이 0일 경우
 //            return ResponseEntity.status(404).body("이미지 등록에 실패하였습니다...");
 //        } else {
@@ -324,7 +324,7 @@ public class socialController {
         //지역 코드
         Local local = socialService.readSocialPostLocal(localCode);
         //받아온 지역 코드로 해당 게시글 리스트로 받아오기
-        List<Social> socialList = socialService.readSocialPostWhereLocalCode(localCode);
+        List<SocialDTO> socialList = socialService.readSocialPostWhereLocalCode(localCode);
 
         return ResponseEntity.ok().body(socialList);
     }
@@ -335,7 +335,7 @@ public class socialController {
         //지역 코드
         Local local = socialService.readSocialPostLocal(localCode);
         //받아온 지역 코드로 해당 게시글 리스트로 받아오기
-        List<Social> socialList = socialService.readSocialPostWhereLocalCode(localCode);
+        List<SocialDTO> socialList = socialService.readSocialPostWhereLocalCode(localCode);
 
         return ResponseEntity.ok().body(socialList.size());
     }
