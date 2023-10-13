@@ -384,7 +384,7 @@ public class socialController {
     @ApiOperation(value = "소셜 검색 Api", notes = "검색어를 통해 해당되는 소셜의 제목을 조회한다.")
     public ResponseEntity<List<?>> socialSearch(@RequestParam(name = "socialName") String socialName, final Pageable pageable) {
         List<SocialDTO> socialDTOList = socialService.findSocialBySocialNameContaining(pageable, socialName);
-
+        System.out.println(socialDTOList.size());
         if (socialDTOList.size() == 0) {
             List<String> error = new ArrayList<>();
             error.add(null);
