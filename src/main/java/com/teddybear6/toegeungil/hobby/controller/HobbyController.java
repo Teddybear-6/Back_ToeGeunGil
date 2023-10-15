@@ -224,30 +224,14 @@ public class HobbyController {
     @ApiOperation(value = "취미 단일 조회 Api", notes = "취미 게시글 번호로 해당 게시글을 조회한다.")
     public ResponseEntity<Object> detailFindById(@PathVariable int hobbyCode) {
 
-        Hobby hobby = hobbyService.findById(hobbyCode);
+        HobbyDTO hobbyDTO = hobbyService.findByIddetail(hobbyCode);
 
-        if (Objects.isNull(hobby)) {
+        if (Objects.isNull(hobbyDTO)) {
             return ResponseEntity.status(404).body("취미가 없습니다.");
         }
 
-        HobbyDTO hobbyDTO = new HobbyDTO(hobby);
-        List<Keyword> keyword = new ArrayList<>();
-        for (int i = 0; i < hobby.getHobbyKeywordList().size(); i++) {
-            keyword.add(hobby.getHobbyKeywordList().get(i).getKeyword());
-        }
-        List<HobbyImage> hobbyImages = hobby.getHobbyImages();
 
-        List<ImageIdDTO> imageIdDTOS = new ArrayList<>();
 
-        for (int i = 0; i < hobbyImages.size(); i++) {
-
-            imageIdDTOS.add(new ImageIdDTO(hobbyImages.get(i).getId(), hobbyImages.get(i).getPath(), hobbyImages.get(i).getName(), hobbyImages.get(i).getHobbyCode()));
-
-        }
-
-        List<HobbyKeywordDTO> hobbyKeywordDTO = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
-        hobbyDTO.setKeywordDTOList(hobbyKeywordDTO);
-        hobbyDTO.setImageId(imageIdDTOS);
         return ResponseEntity.ok().body(hobbyDTO);
     }
 
@@ -444,7 +428,6 @@ public class HobbyController {
     @ApiOperation(value = "취미 후기 수정 Api", notes = "취미 리뷰 번호로 해당 게시글의 참여 후기를 수정한다.")
     public ResponseEntity<?> modifyReview(@PathVariable int reviewCode, @RequestBody HobbyReviewDTO hobbyReviewDTO ,@AuthenticationPrincipal AuthUserDetail userDetails) {
         Map<String, String> respose = new HashMap<>();
-        hobbyReviewDTO.setReviewCode(reviewCode);
         HobbyReview hobbyReview = hobbyService.findByReviewCode(reviewCode);
         if (Objects.isNull(hobbyReview)) {
             respose.put("value","후기가 없습니다.");
@@ -456,7 +439,7 @@ public class HobbyController {
             return ResponseEntity.status(404).body(respose);
         }
 
-        int result = hobbyService.updateReview(hobbyReviewDTO);
+        int result = hobbyService.updateReview(hobbyReview,hobbyReviewDTO);
 
         if (result > 0) {
             respose.put("value","수정 성공했습니다.");

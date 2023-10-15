@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.hobby.service;
 
+import com.teddybear6.toegeungil.category.repository.CategoryRepository;
 import com.teddybear6.toegeungil.common.utils.ImageApi;
 import com.teddybear6.toegeungil.hobby.dto.*;
 import com.teddybear6.toegeungil.hobby.entity.*;
@@ -36,9 +37,10 @@ public class HobbyService {
     private final HobbyJoinRepository hobbyJoinRepository;
 
     private final HobbyReviewRepository hobbyReviewRepository;
+    private final CategoryRepository categoryRepository;
 
 
-    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository, ReviewAnswerRepository reviewAnswerRepository, HobbyJoinRepository hobbyJoinRepository, HobbyReviewRepository hobbyReviewRepository) {
+    public HobbyService(StorageRepository storageRepository, KeywordRepository keywordRepository, HobbyRepository hobbyRepository, HobbyKeywordRepository hobbyKeywordRepository, ReviewAnswerRepository reviewAnswerRepository, HobbyJoinRepository hobbyJoinRepository, HobbyReviewRepository hobbyReviewRepository, CategoryRepository categoryRepository) {
         this.storageRepository = storageRepository;
         this.keywordRepository = keywordRepository;
         this.hobbyRepository = hobbyRepository;
@@ -46,6 +48,7 @@ public class HobbyService {
         this.reviewAnswerRepository = reviewAnswerRepository;
         this.hobbyJoinRepository = hobbyJoinRepository;
         this.hobbyReviewRepository = hobbyReviewRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Transactional
@@ -111,6 +114,7 @@ public class HobbyService {
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
 
+            hobbyGetDTOS.get(i).setCategoryName(categoryRepository.findById(hobbyGetDTOS.get(i).getCategoryCode()).getCategoryName());
             List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
 
             ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
@@ -135,10 +139,28 @@ public class HobbyService {
         return hobbyImage;
     }
 
-    public Hobby findById(int hobbyCode) {
+    public  HobbyDTO findByIddetail(int hobbyCode) {
         Hobby hobby = hobbyRepository.findById(hobbyCode);
+        HobbyDTO hobbyDTO = new HobbyDTO(hobby);
+        List<Keyword> keyword = new ArrayList<>();
+        for (int i = 0; i < hobby.getHobbyKeywordList().size(); i++) {
+            keyword.add(hobby.getHobbyKeywordList().get(i).getKeyword());
+        }
+        List<HobbyImage> hobbyImages = hobby.getHobbyImages();
 
-        return hobby;
+        List<ImageIdDTO> imageIdDTOS = new ArrayList<>();
+
+        for (int i = 0; i < hobbyImages.size(); i++) {
+
+            imageIdDTOS.add(new ImageIdDTO(hobbyImages.get(i).getId(), hobbyImages.get(i).getPath(), hobbyImages.get(i).getName(), hobbyImages.get(i).getHobbyCode()));
+
+        }
+
+        List<HobbyKeywordDTO> hobbyKeywordDTO = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
+        hobbyDTO.setKeywordDTOList(hobbyKeywordDTO);
+        hobbyDTO.setImageId(imageIdDTOS);
+
+        return hobbyDTO;
 
 
     }
@@ -356,14 +378,14 @@ public class HobbyService {
     }
 
     @Transactional
-    public int updateReview(HobbyReviewDTO hobbyReviewDTO) {
-        hobbyReviewDTO.setUpdateDate(new Date());
-        HobbyReview findReview = hobbyReviewRepository.findById(hobbyReviewDTO.getReviewCode());
+    public int updateReview(HobbyReview hobbyReview , HobbyReviewDTO hobbyReviewDTO ) {
+        hobbyReview.setUpdateDate(new Date());
 
-        findReview.setContent(hobbyReviewDTO.getContent());
-        findReview.setScore(hobbyReviewDTO.getScore());
 
-        if (findReview.getContent().equals(hobbyReviewDTO.getContent()) && findReview.getScore() == hobbyReviewDTO.getScore()) {
+        hobbyReview.setContent(hobbyReviewDTO.getContent());
+//        hobbyReview.setScore(hobbyReviewDTO.getScore());
+
+        if (hobbyReview.getContent().equals(hobbyReviewDTO.getContent())) {
             return 1;
         } else {
             return 0;
@@ -550,5 +572,10 @@ public class HobbyService {
 
         return hobbies;
 
+    }
+
+    public Hobby findById(int hobbyCode) {
+        Hobby hobby = hobbyRepository.findById(hobbyCode);
+        return hobby;
     }
 }
