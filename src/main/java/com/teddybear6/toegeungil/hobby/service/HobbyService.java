@@ -98,13 +98,13 @@ public class HobbyService {
     public Map<String, Object> findAll(final Pageable pageable) {
 
         Page<Hobby> hobbyListPage = hobbyRepository.findAllByOrderByHobbyCodeDesc(pageable);
+        System.out.println("확인1");
 
         List<Hobby> hobbyList =hobbyListPage.getContent();
 
 
 
         List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
-
 
         for (int i = 0; i < hobbyList.size(); i++) {
             List<Keyword> keyword = new ArrayList<>();
@@ -397,7 +397,7 @@ public class HobbyService {
     public Map<String,Object> findByCategoryCode(int categoryCode, Pageable pageable) {
         Page<Hobby> hobbyListPage = hobbyRepository.findByCategoryCode(categoryCode, pageable);
         List<Hobby> hobbyList =hobbyListPage.getContent();
-
+        System.out.println("확인1");
 
         List<HobbyGetDTO> hobbyGetDTOS = hobbyList.stream().map(m -> new HobbyGetDTO(m)).collect(Collectors.toList());
 
@@ -410,7 +410,7 @@ public class HobbyService {
             }
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
             List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
-
+            hobbyGetDTOS.get(i).setCategoryName(categoryRepository.findById(hobbyGetDTOS.get(i).getCategoryCode()).getCategoryName());
             ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
             hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
         }
@@ -439,7 +439,7 @@ public class HobbyService {
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
             List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
-
+            hobbyGetDTOS.get(i).setCategoryName(categoryRepository.findById(hobbyGetDTOS.get(i).getCategoryCode()).getCategoryName());
             ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
             hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
@@ -464,7 +464,7 @@ public class HobbyService {
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
             List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
-
+            hobbyGetDTOS.get(i).setCategoryName(categoryRepository.findById(hobbyGetDTOS.get(i).getCategoryCode()).getCategoryName());
             ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
             hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
@@ -511,7 +511,7 @@ public class HobbyService {
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
             List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
-
+            hobbyGetDTOS.get(i).setCategoryName(categoryRepository.findById(hobbyGetDTOS.get(i).getCategoryCode()).getCategoryName());
             ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
             hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
@@ -538,7 +538,7 @@ public class HobbyService {
                 keywordDTOList = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
             }
             List<HobbyImage> hobbyImages = hobbyList.get(i).getHobbyImages();
-
+            hobbyGetDTOS.get(i).setCategoryName(categoryRepository.findById(hobbyGetDTOS.get(i).getCategoryCode()).getCategoryName());
             ImageIdDTO imageIdDTOS = (new ImageIdDTO(hobbyImages.get(0).getId(), hobbyImages.get(0).getPath(), hobbyImages.get(0).getName(), hobbyImages.get(0).getHobbyCode()));
             hobbyGetDTOS.get(i).setImageIdDTO(imageIdDTOS);
             hobbyGetDTOS.get(i).setKeyword(keywordDTOList);
