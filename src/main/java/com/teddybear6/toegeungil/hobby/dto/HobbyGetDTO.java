@@ -30,6 +30,7 @@ public class HobbyGetDTO {
     private Date endTime; //시간
 
     private int categoryCode; // 카테고리
+    private String categoryName; // 카테고리
 
     private String close; //마감
 
@@ -52,7 +53,7 @@ public class HobbyGetDTO {
     }
 
 
-    public HobbyGetDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, String hobbyPlace, Date date, Date startTime, Date endTime, int categoryCode, String close, List<HobbyKeywordDTO> keyword, ImageIdDTO imageIdDTO, Date crateDate, Date updateDate, String hobbyStats, int localCode, Date closingDate) {
+    public HobbyGetDTO(int hobbyCode, String hobbyTitle, int tutorCode, String tutorIntro, int maxPersonnel, int hobbyPrice, String intro, String hobbyPlace, Date date, Date startTime, Date endTime, int categoryCode, String categoryName, String close, List<HobbyKeywordDTO> keyword, ImageIdDTO imageIdDTO, Date crateDate, Date updateDate, String hobbyStats, int localCode, Date closingDate) {
         this.hobbyCode = hobbyCode;
         this.hobbyTitle = hobbyTitle;
         this.tutorCode = tutorCode;
@@ -65,6 +66,7 @@ public class HobbyGetDTO {
         this.startTime = startTime;
         this.endTime = endTime;
         this.categoryCode = categoryCode;
+        this.categoryName = categoryName;
         this.close = close;
         this.keyword = keyword;
         this.imageIdDTO = imageIdDTO;
@@ -97,6 +99,14 @@ public class HobbyGetDTO {
 
     }
 
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 
     public int getHobbyCode() {
         return hobbyCode;
@@ -274,6 +284,7 @@ public class HobbyGetDTO {
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", categoryCode=" + categoryCode +
+                ", categoryName=" + categoryName +
                 ", close='" + close + '\'' +
                 ", keyword=" + keyword +
                 ", imageIdDTO=" + imageIdDTO +
