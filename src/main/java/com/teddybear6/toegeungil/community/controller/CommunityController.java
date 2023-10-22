@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,8 +38,8 @@ public class CommunityController {
 
     @GetMapping // 커뮤니티 전체 조회
     @ApiOperation(value = "커뮤니티 전체 조회 Api", notes = "커뮤니티 전체 목록을 조회한다.")
-    public ResponseEntity<List<?>> findAllCommunity() {
-        List<CommunityDTO> communityList = communityService.findAllCommunity();
+    public ResponseEntity<List<?>> findAllCommunity(final Pageable pageable) {
+        List<CommunityDTO> communityList = communityService.findAllCommunity(pageable);
 
         if (communityList.isEmpty()) {
             return ResponseEntity.status(404).body(Collections.singletonList("error"));
