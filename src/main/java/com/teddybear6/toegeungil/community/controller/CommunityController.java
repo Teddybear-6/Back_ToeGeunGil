@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.community.controller;
 import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
+import com.teddybear6.toegeungil.category.entity.Category;
 import com.teddybear6.toegeungil.community.dto.CommunityDTO;
 import com.teddybear6.toegeungil.community.dto.CommunityKeywordDTO;
 import com.teddybear6.toegeungil.community.entity.Community;
@@ -135,13 +136,14 @@ public class CommunityController {
         }
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<List<CommunityDTO>> CommunityList(@RequestParam(name = "categoryCode", required = false) Integer categoryCode,
-                                                            @RequestParam(name = "locationCode", required = false) Integer localCode){
+    @GetMapping("/category/{categoryCode}")
+    @ApiOperation(value = "카테고리별 커뮤니티 조회 Api", notes = "카테고리 번호로 카테고리별 해당 커뮤니티 게시글 목록을 조회한다.")
+    public ResponseEntity<List<?>> findCommunityCategory(@PathVariable int categoryCode, final Pageable pageable){
+        Category category = communityService.findCommunityCategory(categoryCode);
 
-        List<CommunityDTO> communityList = communityService.CommunityListFilters(categoryCode,localCode);
+        List<CommunityDTO> communityDTOList = communityService.findCommunityCategoryCode(categoryCode, pageable);
 
-        return ResponseEntity.ok(communityList);
+        return ResponseEntity.ok().body(communityDTOList);
     }
 
 
