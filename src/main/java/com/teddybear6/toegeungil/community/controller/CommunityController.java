@@ -146,5 +146,15 @@ public class CommunityController {
         return ResponseEntity.ok().body(communityDTOList);
     }
 
+    @GetMapping("/category/{categoryCode}/size")
+    @ApiOperation(value = "카테고리별 커뮤니티 사이즈 조회 Api", notes = "카테고리 번호로 카테고리별 해당 커뮤니티 게시글들의 사이즈를 조회한다.")
+    public ResponseEntity<?> findCommunityCategorySize(@PathVariable int categoryCode, final Pageable pageable){
+        Category category = communityService.findCommunityCategory(categoryCode);
+
+        List<CommunityDTO> commuintyList = communityService.findCommunityCategoryCode(categoryCode, pageable);
+
+        return ResponseEntity.ok().body(commuintyList.size());
+    }
+
 
 }
