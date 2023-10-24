@@ -11,6 +11,8 @@ import com.teddybear6.toegeungil.community.repository.CommunityKeywordRepository
 import com.teddybear6.toegeungil.community.repository.CommunityRepository;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
 import com.teddybear6.toegeungil.keyword.repository.KeywordRepository;
+import com.teddybear6.toegeungil.local.entity.Local;
+import com.teddybear6.toegeungil.local.repository.LocalRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,14 +29,15 @@ import java.util.stream.Collectors;
 public class CommunityService {
     private final CommunityRepository communityRepository;
     private final CategoryRepository categoryRepository;
+    private final LocalRepository localRepository;
     private final CommunityKeywordRepository communityKeywordRepository;
-
     private final KeywordRepository keywordRepository;
 
 
-    public CommunityService(CommunityRepository communityRepository, CategoryRepository categoryRepository, CommunityKeywordRepository communityKeywordRepository, KeywordRepository keywordRepository) {
+    public CommunityService(CommunityRepository communityRepository, CategoryRepository categoryRepository, LocalRepository localRepository, CommunityKeywordRepository communityKeywordRepository, KeywordRepository keywordRepository) {
         this.communityRepository = communityRepository;
         this.categoryRepository = categoryRepository;
+        this.localRepository = localRepository;
         this.communityKeywordRepository = communityKeywordRepository;
         this.keywordRepository = keywordRepository;
     }
@@ -155,6 +158,27 @@ public class CommunityService {
 
     public List<CommunityDTO> findCommunityCategoryCode(int categoryCode, Pageable pageable) {
         List<Community> communityList = communityRepository.findByCategoryCode(categoryCode, pageable);
+        List<CommunityDTO> communityDTOList = communityList.stream().map(m -> new CommunityDTO(m)).collect(Collectors.toList());
+
+        for (int i=0; i < communityList.size(); i++){
+            List<Keyword> keywordList = new ArrayList<>();
+            List<CommunityKeywordDTO> keywordDTOList = new ArrayList<>();
+            for (int j=0; j < communityList.get(i).getCommunityKeywordList().size(); j++){
+                keywordList.add(communityList.get(i).getCommunityKeywordList().get(j).getKeyword());
+                keywordDTOList = keywordList.stream().map(m -> new CommunityKeywordDTO(m)).collect(Collectors.toList());
+            }
+            communityDTOList.get(i).setCommunityKeywordDTOList(keywordDTOList);
+        }
+        return communityDTOList;
+    }
+
+    public Local findCommunityLocal(int localCode) {
+        Local local = localRepository.findById(localCode);
+        return  local;
+    }
+
+    public List<CommunityDTO> findCommunityLocalCode(int localCode, Pageable pageable) {
+        List<Community> communityList = communityRepository.findByLocalCode(localCode, pageable);
         List<CommunityDTO> communityDTOList = communityList.stream().map(m -> new CommunityDTO(m)).collect(Collectors.toList());
 
         for (int i=0; i < communityList.size(); i++){

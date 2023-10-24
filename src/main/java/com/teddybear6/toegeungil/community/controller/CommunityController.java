@@ -6,6 +6,7 @@ import com.teddybear6.toegeungil.community.dto.CommunityKeywordDTO;
 import com.teddybear6.toegeungil.community.entity.Community;
 import com.teddybear6.toegeungil.community.service.CommunityService;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
+import com.teddybear6.toegeungil.local.entity.Local;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -156,5 +157,13 @@ public class CommunityController {
         return ResponseEntity.ok().body(commuintyList.size());
     }
 
+    @GetMapping("/local/{localCode}")
+    @ApiOperation(value = "지역별 커뮤니티 조회 Api", notes = "지역 번호로 지역별 해당 커뮤니티 게시글 목록을 조회한다.")
+    public ResponseEntity<List<?>> findCommunityLocal(@PathVariable int localCode, final Pageable pageable){
+        Local local = communityService.findCommunityLocal(localCode);
 
+        List<CommunityDTO> communityDTOList = communityService.findCommunityLocalCode(localCode, pageable);
+
+        return ResponseEntity.ok().body(communityDTOList);
+    }
 }
