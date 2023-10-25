@@ -166,4 +166,15 @@ public class CommunityController {
 
         return ResponseEntity.ok().body(communityDTOList);
     }
+
+    @GetMapping("/category/{categoryCode}/local/{localCode}")
+    @ApiOperation(value = "카테고리 AND 지역 커뮤니티 조회 Api", notes = "카테고리 번호와 지역 변호로 두 조건에 모두 해당되는 커뮤니티 게시글 목록을 조회한다.")
+    public ResponseEntity<List<?>> findCommunityFilterCategoryAndLocal(@PathVariable int categoryCode, @PathVariable int localCode, final Pageable pageable){
+        Category category = communityService.findCommunityCategory(categoryCode);
+        Local local = communityService.findCommunityLocal(localCode);
+
+        List<CommunityDTO> community = communityService.findCommunityFilterCategoryAndLocal(category, local);
+
+        return ResponseEntity.ok().body(community);
+    }
 }

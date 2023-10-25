@@ -192,4 +192,22 @@ public class CommunityService {
         }
         return communityDTOList;
     }
+
+    public List<CommunityDTO> findCommunityFilterCategoryAndLocal(Category category, Local local) {
+
+        List<Community> communityList = communityRepository.findByCategoryCodeAndLocalCode(category.getCategoryCode(), local.getLocalCode());
+        List<CommunityDTO> communityDTOList = communityList.stream().map(m -> new CommunityDTO(m)).collect(Collectors.toList());
+
+        for (int i=0; i < communityList.size(); i++){
+            List<Keyword> keywordList = new ArrayList<>();
+            List<CommunityKeywordDTO> keywordDTOList = new ArrayList<>();
+            for (int j=0; j<communityList.get(i).getCommunityKeywordList().size(); j++){
+                keywordList.add(communityList.get(i).getCommunityKeywordList().get(j).getKeyword());
+                keywordDTOList = keywordList.stream().map(m -> new CommunityKeywordDTO(m)).collect(Collectors.toList());
+            }
+            communityDTOList.get(i).setCommunityKeywordDTOList(keywordDTOList);
+        }
+
+        return communityDTOList;
+    }
 }
