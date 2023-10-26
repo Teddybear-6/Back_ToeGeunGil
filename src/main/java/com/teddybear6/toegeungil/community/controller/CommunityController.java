@@ -167,6 +167,17 @@ public class CommunityController {
         return ResponseEntity.ok().body(communityDTOList);
     }
 
+    @GetMapping("/local/{localCode}/size")
+    @ApiOperation(value = "지역별 커뮤니티 사이즈 조회 Api", notes = "지역 번호로 지역별 해당 커뮤니티 게시글들의 사이즈를 조회한다.")
+    public ResponseEntity<?> findCommunityLocalSize(@PathVariable int localCode, final Pageable pageable){
+        Local local = communityService.findCommunityLocal(localCode);
+
+        List<CommunityDTO> commuintyList = communityService.findCommunityLocalCode(localCode, pageable);
+
+        return ResponseEntity.ok().body(commuintyList.size());
+    }
+
+
     @GetMapping("/category/{categoryCode}/local/{localCode}")
     @ApiOperation(value = "카테고리 AND 지역 커뮤니티 조회 Api", notes = "카테고리 번호와 지역 변호로 두 조건에 모두 해당되는 커뮤니티 게시글 목록을 조회한다.")
     public ResponseEntity<List<?>> findCommunityFilterCategoryAndLocal(@PathVariable int categoryCode, @PathVariable int localCode, final Pageable pageable){
