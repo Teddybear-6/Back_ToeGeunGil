@@ -210,4 +210,10 @@ public class CommunityService {
 
         return communityDTOList;
     }
+
+    public List<Community> findAllCommunitySize() {
+
+        List<Community> communityList = communityRepository.findAll();
+        return communityList;
+    }
 }

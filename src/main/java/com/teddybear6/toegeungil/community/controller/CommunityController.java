@@ -199,4 +199,11 @@ public class CommunityController {
 
         return ResponseEntity.ok().body(community.size());
     }
+
+    @GetMapping("/size")
+    @ApiOperation(value = "커뮤니티 전체 사이즈 조회 Api", notes = "커뮤니티 전체 목록의 사이즈를 조회한다.")
+    public ResponseEntity<?> communitySize(){
+        List<Community> communityList = communityService.findAllCommunitySize();
+        return ResponseEntity.ok().body(communityList.size());
+    }
 }
