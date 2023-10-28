@@ -51,8 +51,6 @@ public class QnaService {
         if(!Objects.isNull(updateQuestion.getQuestionTitle())){
             findQuestion.setQuestionTitle(updateQuestion.getQuestionTitle());
             findQuestion.setQuestionContent(updateQuestion.getQuestionContent());
-            System.out.println("변경한 제목 : " + findQuestion.getQuestionTitle());
-            System.out.println("변경한 내용 : " + findQuestion.getQuestionContent());
             findQuestion.setQuestionUpdate(new Date());
 
         }
