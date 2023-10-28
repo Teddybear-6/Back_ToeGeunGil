@@ -2,7 +2,9 @@ package com.teddybear6.toegeungil.notice.controller;
 
 import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
 import com.teddybear6.toegeungil.notice.dto.NoticeDetailDTO;
+import com.teddybear6.toegeungil.notice.dto.NoticeImageDTO;
 import com.teddybear6.toegeungil.notice.entity.Notice;
+import com.teddybear6.toegeungil.notice.entity.NoticeImage;
 import com.teddybear6.toegeungil.notice.service.NoticeService;
 import com.teddybear6.toegeungil.user.entity.UserEntity;
 import com.teddybear6.toegeungil.user.sevice.UserViewService;
@@ -10,12 +12,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -67,10 +72,19 @@ public class NoticeController {
     /* <POST> /notices: 공지사항 등록 */
     @PostMapping
     @ApiOperation(value = "공지사항 작성 Api", notes = "공지사항 게시글을 작성한다.")
-    public ResponseEntity<?> registNotice(@RequestBody Notice notice) {
+    public ResponseEntity<?> registNotice(@RequestPart ("notice") Notice notice, @RequestPart("image")MultipartFile file) {
         System.out.println(notice);
         notice.setNoticeDate(new Date());
-        int result = noticeService.registNotice(notice);
+
+        int result = 0;
+        try {
+            result = noticeService.registNotice(notice, file);
+        } catch (IOException e) {
+           e.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
 
         if (result > 0) {
             return ResponseEntity.ok().body("공지사항 등록 성공입니다");
@@ -146,5 +160,18 @@ public class NoticeController {
     public ResponseEntity<?> noticeSize() {
         List<Notice> noticeList = noticeService.readAllNoticeSize();
         return ResponseEntity.ok().body(noticeList.size());
+    }
+    
+    @GetMapping("/img/{noticeNum}")
+    @ApiOperation(value = "공지사항 이미지 다운로드 Api", notes = "공지사항 게시글 번호로 해당 게시글의 이미지를 조회한다.")
+    public ResponseEntity<?> downloadImage(@PathVariable int noticeNum){
+        NoticeImage noticeImage = noticeService.downloadImage(noticeNum);
+
+        if(Objects.isNull(noticeImage)){
+            return ResponseEntity.status(404).body("이미지 조회에 실패하였습니다");
+        }else {
+            NoticeImageDTO noticeImageDTO = new NoticeImageDTO(noticeImage);
+            return ResponseEntity.ok().body(noticeImageDTO);
+        }
     }
 }
