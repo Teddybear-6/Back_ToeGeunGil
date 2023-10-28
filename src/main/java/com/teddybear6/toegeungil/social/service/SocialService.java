@@ -64,7 +64,7 @@ public class SocialService {
             }
             socialDTOList.get(i).setKeywordDTOList(keywordDTOList);
         }
-        System.out.println(socialDTOList);
+
         return socialDTOList;
     }
 
