@@ -23,6 +23,11 @@ public class Question {
     private String questionContent;                     //질문 내용
     @Column(name = "queNickName")
     private String questionNick;                        //질문 작성자
+
+    @Column(name ="userNo")
+    private String userNo;
+
+
     @Column(name = "queDate")
     @Temporal(TemporalType.DATE)
     @CreatedDate
@@ -41,11 +46,12 @@ public class Question {
     public Question() {
     }
 
-    public Question(int questionNum, String questionTitle, String questionContent, String questionNick, Date questionDate, Date questionUpdate, Date questionDelete, String questionStatus) {
+    public Question(int questionNum, String questionTitle, String questionContent, String questionNick, String userNo, Date questionDate, Date questionUpdate, Date questionDelete, String questionStatus) {
         this.questionNum = questionNum;
         this.questionTitle = questionTitle;
         this.questionContent = questionContent;
         this.questionNick = questionNick;
+        this.userNo = userNo;
         this.questionDate = questionDate;
         this.questionUpdate = questionUpdate;
         this.questionDelete = questionDelete;
@@ -116,6 +122,14 @@ public class Question {
         this.questionStatus = questionStatus;
     }
 
+    public String getUserNo() {
+        return userNo;
+    }
+
+    public void setUserNo(String userNo) {
+        this.userNo = userNo;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
@@ -123,6 +137,7 @@ public class Question {
                 ", questionTitle='" + questionTitle + '\'' +
                 ", questionContent='" + questionContent + '\'' +
                 ", questionNick='" + questionNick + '\'' +
+                ", userNo='" + userNo + '\'' +
                 ", questionDate=" + questionDate +
                 ", questionUpdate=" + questionUpdate +
                 ", questionDelete=" + questionDelete +
