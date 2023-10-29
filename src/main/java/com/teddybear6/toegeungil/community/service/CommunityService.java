@@ -216,4 +216,9 @@ public class CommunityService {
         List<Community> communityList = communityRepository.findAll();
         return communityList;
     }
+
+    public List<Community> findCommunityByCommunityNameContaining(String communityName) {
+        List<Community> communityList = communityRepository.findByCommunityNameContaining(communityName);
+        return communityList;
+    }
 }

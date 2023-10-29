@@ -16,4 +16,6 @@ public interface CommunityRepository extends JpaRepository<Community, Integer> {
     List<Community> findByLocalCode(int localCode, Pageable pageable);
 
     List<Community> findByCategoryCodeAndLocalCode(int categoryCode, int localCode);
+
+    List<Community> findByCommunityNameContaining(String communityName);
 }
