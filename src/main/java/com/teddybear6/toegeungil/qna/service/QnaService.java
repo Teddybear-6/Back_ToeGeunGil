@@ -33,9 +33,10 @@ public class QnaService {
 
     @Transactional
     public int registQuestion(Question question) {
+        question.setQuestionStatus("Y");
         question.setQuestionDate(new Date());
-        question.setQuestionStatus("N");
         Question result = questionRepository.save(question);
+        System.out.println(result);
 
 
 
@@ -66,9 +67,9 @@ public class QnaService {
 
     @Transactional
     public void deleteCode(int del){
-        questionRepository.deleteById(del);
+        Question question= questionRepository.findById(del);
+        question.setQuestionStatus("N");
+        questionRepository.save(question);
 
-        Question question = questionRepository.findById(del);
-        System.out.println(question);
     }
 }
