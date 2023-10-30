@@ -217,8 +217,19 @@ public class CommunityService {
         return communityList;
     }
 
-    public List<Community> findCommunityByCommunityNameContaining(String communityName) {
-        List<Community> communityList = communityRepository.findByCommunityNameContaining(communityName);
-        return communityList;
+    public List<CommunityDTO> findCommunityBycommunityTitleContaining(Pageable pageable, String communityTitle) {
+        List<Community> communityList = communityRepository.findCommunityByCommunityTitleContaining(communityTitle, pageable);
+        List<CommunityDTO> communityDTOList = communityList.stream().map(m -> new CommunityDTO(m)).collect(Collectors.toList());
+
+        for (int i=0; i<communityList.size(); i++){
+            List<Keyword> keywordList = new ArrayList<>();
+            List<CommunityKeywordDTO> communityKeywordDTOList = new ArrayList<>();
+            for (int j=0; j<communityList.get(i).getCommunityKeywordList().size(); j++){
+                keywordList.add(communityList.get(i).getCommunityKeywordList().get(j).getKeyword());
+                communityKeywordDTOList = keywordList.stream().map(m -> new CommunityKeywordDTO(m)).collect(Collectors.toList());
+            }
+            communityDTOList.get(i).setCommunityKeywordDTOList(communityKeywordDTOList);
+        }
+        return communityDTOList;
     }
 }

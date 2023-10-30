@@ -209,13 +209,14 @@ public class CommunityController {
 
     @GetMapping("/search")
     @ApiOperation(value = "커뮤니티 검색 Api", notes = "검색어를 통해 해당되는 커뮤니티의 제목을 조회한다.")
-    public ResponseEntity<List<?>> communitySearch(@RequestParam(name = "communityName") String communityName, final Pageable pageable){
-        List<CommunityDTO> communityDTOList = communityService.findCommunityByCommunityNameContaining(pageable, communityName);
+    public ResponseEntity<List<?>> communitySearch(@RequestParam(name = "communityTitle") String communityTitle, final Pageable pageable){
+        List<CommunityDTO> communityDTOList = communityService.findCommunityBycommunityTitleContaining(pageable, communityTitle);
+
         if (communityDTOList.size() == 0){
             List<String> error = new ArrayList<>();
             error.add(null);
             return ResponseEntity.status(500).body(error);
-        } else {
+        }else {
             return ResponseEntity.ok().body(communityDTOList);
         }
     }
