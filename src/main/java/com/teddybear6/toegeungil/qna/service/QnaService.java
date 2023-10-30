@@ -34,6 +34,7 @@ public class QnaService {
     @Transactional
     public int registQuestion(Question question) {
         question.setQuestionStatus("Y");
+        question.setAnswerStatus("N");
         question.setQuestionDate(new Date());
         Question result = questionRepository.save(question);
         System.out.println(result);

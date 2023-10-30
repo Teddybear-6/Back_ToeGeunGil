@@ -12,8 +12,8 @@ import java.util.Date;
 
 @Entity(name = "qna_question")
 @Table(name = "qna_question")
-@EntityListeners(AuditingEntityListener.class)
 @DynamicInsert
+@EntityListeners(AuditingEntityListener.class)
 @Where(clause = "que_status='Y'")
 public class Question {
     //질문 관련 엔티티
@@ -46,11 +46,9 @@ public class Question {
     @LastModifiedDate
     private Date questionDelete;                        //질문 삭제일
     @Column(name = "que_status",columnDefinition = "varchar(1)")
-    @ColumnDefault("'Y'")
     private String questionStatus;                      //질문 상태
 
    @Column(name = "answer_status" ,columnDefinition = "varchar(1)")   //답변여부
-   @ColumnDefault("'N'")
    private String answerStatus;
 
     public Question() {
