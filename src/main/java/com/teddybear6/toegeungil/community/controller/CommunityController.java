@@ -220,4 +220,18 @@ public class CommunityController {
             return ResponseEntity.ok().body(communityDTOList);
         }
     }
+
+    @GetMapping("search/size")
+    @ApiOperation(value = "커뮤니티 검색 사이즈 Api", notes = "검색어를 통해 해당되는 커뮤니티의 사이즈를 조회한다.")
+    public ResponseEntity<?> communitySearchSize(@RequestParam(name = "communityName") String communityName, final Pageable pageable){
+        List<CommunityDTO> communityDTOList = communityService.findCommunityBycommunityTitleContaining(pageable, communityName);
+
+        if (communityDTOList.size() == 0){
+            List<String> error = new ArrayList<>();
+            error.add(null);
+            return ResponseEntity.status(500).body(error);
+        }else {
+            return ResponseEntity.ok().body(communityDTOList.size());
+        }
+    }
 }
