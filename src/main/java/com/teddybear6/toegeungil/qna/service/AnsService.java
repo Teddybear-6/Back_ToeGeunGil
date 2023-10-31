@@ -33,6 +33,8 @@ public class AnsService {
     //답변 글 생성 로직
     @Transactional
     public int registAnswer(Answer answer){
+        answer.setAnswerStatus("Y");
+        answer.setAnswerDate(new Date());
         Answer result = answerRepository.save(answer);
         System.out.println(result);
 
@@ -50,6 +52,7 @@ public class AnsService {
         if(!Objects.isNull(updateAnswer.getAnswerTitle())){
             findAnswer.setAnswerTitle(updateAnswer.getAnswerTitle());
             findAnswer.setAnswerContent(updateAnswer.getAnswerContent());
+            findAnswer.setAnswerUpdate(new Date());
 
             System.out.println("변경한 답변 제목 : " + findAnswer.getAnswerTitle());
             System.out.println("변경한 답변 내용 : " + findAnswer.getAnswerContent());
@@ -64,10 +67,11 @@ public class AnsService {
     }
     @Transactional
     public void deleteCode(int del){
-        answerRepository.deleteById(del);
-
         Answer answer = answerRepository.findById(del);
-        System.out.println(answer);
+        answer.setAnswerStatus("N");
+        answerRepository.save(answer);
+
+
     }
 
 

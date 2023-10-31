@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.qna.entity;
 
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -8,6 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "qna_answer")
+@Where(clause = "answerStatus='Y'")
 public class Answer {
     //답변 엔티티
     @Id
@@ -27,12 +29,13 @@ public class Answer {
 
     @Column(name = "ansDate")
     @Temporal(TemporalType.DATE)
-    @CreatedDate
-    private Date answerDate;                    //답변 생성일
+    private Date answerDate;                  //답변 생성일
+    @Column(name = "ansUpdate")
+    @Temporal(TemporalType.DATE)
+    private Date answerUpdate;
 
     @Column(name = "ansDelete")
     @Temporal(TemporalType.DATE)
-    @LastModifiedDate
     private Date answerDelete;                  //답변 삭제일
 
     @Column(name = "ansStatus",columnDefinition = "varchar(1)")
@@ -41,13 +44,14 @@ public class Answer {
     public Answer() {
     }
 
-    public Answer(int answerNum, int questionNum, String answerTitle, String answerContent, String answerNick, Date answerDate, Date answerDelete, String answerStatus) {
+    public Answer(int answerNum, int questionNum, String answerTitle, String answerContent, String answerNick, Date answerDate, Date answerUpdate, Date answerDelete, String answerStatus) {
         this.answerNum = answerNum;
         this.questionNum = questionNum;
         this.answerTitle = answerTitle;
         this.answerContent = answerContent;
         this.answerNick = answerNick;
         this.answerDate = answerDate;
+        this.answerUpdate = answerUpdate;
         this.answerDelete = answerDelete;
         this.answerStatus = answerStatus;
     }
@@ -108,6 +112,13 @@ public class Answer {
         this.answerStatus = answerStatus;
     }
 
+    public Date getAnswerUpdate() {
+        return answerUpdate;
+    }
+
+    public void setAnswerUpdate(Date answerUpdate) {
+        this.answerUpdate = answerUpdate;
+    }
 
     public int getQuestionNum() {
         return questionNum;
@@ -126,6 +137,7 @@ public class Answer {
                 ", answerContent='" + answerContent + '\'' +
                 ", answerNick='" + answerNick + '\'' +
                 ", answerDate=" + answerDate +
+                ", answerUpdate=" + answerUpdate +
                 ", answerDelete=" + answerDelete +
                 ", answerStatus='" + answerStatus + '\'' +
                 '}';
