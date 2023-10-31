@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "qna_answer")
-@Where(clause = "answerStatus='Y'")
+@Where(clause = "ans_status='Y'")
 public class Answer {
     //답변 엔티티
     @Id

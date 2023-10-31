@@ -9,9 +9,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/answer")
@@ -55,11 +53,14 @@ public class AnswerController {
     @ApiOperation(value = "QnA 답변 단일 조회 Api", notes = "QnA 번호로 해당 게시글을 조회한다.")
     public ResponseEntity<?> findAnswerByQueNUm(@PathVariable int quenum){
         Answer answer = ansService.findAnswerByQueNum(quenum);
-
+        Map<String,Object> value = new HashMap<>();
         if(Objects.isNull(answer)){
-            return ResponseEntity.ok().body(null);
+
+            value.put("value",null);
+            return ResponseEntity.ok().body(value);
         }
-        return ResponseEntity.ok().body(answer);
+        value.put("value",answer);
+        return ResponseEntity.ok().body(value);
     }
 
 
