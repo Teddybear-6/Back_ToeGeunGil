@@ -69,6 +69,7 @@ public class QnaService {
     @Transactional
     public void deleteCode(int del){
         Question question= questionRepository.findById(del);
+        question.setQuestionDelete(new Date());
         question.setQuestionStatus("N");
         questionRepository.save(question);
 

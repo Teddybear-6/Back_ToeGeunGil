@@ -50,6 +50,22 @@ public class AnswerController {
         }
         return ResponseEntity.ok().body(answerList);
     }
+
+    @GetMapping("/que/{quenum}")
+    @ApiOperation(value = "QnA 답변 단일 조회 Api", notes = "QnA 번호로 해당 게시글을 조회한다.")
+    public ResponseEntity<?> findAnswerByQueNUm(@PathVariable int quenum){
+        Answer answer = ansService.findAnswerByQueNum(quenum);
+
+        if(Objects.isNull(answer)){
+            return ResponseEntity.ok().body(null);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
+
+
+
+
     @PostMapping("/regist")
     @ApiOperation(value = "QnA 답변 작성 Api", notes = "QnA 답변 게시글을 작성한다.")
     public ResponseEntity<?> regist(@RequestBody Answer answer){

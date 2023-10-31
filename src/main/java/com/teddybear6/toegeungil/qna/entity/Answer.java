@@ -15,6 +15,8 @@ public class Answer {
     @Column(name = "ansNum")
     private int answerNum;                      //답변 번호
 
+    private int questionNum;                  //질문번호
+
     @Column(name = "ansTitle")
     private String answerTitle;                 //답변 제목
     @Column(name = "ansContent")
@@ -33,14 +35,15 @@ public class Answer {
     @LastModifiedDate
     private Date answerDelete;                  //답변 삭제일
 
-    @Column(name = "ansStatus")
+    @Column(name = "ansStatus",columnDefinition = "varchar(1)")
     private String answerStatus;                //답변 상태
 
     public Answer() {
     }
 
-    public Answer(int answerNum, String answerTitle, String answerContent, String answerNick, Date answerDate, Date answerDelete, String answerStatus) {
+    public Answer(int answerNum, int questionNum, String answerTitle, String answerContent, String answerNick, Date answerDate, Date answerDelete, String answerStatus) {
         this.answerNum = answerNum;
+        this.questionNum = questionNum;
         this.answerTitle = answerTitle;
         this.answerContent = answerContent;
         this.answerNick = answerNick;
@@ -105,10 +108,20 @@ public class Answer {
         this.answerStatus = answerStatus;
     }
 
+
+    public int getQuestionNum() {
+        return questionNum;
+    }
+
+    public void setQuestionNum(int questionNum) {
+        this.questionNum = questionNum;
+    }
+
     @Override
-    public String  toString() {
+    public String toString() {
         return "Answer{" +
                 "answerNum=" + answerNum +
+                ", questionNum=" + questionNum +
                 ", answerTitle='" + answerTitle + '\'' +
                 ", answerContent='" + answerContent + '\'' +
                 ", answerNick='" + answerNick + '\'' +

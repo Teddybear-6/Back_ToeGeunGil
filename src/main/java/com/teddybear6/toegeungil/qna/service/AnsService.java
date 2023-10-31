@@ -71,6 +71,9 @@ public class AnsService {
     }
 
 
+    public Answer findAnswerByQueNum(int quenum) {
+        Answer answer= answerRepository.findByquestionNum(quenum);
 
-
+        return answer;
+    }
 }
