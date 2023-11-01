@@ -33,11 +33,10 @@ public class QnaService {
 
     @Transactional
     public int registQuestion(Question question) {
-
-        Question result = questionRepository.save(question);
-        System.out.println(result);
-
         question.setQuestionDate(new Date());
+        Question result = questionRepository.save(question);
+
+
 
         if(Objects.isNull(result)){
             return 0;
