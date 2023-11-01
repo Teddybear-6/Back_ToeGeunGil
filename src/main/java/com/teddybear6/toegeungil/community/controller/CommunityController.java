@@ -1,14 +1,17 @@
 package com.teddybear6.toegeungil.community.controller;
 import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
+import com.teddybear6.toegeungil.category.entity.Category;
 import com.teddybear6.toegeungil.community.dto.CommunityDTO;
 import com.teddybear6.toegeungil.community.dto.CommunityKeywordDTO;
 import com.teddybear6.toegeungil.community.entity.Community;
 import com.teddybear6.toegeungil.community.service.CommunityService;
 import com.teddybear6.toegeungil.keyword.entity.Keyword;
+import com.teddybear6.toegeungil.local.entity.Local;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,8 +40,8 @@ public class CommunityController {
 
     @GetMapping // 커뮤니티 전체 조회
     @ApiOperation(value = "커뮤니티 전체 조회 Api", notes = "커뮤니티 전체 목록을 조회한다.")
-    public ResponseEntity<List<?>> findAllCommunity() {
-        List<CommunityDTO> communityList = communityService.findAllCommunity();
+    public ResponseEntity<List<?>> findAllCommunity(final Pageable pageable) {
+        List<CommunityDTO> communityList = communityService.findAllCommunity(pageable);
 
         if (communityList.isEmpty()) {
             return ResponseEntity.status(404).body(Collections.singletonList("error"));
@@ -134,14 +137,101 @@ public class CommunityController {
         }
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<List<CommunityDTO>> CommunityList(@RequestParam(name = "categoryCode", required = false) Integer categoryCode,
-                                                            @RequestParam(name = "locationCode", required = false) Integer localCode){
+    @GetMapping("/category/{categoryCode}")
+    @ApiOperation(value = "카테고리별 커뮤니티 조회 Api", notes = "카테고리 번호로 카테고리별 해당 커뮤니티 게시글 목록을 조회한다.")
+    public ResponseEntity<List<?>> findCommunityCategory(@PathVariable int categoryCode, final Pageable pageable){
+        Category category = communityService.findCommunityCategory(categoryCode);
 
-        List<CommunityDTO> communityList = communityService.CommunityListFilters(categoryCode,localCode);
+        List<CommunityDTO> communityDTOList = communityService.findCommunityCategoryCode(categoryCode, pageable);
 
-        return ResponseEntity.ok(communityList);
+        return ResponseEntity.ok().body(communityDTOList);
+    }
+
+    @GetMapping("/category/{categoryCode}/size")
+    @ApiOperation(value = "카테고리별 커뮤니티 사이즈 조회 Api", notes = "카테고리 번호로 카테고리별 해당 커뮤니티 게시글들의 사이즈를 조회한다.")
+    public ResponseEntity<?> findCommunityCategorySize(@PathVariable int categoryCode, final Pageable pageable){
+        Category category = communityService.findCommunityCategory(categoryCode);
+
+        List<CommunityDTO> commuintyList = communityService.findCommunityCategoryCode(categoryCode, pageable);
+
+        return ResponseEntity.ok().body(commuintyList.size());
+    }
+
+    @GetMapping("/local/{localCode}")
+    @ApiOperation(value = "지역별 커뮤니티 조회 Api", notes = "지역 번호로 지역별 해당 커뮤니티 게시글 목록을 조회한다.")
+    public ResponseEntity<List<?>> findCommunityLocal(@PathVariable int localCode, final Pageable pageable){
+        Local local = communityService.findCommunityLocal(localCode);
+
+        List<CommunityDTO> communityDTOList = communityService.findCommunityLocalCode(localCode, pageable);
+
+        return ResponseEntity.ok().body(communityDTOList);
+    }
+
+    @GetMapping("/local/{localCode}/size")
+    @ApiOperation(value = "지역별 커뮤니티 사이즈 조회 Api", notes = "지역 번호로 지역별 해당 커뮤니티 게시글들의 사이즈를 조회한다.")
+    public ResponseEntity<?> findCommunityLocalSize(@PathVariable int localCode, final Pageable pageable){
+        Local local = communityService.findCommunityLocal(localCode);
+
+        List<CommunityDTO> commuintyList = communityService.findCommunityLocalCode(localCode, pageable);
+
+        return ResponseEntity.ok().body(commuintyList.size());
     }
 
 
+    @GetMapping("/category/{categoryCode}/local/{localCode}")
+    @ApiOperation(value = "카테고리 AND 지역 커뮤니티 조회 Api", notes = "카테고리 번호와 지역 변호로 두 조건에 모두 해당되는 커뮤니티 게시글 목록을 조회한다.")
+    public ResponseEntity<List<?>> findCommunityFilterCategoryAndLocal(@PathVariable int categoryCode, @PathVariable int localCode, final Pageable pageable){
+        Category category = communityService.findCommunityCategory(categoryCode);
+        Local local = communityService.findCommunityLocal(localCode);
+
+        List<CommunityDTO> community = communityService.findCommunityFilterCategoryAndLocal(category, local);
+
+        return ResponseEntity.ok().body(community);
+    }
+
+    @GetMapping("/category/{categoryCode}/local/{localCode}/size")
+    @ApiOperation(value = "카테고리 AND 지역 커뮤니티 조회 Api", notes = "카테고리 번호와 지역 번호로 두 조건에 모두 해당되는 커뉴니티 게시글 목록을 조회한다.")
+    public ResponseEntity<?> findCommunityFilterCategoryAndLocalSize(@PathVariable int categoryCode, @PathVariable int localCode, final Pageable pageable){
+        Category category = communityService.findCommunityCategory(categoryCode);
+        Local local = communityService.findCommunityLocal(localCode);
+
+        List<CommunityDTO> community = communityService.findCommunityFilterCategoryAndLocal(category, local);
+
+        return ResponseEntity.ok().body(community.size());
+    }
+
+    @GetMapping("/size")
+    @ApiOperation(value = "커뮤니티 전체 사이즈 조회 Api", notes = "커뮤니티 전체 목록의 사이즈를 조회한다.")
+    public ResponseEntity<?> communitySize(){
+        List<Community> communityList = communityService.findAllCommunitySize();
+        return ResponseEntity.ok().body(communityList.size());
+    }
+
+    @GetMapping("/search")
+    @ApiOperation(value = "커뮤니티 검색 Api", notes = "검색어를 통해 해당되는 커뮤니티의 제목을 조회한다.")
+    public ResponseEntity<List<?>> communitySearch(@RequestParam(name = "communityTitle") String communityTitle, final Pageable pageable){
+        List<CommunityDTO> communityDTOList = communityService.findCommunityBycommunityTitleContaining(pageable, communityTitle);
+
+        if (communityDTOList.size() == 0){
+            List<String> error = new ArrayList<>();
+            error.add(null);
+            return ResponseEntity.status(500).body(error);
+        }else {
+            return ResponseEntity.ok().body(communityDTOList);
+        }
+    }
+
+    @GetMapping("search/size")
+    @ApiOperation(value = "커뮤니티 검색 사이즈 Api", notes = "검색어를 통해 해당되는 커뮤니티의 사이즈를 조회한다.")
+    public ResponseEntity<?> communitySearchSize(@RequestParam(name = "communityName") String communityName, final Pageable pageable){
+        List<CommunityDTO> communityDTOList = communityService.findCommunityBycommunityTitleContaining(pageable, communityName);
+
+        if (communityDTOList.size() == 0){
+            List<String> error = new ArrayList<>();
+            error.add(null);
+            return ResponseEntity.status(500).body(error);
+        }else {
+            return ResponseEntity.ok().body(communityDTOList.size());
+        }
+    }
 }
