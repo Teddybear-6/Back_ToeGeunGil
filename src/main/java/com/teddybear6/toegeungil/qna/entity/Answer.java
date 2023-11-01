@@ -17,6 +17,7 @@ public class Answer {
     @Column(name = "ansNum")
     private int answerNum;                      //답변 번호
 
+    @Column(name = "questionNum")
     private int questionNum;                  //질문번호
 
     @Column(name = "ansTitle")
@@ -26,7 +27,8 @@ public class Answer {
 
     @Column(name = "ansNick")
     private String answerNick;                  //답변자 닉네임
-
+    @Column(name ="userNo")
+    private String userNo;
     @Column(name = "ansDate")
     @Temporal(TemporalType.DATE)
     private Date answerDate;                  //답변 생성일
@@ -44,12 +46,13 @@ public class Answer {
     public Answer() {
     }
 
-    public Answer(int answerNum, int questionNum, String answerTitle, String answerContent, String answerNick, Date answerDate, Date answerUpdate, Date answerDelete, String answerStatus) {
+    public Answer(int answerNum, int questionNum, String answerTitle, String answerContent, String answerNick, String userNo, Date answerDate, Date answerUpdate, Date answerDelete, String answerStatus) {
         this.answerNum = answerNum;
         this.questionNum = questionNum;
         this.answerTitle = answerTitle;
         this.answerContent = answerContent;
         this.answerNick = answerNick;
+        this.userNo = userNo;
         this.answerDate = answerDate;
         this.answerUpdate = answerUpdate;
         this.answerDelete = answerDelete;
@@ -128,6 +131,14 @@ public class Answer {
         this.questionNum = questionNum;
     }
 
+    public String getUserNo() {
+        return userNo;
+    }
+
+    public void setUserNo(String userNo) {
+        this.userNo = userNo;
+    }
+
     @Override
     public String toString() {
         return "Answer{" +
@@ -136,6 +147,7 @@ public class Answer {
                 ", answerTitle='" + answerTitle + '\'' +
                 ", answerContent='" + answerContent + '\'' +
                 ", answerNick='" + answerNick + '\'' +
+                ", userNo='" + userNo + '\'' +
                 ", answerDate=" + answerDate +
                 ", answerUpdate=" + answerUpdate +
                 ", answerDelete=" + answerDelete +

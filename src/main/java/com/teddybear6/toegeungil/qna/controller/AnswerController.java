@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.qna.controller;
 
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
 import com.teddybear6.toegeungil.qna.entity.Answer;
 import com.teddybear6.toegeungil.qna.service.AnsService;
 import io.swagger.annotations.Api;
@@ -7,6 +8,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -69,7 +72,8 @@ public class AnswerController {
 
     @PostMapping("/regist")
     @ApiOperation(value = "QnA 답변 작성 Api", notes = "QnA 답변 게시글을 작성한다.")
-    public ResponseEntity<?> regist(@RequestBody Answer answer){
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> regist(@RequestBody Answer answer,@AuthenticationPrincipal AuthUserDetail userDetails){
         System.out.println("cnt: " + answer);
         int result = ansService.registAnswer(answer);
 

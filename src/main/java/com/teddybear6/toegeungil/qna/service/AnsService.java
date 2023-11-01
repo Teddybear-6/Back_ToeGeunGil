@@ -3,6 +3,7 @@ package com.teddybear6.toegeungil.qna.service;
 import com.teddybear6.toegeungil.qna.entity.Answer;
 import com.teddybear6.toegeungil.qna.entity.Question;
 import com.teddybear6.toegeungil.qna.repository.AnswerRepository;
+import com.teddybear6.toegeungil.qna.repository.QuestionRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,8 +17,12 @@ public class AnsService {
 
     //answer 레파지토리
     private final AnswerRepository answerRepository;
-    public AnsService(AnswerRepository answerRepository) {
+
+    private final QuestionRepository questionRepository;
+
+    public AnsService(AnswerRepository answerRepository, QuestionRepository questionRepository) {
         this.answerRepository = answerRepository;
+        this.questionRepository = questionRepository;
     }
 
     public Answer findAnswerByCode(int answerNum){
@@ -36,13 +41,15 @@ public class AnsService {
         answer.setAnswerStatus("Y");
         answer.setAnswerDate(new Date());
         Answer result = answerRepository.save(answer);
-        System.out.println(result);
 
-        answer.setAnswerDate(new Date());
+
 
         if(Objects.isNull(result)){
             return 0;
         }else {
+            Question question = questionRepository.findById(answer.getQuestionNum());
+            question.setAnswerStatus("Y");
+            questionRepository.save(question);
             return 1;
         }
     }
