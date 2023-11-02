@@ -82,7 +82,7 @@ public class AnswerController {
 
     @PutMapping("/update")
     @ApiOperation(value = "QnA 답변 수정 Api", notes = "QnA 답변 게시글을 수정한다.")
-    public ResponseEntity<?> update(Answer answer){
+    public ResponseEntity<?> update(@RequestBody Answer answer){
         Answer findAnswer = ansService.findAnswerByCode(answer.getAnswerNum());
 
         if(Objects.isNull(findAnswer)){
