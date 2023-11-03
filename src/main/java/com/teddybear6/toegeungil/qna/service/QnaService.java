@@ -33,8 +33,11 @@ public class QnaService {
 
     @Transactional
     public int registQuestion(Question question) {
+        question.setQuestionStatus("Y");
+        question.setAnswerStatus("N");
         question.setQuestionDate(new Date());
         Question result = questionRepository.save(question);
+        System.out.println(result);
 
 
 
@@ -50,8 +53,6 @@ public class QnaService {
         if(!Objects.isNull(updateQuestion.getQuestionTitle())){
             findQuestion.setQuestionTitle(updateQuestion.getQuestionTitle());
             findQuestion.setQuestionContent(updateQuestion.getQuestionContent());
-            System.out.println("변경한 제목 : " + findQuestion.getQuestionTitle());
-            System.out.println("변경한 내용 : " + findQuestion.getQuestionContent());
             findQuestion.setQuestionUpdate(new Date());
 
         }
@@ -67,9 +68,10 @@ public class QnaService {
 
     @Transactional
     public void deleteCode(int del){
-        questionRepository.deleteById(del);
+        Question question= questionRepository.findById(del);
+        question.setQuestionDelete(new Date());
+        question.setQuestionStatus("N");
+        questionRepository.save(question);
 
-        Question question = questionRepository.findById(del);
-        System.out.println(question);
     }
 }

@@ -1,5 +1,8 @@
 package com.teddybear6.toegeungil.qna.entity;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -7,9 +10,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
+@Entity(name = "qna_question")
 @Table(name = "qna_question")
+@DynamicInsert
 @EntityListeners(AuditingEntityListener.class)
+@Where(clause = "que_status='Y'")
 public class Question {
     //질문 관련 엔티티
 
@@ -40,13 +45,16 @@ public class Question {
     @Temporal(TemporalType.DATE)
     @LastModifiedDate
     private Date questionDelete;                        //질문 삭제일
-    @Column(name = "queStatus")
+    @Column(name = "que_status",columnDefinition = "varchar(1)")
     private String questionStatus;                      //질문 상태
+
+   @Column(name = "answer_status" ,columnDefinition = "varchar(1)")   //답변여부
+   private String answerStatus;
 
     public Question() {
     }
 
-    public Question(int questionNum, String questionTitle, String questionContent, String questionNick, String userNo, Date questionDate, Date questionUpdate, Date questionDelete, String questionStatus) {
+    public Question(int questionNum, String questionTitle, String questionContent, String questionNick, String userNo, Date questionDate, Date questionUpdate, Date questionDelete, String questionStatus, String answerStatus) {
         this.questionNum = questionNum;
         this.questionTitle = questionTitle;
         this.questionContent = questionContent;
@@ -56,6 +64,7 @@ public class Question {
         this.questionUpdate = questionUpdate;
         this.questionDelete = questionDelete;
         this.questionStatus = questionStatus;
+        this.answerStatus = answerStatus;
     }
 
     public int getQuestionNum() {
@@ -130,6 +139,14 @@ public class Question {
         this.userNo = userNo;
     }
 
+    public String getAnswerStatus() {
+        return answerStatus;
+    }
+
+    public void setAnswerStatus(String answerStatus) {
+        this.answerStatus = answerStatus;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
@@ -142,6 +159,7 @@ public class Question {
                 ", questionUpdate=" + questionUpdate +
                 ", questionDelete=" + questionDelete +
                 ", questionStatus='" + questionStatus + '\'' +
+                ", answerStatus='" + answerStatus + '\'' +
                 '}';
     }
 }

@@ -7,4 +7,5 @@ public interface AnswerRepository extends JpaRepository<Answer, Integer> {
     Answer findById(int answerNum);
 
 
+    Answer findByquestionNum(int quenum);
 }

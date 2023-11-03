@@ -3,6 +3,7 @@ package com.teddybear6.toegeungil.qna.service;
 import com.teddybear6.toegeungil.qna.entity.Answer;
 import com.teddybear6.toegeungil.qna.entity.Question;
 import com.teddybear6.toegeungil.qna.repository.AnswerRepository;
+import com.teddybear6.toegeungil.qna.repository.QuestionRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,8 +17,12 @@ public class AnsService {
 
     //answer 레파지토리
     private final AnswerRepository answerRepository;
-    public AnsService(AnswerRepository answerRepository) {
+
+    private final QuestionRepository questionRepository;
+
+    public AnsService(AnswerRepository answerRepository, QuestionRepository questionRepository) {
         this.answerRepository = answerRepository;
+        this.questionRepository = questionRepository;
     }
 
     public Answer findAnswerByCode(int answerNum){
@@ -33,14 +38,18 @@ public class AnsService {
     //답변 글 생성 로직
     @Transactional
     public int registAnswer(Answer answer){
-        Answer result = answerRepository.save(answer);
-        System.out.println(result);
-
+        answer.setAnswerStatus("Y");
         answer.setAnswerDate(new Date());
+        Answer result = answerRepository.save(answer);
+
+
 
         if(Objects.isNull(result)){
             return 0;
         }else {
+            Question question = questionRepository.findById(answer.getQuestionNum());
+            question.setAnswerStatus("Y");
+            questionRepository.save(question);
             return 1;
         }
     }
@@ -50,6 +59,7 @@ public class AnsService {
         if(!Objects.isNull(updateAnswer.getAnswerTitle())){
             findAnswer.setAnswerTitle(updateAnswer.getAnswerTitle());
             findAnswer.setAnswerContent(updateAnswer.getAnswerContent());
+            findAnswer.setAnswerUpdate(new Date());
 
             System.out.println("변경한 답변 제목 : " + findAnswer.getAnswerTitle());
             System.out.println("변경한 답변 내용 : " + findAnswer.getAnswerContent());
@@ -64,13 +74,17 @@ public class AnsService {
     }
     @Transactional
     public void deleteCode(int del){
-        answerRepository.deleteById(del);
-
         Answer answer = answerRepository.findById(del);
-        System.out.println(answer);
+        answer.setAnswerStatus("N");
+        answerRepository.save(answer);
+
+
     }
 
 
+    public Answer findAnswerByQueNum(int quenum) {
+        Answer answer= answerRepository.findByquestionNum(quenum);
 
-
+        return answer;
+    }
 }

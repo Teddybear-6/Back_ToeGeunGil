@@ -75,18 +75,29 @@ public class QuestionController {
 
 
     @PutMapping("/update")
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @ApiOperation(value = "QnA 질문 수정 Api", notes = "QnA 질문 게시글을 수정한다.")
-    public ResponseEntity<?> update(Question question){
-        Question findQuestion = qnaService.findQuestionByCode(question.getQuestionNum());
+    public ResponseEntity<?> update(@RequestBody  Question question,@AuthenticationPrincipal AuthUserDetail userDetails){
 
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "회원이 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
+        System.out.println(question);
+        Question findQuestion = qnaService.findQuestionByCode(question.getQuestionNum());
         if(Objects.isNull(findQuestion)){
-            return ResponseEntity.ok().body("데이터가 존재하지 않습니다.");
+            respose.put("value", "데이터가 존재하지 않습니다.");
+            return ResponseEntity.ok().body(respose);
         }
         int result = qnaService.updateQuestion(findQuestion, question);
         if(result > 0){
-            return ResponseEntity.ok().body("수정 완료");
+            respose.put("value", "수정 완료");
+            return ResponseEntity.ok().body(respose);
         }else {
-            return ResponseEntity.status(400).body("수정 실패");
+            respose.put("value", "수정 실패");
+            return ResponseEntity.status(400).body(respose);
         }
 
     }
