@@ -82,13 +82,15 @@ public class AnswerController {
 
     @PutMapping("/update")
     @ApiOperation(value = "QnA 답변 수정 Api", notes = "QnA 답변 게시글을 수정한다.")
-    public ResponseEntity<?> update(@RequestBody Answer answer){
-        Answer findAnswer = ansService.findAnswerByCode(answer.getAnswerNum());
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> update(@RequestBody Answer modifyAnswer,@AuthenticationPrincipal AuthUserDetail userDetails){
+        System.out.println("cnt: " + modifyAnswer);
+        Answer findAnswer = ansService.findAnswerByCode(modifyAnswer.getAnswerNum());
 
         if(Objects.isNull(findAnswer)){
             return ResponseEntity.ok().body("데이터가 존재하지 않다.");
         }
-        int result = ansService.updateAnswer(findAnswer, answer);
+        int result = ansService.updateAnswer(findAnswer, modifyAnswer);
         if(result > 0){
             return  ResponseEntity.ok().body("수정 완료!");
         }else {
