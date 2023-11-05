@@ -74,11 +74,13 @@ public class AnsService {
     }
     @Transactional
     public void deleteCode(int del){
+
         Answer answer = answerRepository.findById(del);
         answer.setAnswerStatus("N");
         answerRepository.save(answer);
-
-
+        Question question = questionRepository.findById(answer.getQuestionNum());
+        question.setAnswerStatus("N");
+        questionRepository.save(question);
     }
 
 
