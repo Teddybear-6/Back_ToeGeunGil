@@ -10,20 +10,20 @@ import org.springframework.context.annotation.PropertySource;
 public class MailProperties {
 
     // SMTP 서버
-    @Value("${email.host}")
-    private String host;
+
+    private static String host;
 
     // 계정
-    @Value("${email.username}")
-    private String username;
+
+    private static String username;
 
     // 비밀번호
-    @Value("${email.password}")
-    private String password;
+
+    private static String password;
 
     // 포트번호
-    @Value("${email.port}")
-    private int port;
+
+    private  static int port;
 
     public MailProperties() {
     }
@@ -39,6 +39,7 @@ public class MailProperties {
         return host;
     }
 
+    @Value("${email.host}")
     public void setHost(String host) {
         this.host = host;
     }
@@ -47,6 +48,7 @@ public class MailProperties {
         return username;
     }
 
+    @Value("${email.username}")
     public void setUsername(String username) {
         this.username = username;
     }
@@ -55,6 +57,7 @@ public class MailProperties {
         return password;
     }
 
+    @Value("${email.password}")
     public void setPassword(String password) {
         this.password = password;
     }
@@ -63,6 +66,7 @@ public class MailProperties {
         return port;
     }
 
+    @Value("${email.port}")
     public void setPort(int port) {
         this.port = port;
     }
