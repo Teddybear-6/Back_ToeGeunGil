@@ -16,14 +16,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
+@Component
 public class ImageApi {
 
-    public static final String image = "http://106.250.199.126:9000/";
+    public static  String url;
 
+    @Value("${image.url}")
+    public void setUrl(String value){
+        url=value;
+    }
 
     //단일 파일 업로드
     public static ResponseEntity<?> singleImage(MultipartFile file) throws IOException, ParseException {
-        String host = image+"/upload";
+        String host = url+"upload";
 
         MultiValueMap<String , Object>  body = new LinkedMultiValueMap<>();
         System.out.println("================");
@@ -53,8 +59,7 @@ public class ImageApi {
 
 
     public static ResponseEntity<?> multiImages(MultipartFile[] files) throws IOException, ParseException {
-
-        String host = image+"/uploads";
+        String host = url+"uploads";
         MultiValueMap<String , Object> body = new LinkedMultiValueMap<>();
 
         Arrays.stream(files).forEach(file->{
