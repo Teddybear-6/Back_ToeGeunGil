@@ -1,17 +1,20 @@
 package com.teddybear6.toegeungil.qna.controller;
 
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
 import com.teddybear6.toegeungil.qna.entity.Question;
 import com.teddybear6.toegeungil.qna.service.QnaService;
+import com.teddybear6.toegeungil.user.entity.UserEntity;
+import com.teddybear6.toegeungil.user.sevice.UserViewService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/question")
@@ -24,11 +27,13 @@ import java.util.Objects;
 public class QuestionController {
 
     private final QnaService qnaService;
+    private final UserViewService userViewService;
 
-    public QuestionController(QnaService qnaService) {
+    public QuestionController(QnaService qnaService, UserViewService userViewService) {
         this.qnaService = qnaService;
+        this.userViewService = userViewService;
     }
-    
+
     @GetMapping("/{queNum}") //단일 조회
     @ApiOperation(value = "QnA 질문 단일 조회 Api", notes = "QnA 질문 번호로 해당 게시글을 조회한다.")
     public ResponseEntity<Object> findQuestionByCode(@PathVariable int queNum){
@@ -54,27 +59,45 @@ public class QuestionController {
     
     @PostMapping("/regist")
     @ApiOperation(value = "QnA 질문 작성 Api", notes = "QnA 질문 게시글을 작성한다.")
-    public ResponseEntity<?> regist(@RequestBody Question question){
-        System.out.println("cnt " + question);
-        int result = qnaService.registQuestion(question);
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
+    public ResponseEntity<?> regist(@RequestBody Question question, @AuthenticationPrincipal AuthUserDetail userDetails){
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "회원이 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
 
-        return ResponseEntity.ok().body("성공");
+        int result = qnaService.registQuestion(question);
+        respose.put("value", "등록 성공했습니다");
+        return ResponseEntity.ok().body(respose);
     }
 
 
     @PutMapping("/update")
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @ApiOperation(value = "QnA 질문 수정 Api", notes = "QnA 질문 게시글을 수정한다.")
-    public ResponseEntity<?> update(Question question){
-        Question findQuestion = qnaService.findQuestionByCode(question.getQuestionNum());
+    public ResponseEntity<?> update(@RequestBody  Question question,@AuthenticationPrincipal AuthUserDetail userDetails){
 
+        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+        Map<String, String> respose = new HashMap<>();
+        if (Objects.isNull(userEntity)) {
+            respose.put("value", "회원이 아닙니다.");
+            return ResponseEntity.status(500).body(respose);
+        }
+        System.out.println(question);
+        Question findQuestion = qnaService.findQuestionByCode(question.getQuestionNum());
         if(Objects.isNull(findQuestion)){
-            return ResponseEntity.ok().body("데이터가 존재하지 않습니다.");
+            respose.put("value", "데이터가 존재하지 않습니다.");
+            return ResponseEntity.ok().body(respose);
         }
         int result = qnaService.updateQuestion(findQuestion, question);
         if(result > 0){
-            return ResponseEntity.ok().body("수정 완료");
+            respose.put("value", "수정 완료");
+            return ResponseEntity.ok().body(respose);
         }else {
-            return ResponseEntity.status(400).body("수정 실패");
+            respose.put("value", "수정 실패");
+            return ResponseEntity.status(400).body(respose);
         }
 
     }

@@ -56,7 +56,7 @@ public class EmailService {
         createCode();
         String setFrom = "algoreatt@gmail.com";
         String toEmail = email;
-        String title = "algore 회원가입 인증번호";
+        String title = "퇴근길 임시비밀번호 입니다";
 
         MimeMessage message = mailSender.createMimeMessage();
         message.addRecipients(MimeMessage.RecipientType.TO,email); // 보낼 이메일
@@ -68,8 +68,6 @@ public class EmailService {
 
     //실제 메일 발송
     public String sendEmail(String toEmail) throws MessagingException,UnsupportedEncodingException{
-        System.out.println("호출 서비스");
-
         MimeMessage eemailForm = createEmailForm(toEmail);
 
         //메일 전송

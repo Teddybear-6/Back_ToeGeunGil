@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
         @ApiResponse(code = 404,message = "잘못된 접근") ,
         @ApiResponse(code = 500,message = "서버에러")
 })
+
 public class HobbyController {
 
     /*  해야할일
@@ -224,30 +225,14 @@ public class HobbyController {
     @ApiOperation(value = "취미 단일 조회 Api", notes = "취미 게시글 번호로 해당 게시글을 조회한다.")
     public ResponseEntity<Object> detailFindById(@PathVariable int hobbyCode) {
 
-        Hobby hobby = hobbyService.findById(hobbyCode);
+        HobbyDTO hobbyDTO = hobbyService.findByIddetail(hobbyCode);
 
-        if (Objects.isNull(hobby)) {
+        if (Objects.isNull(hobbyDTO)) {
             return ResponseEntity.status(404).body("취미가 없습니다.");
         }
 
-        HobbyDTO hobbyDTO = new HobbyDTO(hobby);
-        List<Keyword> keyword = new ArrayList<>();
-        for (int i = 0; i < hobby.getHobbyKeywordList().size(); i++) {
-            keyword.add(hobby.getHobbyKeywordList().get(i).getKeyword());
-        }
-        List<HobbyImage> hobbyImages = hobby.getHobbyImages();
 
-        List<ImageIdDTO> imageIdDTOS = new ArrayList<>();
 
-        for (int i = 0; i < hobbyImages.size(); i++) {
-
-            imageIdDTOS.add(new ImageIdDTO(hobbyImages.get(i).getId(), hobbyImages.get(i).getPath(), hobbyImages.get(i).getName(), hobbyImages.get(i).getHobbyCode()));
-
-        }
-
-        List<HobbyKeywordDTO> hobbyKeywordDTO = keyword.stream().map(m -> new HobbyKeywordDTO(m)).collect(Collectors.toList());
-        hobbyDTO.setKeywordDTOList(hobbyKeywordDTO);
-        hobbyDTO.setImageId(imageIdDTOS);
         return ResponseEntity.ok().body(hobbyDTO);
     }
 
@@ -412,40 +397,57 @@ public class HobbyController {
 
 
     //후기 삭제
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @DeleteMapping("/review/{reviewCode}")
     @ApiOperation(value = "취미 후기 삭제 Api", notes = "취미 리뷰 번호로 해당 게시글의 참여 후기를 삭제한다.")
-    public ResponseEntity<?> removeReview(@PathVariable int reviewCode) {
+    public ResponseEntity<?> removeReview(@PathVariable int reviewCode, @AuthenticationPrincipal AuthUserDetail userDetails) {
+        Map<String, String> respose = new HashMap<>();
+        int result = 0;
         HobbyReview hobbyReview = hobbyService.findByReviewCode(reviewCode);
         if (Objects.isNull(hobbyReview)) {
             return ResponseEntity.status(404).body("후기가 없습니다.");
         }
-        hobbyReview.setReviewStatus("N");
-        int result = hobbyService.deleteByReviewCode(hobbyReview);
+        if(userDetails.getUserEntity().getUserNo()==hobbyReview.getUserNo()){
+            hobbyReview.setReviewStatus("N");
+            result  = hobbyService.deleteByReviewCode(hobbyReview);
+
+        }
 
         if (result > 0) {
-            return ResponseEntity.ok().body("삭제 완료됐습니다.");
+            respose.put("value","삭제되었습니다.");
+            return ResponseEntity.ok().body(respose);
         } else {
-            return ResponseEntity.status(404).body("삭제 실패했습니다.");
+            respose.put("value","삭제 실패했습니다..");
+            return ResponseEntity.status(404).body(respose);
         }
 
     }
 
     //후기 수정
     @PutMapping("/review/{reviewCode}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @ApiOperation(value = "취미 후기 수정 Api", notes = "취미 리뷰 번호로 해당 게시글의 참여 후기를 수정한다.")
-    public ResponseEntity<?> modifyReview(@PathVariable int reviewCode, @RequestBody HobbyReviewDTO hobbyReviewDTO) {
-        hobbyReviewDTO.setReviewCode(reviewCode);
+    public ResponseEntity<?> modifyReview(@PathVariable int reviewCode, @RequestBody HobbyReviewDTO hobbyReviewDTO ,@AuthenticationPrincipal AuthUserDetail userDetails) {
+        Map<String, String> respose = new HashMap<>();
         HobbyReview hobbyReview = hobbyService.findByReviewCode(reviewCode);
         if (Objects.isNull(hobbyReview)) {
-            return ResponseEntity.status(404).body("후기가 없습니다.");
+            respose.put("value","후기가 없습니다.");
+            return ResponseEntity.status(404).body(respose);
         }
 
-        int result = hobbyService.updateReview(hobbyReviewDTO);
+        if (hobbyReview.getUserNo()!=userDetails.getUserEntity().getUserNo()) {
+            respose.put("value","작성자가 아닙니다.");
+            return ResponseEntity.status(404).body(respose);
+        }
+
+        int result = hobbyService.updateReview(hobbyReview,hobbyReviewDTO);
 
         if (result > 0) {
-            return ResponseEntity.ok().body("수정 성공했습니다.");
+            respose.put("value","수정 성공했습니다.");
+            return ResponseEntity.ok().body(respose);
         } else {
-            return ResponseEntity.status(500).body("수정 실패했습니다.");
+            respose.put("value","수정 실패했습니다.");
+            return ResponseEntity.status(500).body(respose);
         }
 
 
@@ -557,8 +559,6 @@ public class HobbyController {
         }
         return ResponseEntity.ok().body(hobbies);
     }
-
-
 
 
 

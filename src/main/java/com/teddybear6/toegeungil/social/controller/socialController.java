@@ -129,6 +129,7 @@ public class socialController {
     @ApiOperation(value = "소셜 작성 Api", notes = "소셜 게시글을 작성한다.")
     public ResponseEntity<?> SocialPostRegistration(@RequestPart("social") SocialDTO socialDTO, @RequestPart("image") MultipartFile file, @AuthenticationPrincipal AuthUserDetail userDetails) { //@RequestBody -> Json으로 넘기기위해 필요한 친구
 
+        //회원 정보가 존재하는지 확인
         UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
         Map<String, String> respose = new HashMap<>();
         if (Objects.isNull(userEntity)) {
@@ -140,8 +141,8 @@ public class socialController {
 
         try {
             socialDTO.setPostRegDate(new Date()); //게시글 등록일
-            socialDTO.setUserNum(userEntity.getUserNo());
-            result = socialService.SocialPostRegistration(socialDTO, file);
+            socialDTO.setUserNum(userEntity.getUserNo()); //유저 번호
+            result = socialService.SocialPostRegistration(socialDTO, file); //게시글, 사진 저장
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -159,23 +160,31 @@ public class socialController {
     @PreAuthorize("hasAnyRole('USER','ADMIN','TUTOR')")
     @PutMapping //04_소셜 수정(/social{socialNum})
     @ApiOperation(value = "소셜 수정 Api", notes = "소셜 게시글 번호로 해당 게시글을 수정한다.")
-    public ResponseEntity<?> updateSocialPostNum(@RequestPart("social") SocialDTO socialDTO, @RequestPart(value = "image", required = false) MultipartFile file, SocialImage socialImage) {
+    public ResponseEntity<?> updateSocialPostNum(@RequestPart("social") SocialDTO socialDTO, @RequestPart(value = "image", required = false) MultipartFile file, SocialImage socialImage, @AuthenticationPrincipal AuthUserDetail userDetails) {
         /*
         update 과정
         ex) 1.변경전[0,0,0] -> 2.변경후[0,0,1] -> 3.save(id) 메서드 호출 후 변경 전;후 값 비교
             -> 4.영속성컨텍스트 [0,0,1] 저장 -> 5.DB에 반영*/
 
         //update를 위해 수정하고자 하는 값이 영속(존재) 상태인지 확인한다.
-        System.out.println(socialDTO);
-
         Social findSocial = socialService.readSocialPostNum(socialDTO.getSocialNum());
         //영속성 컨텍스트에 존재하지 않을 경우, "해당 게시글이 존재하지 않습니다."
         if (Objects.isNull(findSocial)) {
             return ResponseEntity.status(404).body("해당 게시글이 존재하지 않습니다.");
         }
+        
+        //존재하는 회원인가?
+//        UserEntity userEntity = userViewService.findUserEmail(userDetails.getUserEntity().getUserEmail());
+//        System.out.println("userEntity : " + userEntity);
+//        System.out.println("userEntity.user");
+//        if (Objects.isNull(userEntity)) {
+//            return ResponseEntity.status(404).body("회원이 아닙니다.");
+//        } else if (userEntity.getUserNo() != findSocial.getUserNum()) {
+//            return ResponseEntity.status(404).body("작성자만 수정 가능합니다.");
+//        }
 
         SocialDTO social = socialDTO;
-        social.setPostModiDate(new Date());
+        social.setPostModiDate(new Date()); //수정일 등록
         int result = socialService.updateSocialPostNum(findSocial, social, file, socialImage);
         System.out.println("result : " + result);
         if (result == 0) {
@@ -324,28 +333,48 @@ public class socialController {
         //지역 코드
         Local local = socialService.readSocialPostLocal(localCode);
         //받아온 지역 코드로 해당 게시글 리스트로 받아오기
-        List<Social> socialList = socialService.readSocialPostWhereLocalCode(localCode);
+        List<SocialDTO> socialList = socialService.readSocialPostWhereLocalCode(localCode);
 
         return ResponseEntity.ok().body(socialList);
     }
 
-//    @ApiOperation(value = "카테고리 별 소셜 사이즈 조회 Api")
+    @GetMapping("local/{localCode}/size") //31_지역 코드 사이즈 필터
+    @ApiOperation(value = "지역별 소셜 사이즈 조회 Api", notes = "지역 번호로 지역별 해당 소셜 게시글들의 사이즈를 조회한다.")
+    public ResponseEntity<?> readSocialPostLocalSize(@PathVariable int localCode) {
+        //지역 코드
+        Local local = socialService.readSocialPostLocal(localCode);
+        //받아온 지역 코드로 해당 게시글 리스트로 받아오기
+        List<SocialDTO> socialList = socialService.readSocialPostWhereLocalCode(localCode);
+
+        return ResponseEntity.ok().body(socialList.size());
+    }
 
     @GetMapping("/category/{categoryCode}/local/{localCode}") //32_지역 AND 카테고리 필터
     @ApiOperation(value = "카테고리 AND 지역 소셜 조회 Api", notes = "카테고리 번호와 지역 번호로 두 조건에 모두 해당되는 소셜 게시글 목록을 조회한다.")
     public ResponseEntity<List<?>> readSocialFilterCategoryAndLocal(@PathVariable int categoryCode, @PathVariable int localCode, final Pageable pageable) {
         //카테고리 코드 받아오기
         Category category = socialService.readSocialPostCategory(categoryCode);
-        System.out.println("Category : " + category);
         //지역 코드
         Local local = socialService.readSocialPostLocal(localCode);
-        System.out.println("Local : " + local);
 
         //카테고리 AND 지역
-        List<Social> social = socialService.readSocialFilterCategoryAndLocal(category, local);
-        System.out.println("controller : " + social);
+        List<SocialDTO> social = socialService.readSocialFilterCategoryAndLocal(category, local);
 
         return ResponseEntity.ok().body(social);
+    }
+
+    @GetMapping("/category/{categoryCode}/local/{localCode}/size") //32_지역 AND 카테고리 필터 사이즈
+    @ApiOperation(value = "카테고리 AND 지역 소셜 조회 Api", notes = "카테고리 번호와 지역 번호로 두 조건에 모두 해당되는 소셜 게시글 목록을 조회한다.")
+    public ResponseEntity<?> readSocialFilterCategoryAndLocalSize(@PathVariable int categoryCode, @PathVariable int localCode, final Pageable pageable) {
+        //카테고리 코드 받아오기
+        Category category = socialService.readSocialPostCategory(categoryCode);
+        //지역 코드
+        Local local = socialService.readSocialPostLocal(localCode);
+
+        //카테고리 AND 지역
+        List<SocialDTO> social = socialService.readSocialFilterCategoryAndLocal(category, local);
+
+        return ResponseEntity.ok().body(social.size());
     }
 
     /*
@@ -364,10 +393,7 @@ public class socialController {
     @ApiOperation(value = "소셜 검색 Api", notes = "검색어를 통해 해당되는 소셜의 제목을 조회한다.")
     public ResponseEntity<List<?>> socialSearch(@RequestParam(name = "socialName") String socialName, final Pageable pageable) {
 
-        System.out.println(socialName + ": 확인");
-
         List<SocialDTO> socialDTOList = socialService.findSocialBySocialNameContaining(pageable, socialName);
-
         if (socialDTOList.size() == 0) {
             List<String> error = new ArrayList<>();
             error.add(null);
@@ -379,15 +405,15 @@ public class socialController {
 
     @GetMapping("/search/size")
     @ApiOperation(value = "소셜 검색 사이즈 Api", notes = "검색어를 통해 해당되는 소셜들을 사이즈를 조회한다.")
-    public ResponseEntity<?> socialSearchSize(@RequestParam(name = "socialName") String socialName) {
-        List<Social> socialList = socialService.findBySocialNameContaining(socialName);
+    public ResponseEntity<?> socialSearchSize(@RequestParam(name = "socialName") String socialName, final Pageable pageable) {
+        List<SocialDTO> socialDTOList = socialService.findSocialBySocialNameContaining(pageable, socialName);
 
-        if (socialList.size() == 0) {
+        if (socialDTOList.size() == 0) {
             List<String> error = new ArrayList<>();
             error.add(null);
             return ResponseEntity.status(500).body(error);
         } else {
-            return ResponseEntity.ok().body(socialList.size());
+            return ResponseEntity.ok().body(socialDTOList.size());
         }
     }
 }

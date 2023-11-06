@@ -1,5 +1,6 @@
 package com.teddybear6.toegeungil.qna.controller;
 
+import com.teddybear6.toegeungil.auth.dto.AuthUserDetail;
 import com.teddybear6.toegeungil.qna.entity.Answer;
 import com.teddybear6.toegeungil.qna.service.AnsService;
 import io.swagger.annotations.Api;
@@ -7,11 +8,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/answer")
@@ -50,9 +51,29 @@ public class AnswerController {
         }
         return ResponseEntity.ok().body(answerList);
     }
+
+    @GetMapping("/que/{quenum}")
+    @ApiOperation(value = "QnA 답변 단일 조회 Api", notes = "QnA 번호로 해당 게시글을 조회한다.")
+    public ResponseEntity<?> findAnswerByQueNUm(@PathVariable int quenum){
+        Answer answer = ansService.findAnswerByQueNum(quenum);
+        Map<String,Object> value = new HashMap<>();
+        if(Objects.isNull(answer)){
+
+            value.put("value",null);
+            return ResponseEntity.ok().body(value);
+        }
+        value.put("value",answer);
+        return ResponseEntity.ok().body(value);
+    }
+
+
+
+
+
     @PostMapping("/regist")
     @ApiOperation(value = "QnA 답변 작성 Api", notes = "QnA 답변 게시글을 작성한다.")
-    public ResponseEntity<?> regist(@RequestBody Answer answer){
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> regist(@RequestBody Answer answer,@AuthenticationPrincipal AuthUserDetail userDetails){
         System.out.println("cnt: " + answer);
         int result = ansService.registAnswer(answer);
 
@@ -61,13 +82,15 @@ public class AnswerController {
 
     @PutMapping("/update")
     @ApiOperation(value = "QnA 답변 수정 Api", notes = "QnA 답변 게시글을 수정한다.")
-    public ResponseEntity<?> update(Answer answer){
-        Answer findAnswer = ansService.findAnswerByCode(answer.getAnswerNum());
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> update(@RequestBody Answer modifyAnswer,@AuthenticationPrincipal AuthUserDetail userDetails){
+        System.out.println("cnt: " + modifyAnswer);
+        Answer findAnswer = ansService.findAnswerByCode(modifyAnswer.getAnswerNum());
 
         if(Objects.isNull(findAnswer)){
             return ResponseEntity.ok().body("데이터가 존재하지 않다.");
         }
-        int result = ansService.updateAnswer(findAnswer, answer);
+        int result = ansService.updateAnswer(findAnswer, modifyAnswer);
         if(result > 0){
             return  ResponseEntity.ok().body("수정 완료!");
         }else {
