@@ -59,7 +59,12 @@ public class UserController {
         if(!Objects.isNull(userEntity)){
             return ResponseEntity.ok().body("이미 있는 계정입니다.");
         }
-        user.setRole(UserRole.USER.getValue());
+        if(user.getRole().equals("강사")){
+            user.setRole(UserRole.TUTOR.getValue());
+        }else {
+            user.setRole(UserRole.USER.getValue());
+        }
+
         int result = userViewService.registUser(user);
         if (result > 0) {
             return ResponseEntity.ok().body("Success");

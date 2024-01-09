@@ -16,7 +16,6 @@ spring:
   config:
     import: optional:configserver:http://106.250.199.126:7777
 
-
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
